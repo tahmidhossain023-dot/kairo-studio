@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Studio — about skeleton</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="styles.css">
+<script src="_ds/modernist-77638109-339f-484d-bf96-8f45c98374a1/_ds_bundle.js"></script>
+<style>
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--color-bg); color: var(--color-text); font-family: var(--font-body); -webkit-font-smoothing: antialiased; }
+  * { box-sizing: border-box; }
+  h1, h2, h3, h4, p, ul, ol, figure, blockquote, dl, dd, dt { margin: 0; }
+  ul, ol { list-style: none; padding: 0; }
+  a { color: var(--color-accent-700); text-decoration: none; }
+  a:hover { color: var(--color-accent-600); text-decoration: underline; }
+  :focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+  @media (max-width: 860px) { .stack-narrow { grid-template-columns: 1fr !important; } }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script src="anim.js"></script>
+</helmet>
+
+<header class="anim-section" data-animate="header-pin" style="position:sticky;top:0;z-index:50;background:var(--color-bg);border-bottom:2px solid var(--color-divider)">
+  <div style="width:min(1320px, 100% - clamp(20px,5vw,64px));margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:var(--space-4);min-height:64px">
+    <a href="Studio Home.dc.html" target="_blank" rel="noopener" style="font-family:var(--font-heading);font-weight:800;font-size:18px;color:var(--color-text);text-decoration:none">[LOGO]</a>
+    <nav aria-label="Primary">
+      <ul style="display:flex;flex-wrap:wrap;gap:clamp(12px,2vw,28px)">
+        <li><a href="Studio Work.dc.html" target="_blank" rel="noopener" style="font-size:14px;font-weight:500;color:var(--color-text);text-decoration:none">Work</a></li>
+        <li><a href="Studio About.dc.html" target="_blank" rel="noopener" aria-current="page" style="font-size:14px;font-weight:600;color:var(--color-accent-700);text-decoration:none">Studio</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main role="main">
+  <!-- ===== 01 · INTRO — statement + portrait. Animates: mask-up on the
+       statement lines (each line its own element), image clip wipe. ===== -->
+  <section class="anim-section" data-anim-load-group="" aria-labelledby="about-h" style="border-bottom:2px solid var(--color-divider);padding:clamp(40px,6vw,88px) 0">
+    <div style="width:min(1320px, 100% - clamp(20px,5vw,64px));margin:0 auto">
+      <div class="stack-narrow" style="display:grid;grid-template-columns:minmax(0,7fr) minmax(0,4fr);gap:clamp(24px,4vw,64px);align-items:start">
+        <div style="display:grid;gap:var(--space-6)">
+          <p class="anim-target" data-animate="fade-in" style="font:600 12px/1 var(--font-body);letter-spacing:0.14em;text-transform:uppercase;color:var(--color-accent-700)">The studio</p>
+          <h1 id="about-h" style="font-family:var(--font-heading);font-weight:800;font-size:clamp(30px,5.2vw,68px);line-height:1;letter-spacing:-0.03em;display:grid;gap:0.04em">
+            <span class="anim-target split-line" data-animate="mask-up" data-anim-stagger="0.09" style="display:block">Lorem ipsum dolor sit</span>
+            <span class="anim-target split-line" data-animate="mask-up" data-anim-stagger="0.09" style="display:block">amet consectetur elit</span>
+          </h1>
+          <p class="anim-target" data-animate="fade-up" style="font-size:16px;line-height:1.72;color:var(--color-neutral-800);max-width:60ch;text-wrap:pretty">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam quis nostrud exercitation.</p>
+        </div>
+        <figure class="anim-target" data-animate="clip-reveal">
+          <div class="grayscale" role="img" aria-label="Placeholder for studio photograph" style="aspect-ratio:3/4;border:2px dashed var(--color-neutral-400);background:repeating-linear-gradient(135deg, transparent 0 10px, color-mix(in srgb, var(--color-neutral-400) 26%, transparent) 10px 11px);display:grid;place-items:center"><span style="font:400 11px/1.5 ui-monospace,Menlo,monospace;color:var(--color-neutral-700)">[IMAGE] studio · 3:4</span></div>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 02 · VALUES / PRINCIPLES — numbered list. Animates: rows
+       stagger in from the left, rule draws across each row. ===== -->
+  <section class="anim-section" data-animate="section" data-scroll-trigger="top 78%" aria-labelledby="values-h" style="border-bottom:2px solid var(--color-divider);padding:clamp(40px,5vw,80px) 0">
+    <div style="width:min(1320px, 100% - clamp(20px,5vw,64px));margin:0 auto;display:grid;gap:clamp(20px,2.5vw,40px)">
+      <h2 id="values-h" style="font:600 12px/1 var(--font-body);letter-spacing:0.14em;text-transform:uppercase;color:var(--color-neutral-600)">Principles</h2>
+      <ol class="stagger-group" style="display:grid;gap:0">
+        <sc-for list="{{ values }}" as="v" hint-placeholder-count="4">
+          <li class="stagger-item anim-target" data-animate="fade-right" data-anim-stagger="0.08" style="border-top:2px solid var(--color-divider);padding:clamp(16px,2vw,28px) 0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:clamp(16px,3vw,48px);align-items:start">
+            <span style="font-family:var(--font-heading);font-weight:800;font-size:clamp(20px,2vw,28px);line-height:1;color:var(--color-accent)">{{ v.index }}</span>
+            <div style="display:grid;gap:var(--space-2)">
+              <h3 style="font-family:var(--font-heading);font-weight:700;font-size:clamp(17px,1.8vw,22px);line-height:1.2">{{ v.title }}</h3>
+              <p style="font-size:14px;line-height:1.65;color:var(--color-neutral-800);max-width:62ch;text-wrap:pretty">{{ v.body }}</p>
+            </div>
+          </li>
+        </sc-for>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ===== 03 · TEAM — portrait grid. Animates: portraits stagger with a
+       grayscale-to-contrast hover. Risk: 6+ portraits animating opacity at
+       once on mobile — batch and keep transforms compositor-only. ===== -->
+  <section class="anim-section" data-animate="section" data-scroll-trigger="top 78%" aria-labelledby="team-h" style="border-bottom:2px solid var(--color-divider);padding:clamp(40px,5vw,80px) 0">
+    <div style="width:min(1320px, 100% - clamp(20px,5vw,64px));margin:0 auto;display:grid;gap:clamp(20px,2.5vw,40px)">
+      <h2 id="team-h" style="font:600 12px/1 var(--font-body);letter-spacing:0.14em;text-transform:uppercase;color:var(--color-neutral-600)">People</h2>
+      <ul class="stagger-group" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:clamp(16px,2vw,32px)">
+        <sc-for list="{{ people }}" as="p" hint-placeholder-count="6">
+          <li class="stagger-item anim-target" data-animate="fade-up" data-anim-stagger="0.07" style="display:grid;gap:var(--space-3);align-content:start">
+            <div class="grayscale media-zoom" data-animate="hover-scale" role="img" aria-label="Placeholder for team portrait" style="aspect-ratio:3/4;border:2px dashed var(--color-neutral-400);background:repeating-linear-gradient(135deg, transparent 0 10px, color-mix(in srgb, var(--color-neutral-400) 26%, transparent) 10px 11px);display:grid;place-items:center"><span style="font:400 11px/1.5 ui-monospace,Menlo,monospace;color:var(--color-neutral-700)">[IMAGE] 3:4</span></div>
+            <h3 style="font-family:var(--font-heading);font-weight:700;font-size:16px;line-height:1.25">{{ p.name }}</h3>
+            <p style="font:400 11px/1.5 ui-monospace,Menlo,monospace;color:var(--color-neutral-600)">{{ p.role }}</p>
+          </li>
+        </sc-for>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== 04 · TIMELINE — studio history. Animates: scrubbed vertical
+       rule draw + year counters. ===== -->
+  <section class="anim-section" data-animate="section" data-scroll-trigger="top 78%" aria-labelledby="time-h" style="border-bottom:2px solid var(--color-divider);padding:clamp(40px,5vw,80px) 0">
+    <div style="width:min(1320px, 100% - clamp(20px,5vw,64px));margin:0 auto;display:grid;gap:clamp(20px,2.5vw,40px)">
+      <h2 id="time-h" style="font:600 12px/1 var(--font-body);letter-spacing:0.14em;text-transform:uppercase;color:var(--color-neutral-600)">History</h2>
+      <ol class="stagger-group" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(180px, 1fr));gap:2px;background:var(--color-divider);border:2px solid var(--color-divider)">
+        <sc-for list="{{ milestones }}" as="m" hint-placeholder-count="4">
+          <li class="stagger-item" style="background:var(--color-bg);padding:clamp(16px,2vw,28px)">
+            <div data-anim-inner="" class="anim-target" data-animate="fade-up" data-anim-stagger="0.08" style="display:grid;gap:var(--space-2);align-content:start;height:100%">
+              <span class="anim-target" data-animate="counter" style="font-family:var(--font-heading);font-weight:800;font-size:clamp(22px,2.4vw,32px);line-height:1">{{ m.year }}</span>
+              <p style="font-size:14px;line-height:1.6;color:var(--color-neutral-800)">{{ m.body }}</p>
+            </div>
+          </li>
+        </sc-for>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ===== 05 · CTA BAND — accent field, closing. ===== -->
+  <section class="anim-section" data-animate="section" data-scroll-trigger="top 85%" aria-labelledby="cta-h" style="background:var(--color-accent);color:#fff;padding:clamp(40px,6vw,88px) 0">
+    <div style="width:min(1320px, 100% - clamp(20px,5vw,64px));margin:0 auto;display:grid;gap:var(--space-6)">
+      <h2 id="cta-h" class="anim-target" data-animate="mask-up" style="font-family:var(--font-heading);font-weight:800;font-size:clamp(30px,5vw,64px);line-height:1;letter-spacing:-0.03em;max-width:24ch">Sed do eiusmod tempor incididunt</h2>
+      <a href="Studio Home.dc.html#contact" target="_blank" rel="noopener" class="anim-target" data-animate="fade-up" style="background:#fff;color:var(--color-accent-700);padding:14px var(--space-6);font-size:14px;font-weight:600;text-decoration:none;justify-self:start">Generic CTA</a>
+    </div>
+  </section>
+</main>
+
+<footer role="contentinfo" style="padding:clamp(32px,4vw,56px) 0">
+  <div style="width:min(1320px, 100% - clamp(20px,5vw,64px));margin:0 auto;display:flex;flex-wrap:wrap;gap:var(--space-4);justify-content:space-between;border-top:2px solid var(--color-divider);padding-top:var(--space-4)">
+    <p style="font:400 11px/1.5 ui-monospace,Menlo,monospace;color:var(--color-neutral-600)">&copy; 0000 Placeholder Studio</p>
+    <nav aria-label="Footer"><ul style="display:flex;flex-wrap:wrap;gap:var(--space-4)"><li><a href="Studio Home.dc.html" target="_blank" rel="noopener" style="font:400 11px/1.5 ui-monospace,Menlo,monospace;color:var(--color-neutral-600);text-decoration:none">Home</a></li><li><a href="Studio Work.dc.html" target="_blank" rel="noopener" style="font:400 11px/1.5 ui-monospace,Menlo,monospace;color:var(--color-neutral-600);text-decoration:none">Work</a></li></ul></nav>
+  </div>
+</footer>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const LOREM = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.";
+
+class Component extends DCLogic {
+  renderVals() {
+    const pad = (i) => String(i + 1).padStart(2, "0");
+    return {
+      values: Array.from({ length: 4 }, (_, i) => ({
+        index: pad(i),
+        title: "Principle " + pad(i),
+        body: LOREM,
+      })),
+      people: Array.from({ length: 6 }, (_, i) => ({
+        name: "Name Surname",
+        role: "Role placeholder " + pad(i),
+      })),
+      milestones: Array.from({ length: 4 }, (_, i) => ({
+        year: "000" + i,
+        body: LOREM,
+      })),
+    };
+  }
+}
+
+</script>
+</body>
+</html>

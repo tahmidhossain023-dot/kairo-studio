@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kairo Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Manrope:wght@400;500;600&display=swap">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --bg-2: #0d0510;
+    --accent: #a855f7;
+    --accent-deep: #6d28d9;
+    --accent-soft: rgba(168, 85, 247, 0.16);
+    --ink: #f4f2f8;
+    --ink-muted: #9d9aac;
+    --glow: 1;
+    --card: linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.018));
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Manrope", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  h1, h2, h3, h4, p, figure, blockquote, dl, dd, dt, ul, ol { margin: 0; }
+  ul, ol { list-style: none; padding: 0; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { color: #c9a4ff; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  ::selection { background: rgba(168,85,247,0.32); }
+  @keyframes fade-up { from { opacity: 0; transform: translateY(26px); } to { opacity: 1; transform: none; } }
+  @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes drift-a { 0%,100% { transform: translate3d(0,0,0) scale(1); } 50% { transform: translate3d(3%, -5%, 0) scale(1.07); } }
+  @keyframes drift-b { 0%,100% { transform: translate3d(0,0,0) scale(1.04); } 50% { transform: translate3d(-4%, 4%, 0) scale(0.96); } }
+  @keyframes float-card { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+  @keyframes ribbon-shift { 0%,100% { opacity: 0.75; } 50% { opacity: 1; } }
+  @media (max-width: 900px) {
+    .two-col { grid-template-columns: 1fr !important; }
+    .steps { grid-template-columns: 1fr !important; }
+    .step-lift { margin-top: 0 !important; }
+    .hero-cards { position: static !important; display: grid !important; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 32px; }
+    .hero-card { position: static !important; animation: none !important; }
+  }
+  @media (max-width: 560px) {
+    .nav-links { display: none !important; }
+    .hero-cards { grid-template-columns: 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+</style>
+</helmet>
+
+<div style="--glow: {{ glow }}; --accent: {{ accent }}; --accent-deep: {{ accentDeep }}; position:relative; isolation:isolate; overflow:hidden">
+
+  <!-- FIXED NAV -->
+  <header style="position:fixed;top:0;left:0;right:0;z-index:60;backdrop-filter:blur(18px);background:linear-gradient(180deg, rgba(10,10,15,0.82), rgba(10,10,15,0.35));border-bottom:1px solid rgba(255,255,255,0.06)">
+    <div style="width:min(1200px, 100% - 40px);margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:24px;height:74px">
+      <a href="#top" style="display:flex;align-items:center;gap:11px;color:var(--ink)">
+        <span aria-hidden="true" style="width:26px;height:26px;border-radius:8px;background:linear-gradient(140deg, var(--accent), var(--accent-deep));box-shadow:0 0 20px rgba(168,85,247,calc(0.55 * var(--glow)));display:block"></span>
+        <span style="font-family:'Sora',sans-serif;font-weight:700;font-size:17px;letter-spacing:-0.01em;white-space:nowrap">Kairo Studio</span>
+      </a>
+      <nav class="nav-links" aria-label="Primary">
+        <ul style="display:flex;align-items:center;gap:30px">
+          <li><a href="#services" style="font-size:14px;font-weight:500;color:var(--ink-muted)">Services</a></li>
+          <li><a href="#process" style="font-size:14px;font-weight:500;color:var(--ink-muted)">Process</a></li>
+          <li><a href="#proof" style="font-size:14px;font-weight:500;color:var(--ink-muted)">Results</a></li>
+          <li><a href="#about" style="font-size:14px;font-weight:500;color:var(--ink-muted)">Studio</a></li>
+        </ul>
+      </nav>
+      <a href="#contact" style="background:#fff;color:#0a0a0f;font-weight:600;font-size:13.5px;padding:11px 20px;border-radius:999px;white-space:nowrap;box-shadow:0 0 0 1px rgba(255,255,255,0.6), 0 10px 30px -12px rgba(168,85,247,calc(0.8 * var(--glow)))">Start a project</a>
+    </div>
+  </header>
+
+  <main id="top" role="main">
+
+    <!-- HERO — spotlight wash, ribbon motif, floating glass cards -->
+    <section aria-labelledby="hero-h" style="position:relative;padding:clamp(140px,17vh,210px) 0 clamp(60px,8vh,110px);overflow:hidden">
+      <div aria-hidden="true" style="position:absolute;top:-390px;left:50%;transform:translateX(-50%);width:min(1500px,160vw);height:960px;background:radial-gradient(50% 50% at 50% 50%, rgba(196,141,255,calc(0.62 * var(--glow))) 0%, rgba(139,92,246,calc(0.36 * var(--glow))) 34%, rgba(109,40,217,calc(0.16 * var(--glow))) 54%, rgba(10,10,15,0) 74%);filter:blur(30px);pointer-events:none;z-index:-1;animation:drift-a 18s ease-in-out infinite"></div>
+      <div aria-hidden="true" style="position:absolute;bottom:-220px;left:-160px;width:620px;height:620px;border-radius:50%;background:radial-gradient(circle, rgba(109,40,217,calc(0.42 * var(--glow))) 0%, rgba(10,10,15,0) 68%);filter:blur(50px);pointer-events:none;z-index:-1;animation:drift-b 22s ease-in-out infinite"></div>
+
+      <div style="width:min(1200px, 100% - 40px);margin:0 auto;position:relative">
+        <div style="max-width:860px;margin:0 auto;text-align:center;display:grid;gap:26px;justify-items:center">
+          <p style="font-size:11px;font-weight:600;letter-spacing:0.3em;text-transform:uppercase;color:rgba(214,196,255,0.72);white-space:nowrap;animation:fade-in 1s ease both">Digital product studio</p>
+          <h1 id="hero-h" style="font-family:'Sora',sans-serif;font-weight:800;font-size:clamp(40px,6.6vw,84px);line-height:1.02;letter-spacing:-0.035em;text-wrap:balance;animation:fade-up 1s cubic-bezier(.22,1,.36,1) both;animation-delay:0.08s;text-shadow:0 0 70px rgba(168,85,247,calc(0.4 * var(--glow)))">Software that carries<br />your reputation</h1>
+          <p style="font-size:clamp(15px,1.5vw,18.5px);line-height:1.65;color:var(--ink-muted);max-width:56ch;animation:fade-up 1s cubic-bezier(.22,1,.36,1) both;animation-delay:0.18s">Kairo Studio designs and ships interfaces for teams whose product is the first thing a customer judges them on.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:14px;justify-content:center;animation:fade-up 1s cubic-bezier(.22,1,.36,1) both;animation-delay:0.28s">
+            <a href="#contact" style="background:#fff;color:#0a0a0f;font-weight:600;font-size:15px;padding:16px 30px;border-radius:999px;box-shadow:0 18px 50px -18px rgba(168,85,247,calc(0.95 * var(--glow)))">Start a project</a>
+            <a href="#proof" style="border:1px solid rgba(255,255,255,0.16);background:rgba(255,255,255,0.04);color:var(--ink);font-weight:600;font-size:15px;padding:16px 28px;border-radius:999px;backdrop-filter:blur(10px)">See the work</a>
+          </div>
+        </div>
+
+        <!-- Ribbon motif + floating glass cards (Reference 1 arrangement) -->
+        <div style="position:relative;margin-top:clamp(40px,6vw,72px);height:clamp(240px,26vw,320px)">
+          <svg viewBox="0 0 1200 300" preserveAspectRatio="none" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;animation:ribbon-shift 9s ease-in-out infinite">
+            <defs>
+              <linearGradient id="kairoRibbon" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" stopColor="#6d28d9" stopOpacity="0" />
+                <stop offset="0.22" stopColor="#8b5cf6" stopOpacity="0.9" />
+                <stop offset="0.55" stopColor="#c084fc" stopOpacity="1" />
+                <stop offset="0.82" stopColor="#8b5cf6" stopOpacity="0.85" />
+                <stop offset="1" stopColor="#6d28d9" stopOpacity="0" />
+              </linearGradient>
+            </defs>
+            <path d="M-20 214 C 190 214 226 74 424 104 C 606 132 626 268 806 246 C 968 226 1016 96 1220 118" fill="none" stroke="url(#kairoRibbon)" strokeWidth="16" strokeLinecap="round" style="filter:blur(26px);opacity:calc(0.55 * var(--glow))" />
+            <path d="M-20 214 C 190 214 226 74 424 104 C 606 132 626 268 806 246 C 968 226 1016 96 1220 118" fill="none" stroke="url(#kairoRibbon)" strokeWidth="1.6" strokeLinecap="round" style="filter:drop-shadow(0 0 10px rgba(192,132,252,0.9))" />
+          </svg>
+          <div class="hero-cards" style="position:absolute;inset:0">
+            <div class="hero-card" style="position:absolute;left:0;top:34%;width:clamp(180px,20%,232px);background:var(--card);border:1px solid var(--accent-soft);border-radius:18px;backdrop-filter:blur(16px);box-shadow:0 30px 70px -34px rgba(109,40,217,0.75), inset 0 1px 0 rgba(255,255,255,0.07);padding:18px;animation:float-card 7s ease-in-out infinite">
+              <p style="font-family:'Sora',sans-serif;font-weight:600;font-size:14px;margin-bottom:10px">Discovery</p>
+              <ul style="display:grid;gap:7px">
+                <li style="font-size:12px;color:var(--ink-muted)">Product audit</li>
+                <li style="font-size:12px;color:var(--ink-muted)">Flow mapping</li>
+                <li style="font-size:12px;color:var(--ink-muted)">Scope and sequence</li>
+              </ul>
+            </div>
+            <div class="hero-card" style="position:absolute;right:0;top:8%;width:clamp(180px,20%,232px);background:var(--card);border:1px solid var(--accent-soft);border-radius:18px;backdrop-filter:blur(16px);box-shadow:0 30px 70px -34px rgba(109,40,217,0.75), inset 0 1px 0 rgba(255,255,255,0.07);padding:18px;animation:float-card 8.5s ease-in-out infinite;animation-delay:-2s">
+              <p style="font-family:'Sora',sans-serif;font-weight:600;font-size:14px;margin-bottom:10px">Delivery</p>
+              <ul style="display:grid;gap:7px">
+                <li style="font-size:12px;color:var(--ink-muted)">Design system</li>
+                <li style="font-size:12px;color:var(--ink-muted)">Front-end build</li>
+                <li style="font-size:12px;color:var(--ink-muted)">Motion and polish</li>
+              </ul>
+            </div>
+            <div class="hero-card" style="position:absolute;left:50%;transform:translateX(-50%);bottom:2%;width:clamp(190px,22%,250px);background:var(--card);border:1px solid var(--accent-soft);border-radius:18px;backdrop-filter:blur(16px);box-shadow:0 30px 70px -34px rgba(109,40,217,0.75), inset 0 1px 0 rgba(255,255,255,0.07);padding:18px;animation:float-card 9.5s ease-in-out infinite;animation-delay:-4s">
+              <p style="font-family:'Sora',sans-serif;font-weight:600;font-size:14px;margin-bottom:10px">Interface</p>
+              <ul style="display:grid;gap:7px">
+                <li style="font-size:12px;color:var(--ink-muted)">Screens and states</li>
+                <li style="font-size:12px;color:var(--ink-muted)">Prototype review</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TRUST STRIP -->
+    <sc-if value="{{ showTrust }}" hint-placeholder-val="{{ true }}">
+      <section aria-label="Selected clients" style="border-top:1px solid rgba(255,255,255,0.05);border-bottom:1px solid rgba(255,255,255,0.05);padding:30px 0">
+        <div style="width:min(1200px, 100% - 40px);margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:clamp(22px,4vw,58px)">
+          <p style="font-size:11px;font-weight:600;letter-spacing:0.22em;text-transform:uppercase;color:rgba(157,154,172,0.7)">Trusted by</p>
+          <span style="font-family:'Sora',sans-serif;font-weight:600;font-size:15px;letter-spacing:0.04em;color:rgba(244,242,248,0.42)">NORTHWIND</span>
+          <span style="font-family:'Sora',sans-serif;font-weight:600;font-size:15px;letter-spacing:0.04em;color:rgba(244,242,248,0.42)">PARABOL</span>
+          <span style="font-family:'Sora',sans-serif;font-weight:600;font-size:15px;letter-spacing:0.04em;color:rgba(244,242,248,0.42)">LUMEN</span>
+          <span style="font-family:'Sora',sans-serif;font-weight:600;font-size:15px;letter-spacing:0.04em;color:rgba(244,242,248,0.42)">ATLAS FIELD</span>
+          <span style="font-family:'Sora',sans-serif;font-weight:600;font-size:15px;letter-spacing:0.04em;color:rgba(244,242,248,0.42)">SIGNAL CO</span>
+        </div>
+      </section>
+    </sc-if>
+
+    <!-- ABOUT -->
+    <section id="about" aria-labelledby="about-h" style="position:relative;padding:clamp(90px,13vh,170px) 0">
+      <div aria-hidden="true" style="position:absolute;top:10%;right:-260px;width:660px;height:660px;border-radius:50%;background:radial-gradient(circle, rgba(168,85,247,calc(0.3 * var(--glow))) 0%, rgba(10,10,15,0) 66%);filter:blur(60px);pointer-events:none;z-index:-1;animation:drift-b 26s ease-in-out infinite"></div>
+      <div style="width:min(1200px, 100% - 40px);margin:0 auto;display:grid;gap:clamp(28px,4vw,64px)">
+        <p style="font-size:11px;font-weight:600;letter-spacing:0.3em;text-transform:uppercase;color:rgba(214,196,255,0.72)">Who we are</p>
+        <div class="two-col" style="display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:clamp(28px,5vw,80px);align-items:start">
+          <h2 id="about-h" style="font-family:'Sora',sans-serif;font-weight:700;font-size:clamp(28px,4vw,50px);line-height:1.08;letter-spacing:-0.03em;text-wrap:balance">A small studio, deliberately. The people who scope the work are the people who make it.</h2>
+          <div style="display:grid;gap:22px">
+            <p style="font-size:16px;line-height:1.75;color:var(--ink-muted)">We work in short, senior engagements: one designer and one engineer embedded with your team, shipping to production rather than handing over a folder of screens.</p>
+            <p style="font-size:16px;line-height:1.75;color:var(--ink-muted)">Most of our clients come to us with a product that works and looks like it doesn't. That gap is what we close.</p>
+            <ul style="display:grid;gap:12px;padding-top:6px">
+              <li style="display:flex;gap:12px;align-items:baseline;font-size:15px;color:var(--ink)"><span aria-hidden="true" style="width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 12px var(--accent);flex:0 0 auto"></span>Senior-only team, no handoffs</li>
+              <li style="display:flex;gap:12px;align-items:baseline;font-size:15px;color:var(--ink)"><span aria-hidden="true" style="width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 12px var(--accent);flex:0 0 auto"></span>Six-week engagement cycles</li>
+              <li style="display:flex;gap:12px;align-items:baseline;font-size:15px;color:var(--ink)"><span aria-hidden="true" style="width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 12px var(--accent);flex:0 0 auto"></span>Production code, not mockups</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SERVICES -->
+    <section id="services" aria-labelledby="services-h" style="position:relative;padding:clamp(70px,10vh,130px) 0">
+      <div style="width:min(1200px, 100% - 40px);margin:0 auto;display:grid;gap:clamp(28px,4vw,56px)">
+        <div style="display:grid;gap:18px;max-width:640px">
+          <p style="font-size:11px;font-weight:600;letter-spacing:0.3em;text-transform:uppercase;color:rgba(214,196,255,0.72)">What we do</p>
+          <h2 id="services-h" style="font-family:'Sora',sans-serif;font-weight:700;font-size:clamp(28px,4vw,50px);line-height:1.08;letter-spacing:-0.03em">Three things, done properly</h2>
+        </div>
+        <ul style="display:grid;grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));gap:18px">
+          <li style="background:var(--card);border:1px solid var(--accent-soft);border-radius:22px;backdrop-filter:blur(14px);box-shadow:0 34px 80px -44px rgba(109,40,217,0.8), inset 0 1px 0 rgba(255,255,255,0.06);padding:clamp(24px,2.4vw,34px);display:grid;gap:14px;align-content:start">
+            <span aria-hidden="true" style="width:38px;height:38px;border-radius:12px;background:linear-gradient(140deg, rgba(168,85,247,0.85), rgba(109,40,217,0.5));box-shadow:0 0 26px rgba(168,85,247,calc(0.5 * var(--glow)));display:block"></span>
+            <h3 style="font-family:'Sora',sans-serif;font-weight:600;font-size:20px;letter-spacing:-0.01em">Product design</h3>
+            <p style="font-size:15px;line-height:1.7;color:var(--ink-muted)">End-to-end interface design for new surfaces and rebuilds: flows, states, edge cases, the unglamorous screens included.</p>
+          </li>
+          <li style="background:var(--card);border:1px solid var(--accent-soft);border-radius:22px;backdrop-filter:blur(14px);box-shadow:0 34px 80px -44px rgba(109,40,217,0.8), inset 0 1px 0 rgba(255,255,255,0.06);padding:clamp(24px,2.4vw,34px);display:grid;gap:14px;align-content:start">
+            <span aria-hidden="true" style="width:38px;height:38px;border-radius:12px;background:linear-gradient(140deg, rgba(168,85,247,0.85), rgba(109,40,217,0.5));box-shadow:0 0 26px rgba(168,85,247,calc(0.5 * var(--glow)));display:block"></span>
+            <h3 style="font-family:'Sora',sans-serif;font-weight:600;font-size:20px;letter-spacing:-0.01em">Design systems</h3>
+            <p style="font-size:15px;line-height:1.7;color:var(--ink-muted)">A component library your engineers actually use, documented and shipped in the same repository as the product.</p>
+          </li>
+          <li style="background:var(--card);border:1px solid var(--accent-soft);border-radius:22px;backdrop-filter:blur(14px);box-shadow:0 34px 80px -44px rgba(109,40,217,0.8), inset 0 1px 0 rgba(255,255,255,0.06);padding:clamp(24px,2.4vw,34px);display:grid;gap:14px;align-content:start">
+            <span aria-hidden="true" style="width:38px;height:38px;border-radius:12px;background:linear-gradient(140deg, rgba(168,85,247,0.85), rgba(109,40,217,0.5));box-shadow:0 0 26px rgba(168,85,247,calc(0.5 * var(--glow)));display:block"></span>
+            <h3 style="font-family:'Sora',sans-serif;font-weight:600;font-size:20px;letter-spacing:-0.01em">Motion and front-end</h3>
+            <p style="font-size:15px;line-height:1.7;color:var(--ink-muted)">Interaction and motion built in code, tuned on real devices, with performance budgets agreed before we start.</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- PROCESS — numbered steps threaded on the ribbon motif -->
+    <section id="process" aria-labelledby="process-h" style="position:relative;padding:clamp(70px,10vh,130px) 0 clamp(90px,12vh,160px);overflow:hidden">
+      <div aria-hidden="true" style="position:absolute;top:20%;left:50%;transform:translateX(-50%);width:min(1100px,130vw);height:520px;background:radial-gradient(50% 50% at 50% 50%, rgba(109,40,217,calc(0.34 * var(--glow))) 0%, rgba(10,10,15,0) 70%);filter:blur(40px);pointer-events:none;z-index:-1"></div>
+      <div style="width:min(1200px, 100% - 40px);margin:0 auto;display:grid;gap:clamp(32px,4vw,60px)">
+        <div style="display:grid;gap:18px;max-width:640px">
+          <p style="font-size:11px;font-weight:600;letter-spacing:0.3em;text-transform:uppercase;color:rgba(214,196,255,0.72)">How we work</p>
+          <h2 id="process-h" style="font-family:'Sora',sans-serif;font-weight:700;font-size:clamp(28px,4vw,50px);line-height:1.08;letter-spacing:-0.03em">Four weeks to a decision, six to a release</h2>
+        </div>
+        <div style="position:relative">
+          <svg viewBox="0 0 1200 240" preserveAspectRatio="none" aria-hidden="true" style="position:absolute;top:34%;left:0;width:100%;height:240px;z-index:0">
+            <defs>
+              <linearGradient id="kairoRibbon2" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" stopColor="#6d28d9" stopOpacity="0" />
+                <stop offset="0.3" stopColor="#8b5cf6" stopOpacity="0.9" />
+                <stop offset="0.62" stopColor="#c084fc" stopOpacity="1" />
+                <stop offset="1" stopColor="#6d28d9" stopOpacity="0" />
+              </linearGradient>
+            </defs>
+            <path d="M-20 170 C 220 170 250 60 470 84 C 690 108 720 210 940 186 C 1080 170 1130 100 1220 96" fill="none" stroke="url(#kairoRibbon2)" strokeWidth="14" strokeLinecap="round" style="filter:blur(24px);opacity:calc(0.5 * var(--glow))" />
+            <path d="M-20 170 C 220 170 250 60 470 84 C 690 108 720 210 940 186 C 1080 170 1130 100 1220 96" fill="none" stroke="url(#kairoRibbon2)" strokeWidth="1.4" strokeLinecap="round" style="filter:drop-shadow(0 0 9px rgba(192,132,252,0.85))" />
+          </svg>
+          <ol class="steps" style="position:relative;z-index:1;display:grid;grid-template-columns:repeat(4, minmax(0,1fr));gap:16px">
+            <li style="background:var(--card);border:1px solid var(--accent-soft);border-radius:20px;backdrop-filter:blur(16px);box-shadow:0 30px 70px -40px rgba(109,40,217,0.85), inset 0 1px 0 rgba(255,255,255,0.06);padding:24px;display:grid;gap:12px;align-content:start">
+              <span style="font-family:'Sora',sans-serif;font-weight:700;font-size:13px;letter-spacing:0.16em;color:var(--accent)">01</span>
+              <h3 style="font-family:'Sora',sans-serif;font-weight:600;font-size:18px;letter-spacing:-0.01em">Frame</h3>
+              <p style="font-size:14px;line-height:1.65;color:var(--ink-muted)">A week of audit and interviews. We agree what success looks like before anything is drawn.</p>
+            </li>
+            <li class="step-lift" style="margin-top:clamp(20px,4vw,64px);background:var(--card);border:1px solid var(--accent-soft);border-radius:20px;backdrop-filter:blur(16px);box-shadow:0 30px 70px -40px rgba(109,40,217,0.85), inset 0 1px 0 rgba(255,255,255,0.06);padding:24px;display:grid;gap:12px;align-content:start">
+              <span style="font-family:'Sora',sans-serif;font-weight:700;font-size:13px;letter-spacing:0.16em;color:var(--accent)">02</span>
+              <h3 style="font-family:'Sora',sans-serif;font-weight:600;font-size:18px;letter-spacing:-0.01em">Design</h3>
+              <p style="font-size:14px;line-height:1.65;color:var(--ink-muted)">Two weeks of flows, screens and prototypes, reviewed with your team twice a week.</p>
+            </li>
+            <li style="background:var(--card);border:1px solid var(--accent-soft);border-radius:20px;backdrop-filter:blur(16px);box-shadow:0 30px 70px -40px rgba(109,40,217,0.85), inset 0 1px 0 rgba(255,255,255,0.06);padding:24px;display:grid;gap:12px;align-content:start">
+              <span style="font-family:'Sora',sans-serif;font-weight:700;font-size:13px;letter-spacing:0.16em;color:var(--accent)">03</span>
+              <h3 style="font-family:'Sora',sans-serif;font-weight:600;font-size:18px;letter-spacing:-0.01em">Build</h3>
+              <p style="font-size:14px;line-height:1.65;color:var(--ink-muted)">Components and screens written into your codebase, behind flags, with motion in place.</p>
+            </li>
+            <li class="step-lift" style="margin-top:clamp(20px,4vw,64px);background:var(--card);border:1px solid var(--accent-soft);border-radius:20px;backdrop-filter:blur(16px);box-shadow:0 30px 70px -40px rgba(109,40,217,0.85), inset 0 1px 0 rgba(255,255,255,0.06);padding:24px;display:grid;gap:12px;align-content:start">
+              <span style="font-family:'Sora',sans-serif;font-weight:700;font-size:13px;letter-spacing:0.16em;color:var(--accent)">04</span>
+              <h3 style="font-family:'Sora',sans-serif;font-weight:600;font-size:18px;letter-spacing:-0.01em">Release</h3>
+              <p style="font-size:14px;line-height:1.65;color:var(--ink-muted)">We ship with you, watch the first week of real usage, and leave the system documented.</p>
+            </li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROOF / STATS -->
+    <section id="proof" aria-labelledby="proof-h" style="position:relative;padding:clamp(70px,10vh,130px) 0">
+      <div style="width:min(1200px, 100% - 40px);margin:0 auto">
+        <div style="position:relative;background:linear-gradient(160deg, rgba(168,85,247,0.16), rgba(255,255,255,0.02) 45%, rgba(255,255,255,0.02));border:1px solid var(--accent-soft);border-radius:28px;backdrop-filter:blur(16px);box-shadow:0 50px 120px -60px rgba(109,40,217,0.95), inset 0 1px 0 rgba(255,255,255,0.07);padding:clamp(28px,4vw,60px);overflow:hidden">
+          <div aria-hidden="true" style="position:absolute;top:-180px;right:-120px;width:520px;height:520px;border-radius:50%;background:radial-gradient(circle, rgba(168,85,247,calc(0.45 * var(--glow))) 0%, rgba(10,10,15,0) 68%);filter:blur(46px);pointer-events:none;animation:drift-a 20s ease-in-out infinite"></div>
+          <div style="position:relative;display:grid;gap:clamp(28px,4vw,52px)">
+            <div style="display:grid;gap:16px;max-width:620px">
+              <p style="font-size:11px;font-weight:600;letter-spacing:0.3em;text-transform:uppercase;color:rgba(214,196,255,0.78)">The record</p>
+              <h2 id="proof-h" style="font-family:'Sora',sans-serif;font-weight:700;font-size:clamp(26px,3.4vw,42px);line-height:1.1;letter-spacing:-0.03em">Measured on what happened after launch</h2>
+            </div>
+            <dl style="display:grid;grid-template-columns:repeat(auto-fit, minmax(180px, 1fr));gap:clamp(20px,3vw,40px)">
+              <div style="display:grid;gap:8px;border-top:1px solid rgba(255,255,255,0.1);padding-top:18px">
+                <dt style="font-size:12px;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-muted)">Engagements shipped</dt>
+                <dd style="font-family:'Sora',sans-serif;font-weight:700;font-size:clamp(34px,4vw,52px);line-height:1;letter-spacing:-0.03em">48</dd>
+              </div>
+              <div style="display:grid;gap:8px;border-top:1px solid rgba(255,255,255,0.1);padding-top:18px">
+                <dt style="font-size:12px;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-muted)">Median time to release</dt>
+                <dd style="font-family:'Sora',sans-serif;font-weight:700;font-size:clamp(34px,4vw,52px);line-height:1;letter-spacing:-0.03em">6 wks</dd>
+              </div>
+              <div style="display:grid;gap:8px;border-top:1px solid rgba(255,255,255,0.1);padding-top:18px">
+                <dt style="font-size:12px;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-muted)">Clients who return</dt>
+                <dd style="font-family:'Sora',sans-serif;font-weight:700;font-size:clamp(34px,4vw,52px);line-height:1;letter-spacing:-0.03em">81%</dd>
+              </div>
+              <div style="display:grid;gap:8px;border-top:1px solid rgba(255,255,255,0.1);padding-top:18px">
+                <dt style="font-size:12px;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-muted)">Team size</dt>
+                <dd style="font-family:'Sora',sans-serif;font-weight:700;font-size:clamp(34px,4vw,52px);line-height:1;letter-spacing:-0.03em">7</dd>
+              </div>
+            </dl>
+            <blockquote style="border-left:1px solid var(--accent);padding-left:22px;max-width:62ch">
+              <p style="font-family:'Sora',sans-serif;font-weight:600;font-size:clamp(17px,2vw,23px);line-height:1.45;letter-spacing:-0.015em">"They rebuilt our core surface in six weeks and left us a system our own engineers could extend. The second release was ours alone."</p>
+              <footer style="font-size:13px;color:var(--ink-muted);padding-top:14px">VP Product, Northwind</footer>
+            </blockquote>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section id="contact" aria-labelledby="cta-h" style="position:relative;padding:clamp(90px,13vh,170px) 0;overflow:hidden">
+      <div aria-hidden="true" style="position:absolute;inset:0;background:radial-gradient(60% 80% at 50% 100%, rgba(168,85,247,calc(0.42 * var(--glow))) 0%, rgba(109,40,217,calc(0.2 * var(--glow))) 42%, rgba(10,10,15,0) 76%);pointer-events:none;z-index:-1"></div>
+      <div style="width:min(1200px, 100% - 40px);margin:0 auto;text-align:center;display:grid;gap:26px;justify-items:center">
+        <p style="font-size:11px;font-weight:600;letter-spacing:0.3em;text-transform:uppercase;color:rgba(214,196,255,0.75)">Start here</p>
+        <h2 id="cta-h" style="font-family:'Sora',sans-serif;font-weight:800;font-size:clamp(32px,5.4vw,68px);line-height:1.04;letter-spacing:-0.035em;max-width:22ch;text-wrap:balance;text-shadow:0 0 60px rgba(168,85,247,calc(0.36 * var(--glow)))">Tell us what you are shipping next</h2>
+        <p style="font-size:16px;line-height:1.7;color:var(--ink-muted);max-width:52ch">One call, thirty minutes. If we are not the right studio for it, we will say so and point you somewhere better.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:14px;justify-content:center">
+          <a href="#contact" style="background:#fff;color:#0a0a0f;font-weight:600;font-size:15px;padding:16px 32px;border-radius:999px;box-shadow:0 20px 55px -18px rgba(168,85,247,calc(1 * var(--glow)))">Book a call</a>
+          <a href="#contact" style="border:1px solid rgba(255,255,255,0.16);background:rgba(255,255,255,0.04);color:var(--ink);font-weight:600;font-size:15px;padding:16px 28px;border-radius:999px;backdrop-filter:blur(10px)">hello@kairo.studio</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer role="contentinfo" style="border-top:1px solid rgba(255,255,255,0.06);padding:clamp(40px,6vh,72px) 0 34px">
+    <div style="width:min(1200px, 100% - 40px);margin:0 auto;display:grid;gap:38px">
+      <div class="two-col" style="display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:clamp(28px,5vw,72px)">
+        <div style="display:grid;gap:14px;align-content:start;max-width:38ch">
+          <a href="#top" style="display:flex;align-items:center;gap:11px;color:var(--ink)">
+            <span aria-hidden="true" style="width:24px;height:24px;border-radius:7px;background:linear-gradient(140deg, var(--accent), var(--accent-deep));box-shadow:0 0 18px rgba(168,85,247,calc(0.45 * var(--glow)));display:block"></span>
+            <span style="font-family:'Sora',sans-serif;font-weight:700;font-size:16px;letter-spacing:-0.01em">Kairo Studio</span>
+          </a>
+          <p style="font-size:14px;line-height:1.7;color:var(--ink-muted)">Interface design and front-end delivery for software teams. Remote, with studios in Lisbon and Toronto.</p>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(120px, 1fr));gap:24px">
+          <nav aria-label="Footer — site" style="display:grid;gap:12px;align-content:start">
+            <h2 style="font-size:11px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:rgba(157,154,172,0.7)">Site</h2>
+            <ul style="display:grid;gap:9px">
+              <li><a href="#services" style="font-size:14px;color:var(--ink-muted)">Services</a></li>
+              <li><a href="#process" style="font-size:14px;color:var(--ink-muted)">Process</a></li>
+              <li><a href="#proof" style="font-size:14px;color:var(--ink-muted)">Results</a></li>
+            </ul>
+          </nav>
+          <nav aria-label="Footer — contact" style="display:grid;gap:12px;align-content:start">
+            <h2 style="font-size:11px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:rgba(157,154,172,0.7)">Contact</h2>
+            <ul style="display:grid;gap:9px">
+              <li><a href="#contact" style="font-size:14px;color:var(--ink-muted)">hello@kairo.studio</a></li>
+              <li><a href="#contact" style="font-size:14px;color:var(--ink-muted)">Book a call</a></li>
+              <li><a href="#contact" style="font-size:14px;color:var(--ink-muted)">LinkedIn</a></li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;border-top:1px solid rgba(255,255,255,0.06);padding-top:20px">
+        <p style="font-size:12.5px;color:rgba(157,154,172,0.75)">© 2026 Kairo Studio</p>
+        <p style="font-size:12.5px;color:rgba(157,154,172,0.75)">Placeholder wordmark — drop the real logo in the nav and footer</p>
+      </div>
+    </div>
+  </footer>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;accentHue&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Violet&quot;,&quot;Indigo&quot;,&quot;Magenta&quot;],&quot;default&quot;:&quot;Violet&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Look&quot;},&quot;glowStrength&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:1,&quot;min&quot;:0.4,&quot;max&quot;:1.6,&quot;step&quot;:0.1,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Look&quot;},&quot;showTrust&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Sections&quot;}}">
+const HUES = {
+  Violet: { accent: "#a855f7", deep: "#6d28d9" },
+  Indigo: { accent: "#818cf8", deep: "#4338ca" },
+  Magenta: { accent: "#e879b9", deep: "#9d1f6a" }
+};
+
+class Component extends DCLogic {
+  renderVals() {
+    const hue = HUES[this.props.accentHue] || HUES.Violet;
+    return {
+      glow: String(this.props.glowStrength ?? 1),
+      accent: hue.accent,
+      accentDeep: hue.deep,
+      showTrust: this.props.showTrust ?? true
+    };
+  }
+}
+
+</script>
+</body>
+</html>

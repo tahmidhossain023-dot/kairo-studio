@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Studio — home skeleton</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="styles.css">
+<script src="_ds/modernist-77638109-339f-484d-bf96-8f45c98374a1/_ds_bundle.js"></script>
+<style>
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--color-bg); color: var(--color-text); font-family: var(--font-body); -webkit-font-smoothing: antialiased; }
+  * { box-sizing: border-box; }
+  h1, h2, h3, h4, p, ul, ol, figure, blockquote { margin: 0; }
+  ul, ol { list-style: none; padding: 0; }
+  img, video { display: block; max-width: 100%; }
+  a { color: var(--color-accent-700); text-decoration: none; }
+  a:hover { color: var(--color-accent-600); text-decoration: underline; }
+  :focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+  /* Responsive scaffolding: everything below is layout-only, no animation. */
+  .only-narrow { display: none; }
+  /* Drawer starts closed; anim.js owns the open/close motion. */
+  #mobile-nav { height: 0; opacity: 0; overflow: hidden; }
+  @media (max-width: 1024px) {
+    .only-narrow { display: block; }
+    .only-wide { display: none; }
+    .stack-narrow { grid-template-columns: 1fr !important; }
+  }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script src="anim.js"></script>
+</helmet>
+
+<a href="#main" style="position:absolute;left:-9999px;top:0;padding:var(--space-3);background:var(--color-text);color:var(--color-bg)" style-focus="left:0;z-index:99">Skip to content</a>
+
+<!-- ============================================================
+     HEADER / NAV — sticky site chrome. Every inner page opens in a new tab.
+     Will animate: pin + shrink on scroll (ScrollTrigger), link underline
+     hover sweep, drawer slide-in on narrow. Header is position:sticky, so
+     do NOT animate its height without also refreshing ScrollTrigger.
+     ============================================================ -->
+<header class="anim-section" data-animate="header-pin" data-scroll-trigger="top top" style="position:sticky;top:0;z-index:50;background:var(--color-bg);border-bottom:2px solid var(--color-divider)">
+  <div style="width:min(1320px, 100% - clamp(20px,5vw,64px));margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:var(--space-4);min-height:64px">
+    <a href="#top" class="anim-target" data-animate="fade-in" style="font-family:var(--font-heading);font-weight:800;font-size:18px;letter-spacing:-0.01em;color:var(--color-text);text-decoration:none">[LOGO]</a>
+    <nav class="only-wide" aria-label="Primary">
+      <ul style="display:flex;flex-wrap:nowrap;align-items:center;gap:clamp(12px,2vw,28px);white-space:nowrap">
+        <li><a href="Studio Work.dc.html" target="_blank" rel="noopener" class="anim-target stagger-item" data-animate="fade-down" data-anim-stagger="0.05" style="font-size:14px;font-weight:500;color:var(--color-text);text-decoration:none">Work</a></li>
+        <li><a href="Studio About.dc.html" target="_blank" rel="noopener" class="anim-target stagger-item" data-animate="fade-down" data-anim-stagger="0.05" style="font-size:14px;font-weight:500;color:var(--color-text);text-decoration:none">Studio</a></li>
+        <li><a href="#services" class="anim-target stagger-item" data-animate="fade-down" data-anim-stagger="0.05" style="font-size:14px;font-weight:500;color:var(--color-text);text-decoration:none">Services</a></li>
+        <li><a href="#pricing" class="anim-target stagger-item" data-animate="fade-down" data-anim-stagger="0.05" style="font-size:14px;font-weight:500;color:var(--color-text);text-decoration:none">Pricing</a></li>
+        <li><a href="Studio Case Study.dc.html" target="_blank" rel="noopener" class="anim-target stagger-item" data-animate="fade-down" data-anim-stagger="0.05" style="font-size:14px;font-weight:500;color:var(--color-text);text-decoration:none">Case study</a></li>
+      </ul>
+    </nav>
+    <div style="display:flex;align-items:center;gap:var(--space-2)">
+      <a href="#contact" class="anim-target" data-animate="fade-in" style="border:2px solid var(--color-text);padding:10px var(--space-4);font-size:13px;font-weight:600;color:var(--color-text);text-decoration:none">Start a project</a>
+      <button type="button" class="only-narrow anim-target" data-animate="drawer-toggle" aria-expanded="false" aria-controls="mobile-nav" aria-label="Open menu" style="border:2px solid var(--color-text);background:transparent;color:var(--color-text);font:600 13px/1 var(--font-body);padding:12px var(--space-3);cursor:pointer">MENU</button>
+    </div>
+  </div>
+  <!-- Mobile drawer: rendered inline in the skeleton (no JS yet) so the
+       markup and landmark are reviewable; next pass hides + slides it. -->
+  <nav id="mobile-nav" class="only-narrow" aria-label="Mobile" data-animate="drawer" style="border-top:2px solid var(--color-divider);padding:var(--space-3) 0">
+    <ul style="width:min(1320px, 100% - clamp(20px,5vw,64px));margin:0 auto;display:grid;gap:var(--space-2)">
+      <li><a href="Studio Work.dc.html" target="_blank" rel="noopener" class="stagger-item" data-animate="fade-right" style="display:block;padding:10px 0;font-size:15px;font-weight:600;color:var(--color-text);text-decoration:none">Work</a></li>
+      <li><a href="Studio About.dc.html" target="_blank" rel="noopener" class="stagger-item" data-animate="fade-right" style="display:block;padding:10px 0;font-size:15px;font-weight:600;color:var(--color-text);text-decoration:none">Studio</a></li>
+      <li><a href="#services" class="stagger-item" data-animate="fade-right" style="display:block;padding:10px 0;font-size:15px;font-weight:600;color:var(--color-text);text-decoration:none">Services</a></li>
+      <li><a href="#pricing" class="stagger-item" data-animate="fade-right" style="display:block;padding:10px 0;font-size:15px;font-weight:600;color:var(--color-text);text-decoration:none">Pricing</a></li>
+    </ul>
+  </nav>
+</header>
+<!-- ===== /HEADER ===== -->
+
+<main id="main" role="main">
+
+  <!-- ============================================================
+       01 · HERO — first screen: claim, sub, two CTAs, full-bleed video slot.
+       Will animate: masked line-by-line reveal on h1 (each .split-line is its
+       own element), video clip-path wipe, scroll cue bob, custom glowing
+       cursor follower (.cursor-glow is a fixed layer, pointer-events:none).
+       Risk: reserve the video's aspect box now — a late-loading poster is the
+       main layout-shift source on this page.
+       ============================================================ -->
+  <section id="top" class="anim-section" data-anim-load-group="" aria-labelledby="hero-h" style="border-bottom:2px solid var(--color-divider);padding:clamp(40px,6vw,96px) 0 0">
+    <div style="width:min(1320px, 100% - clamp(20px,5vw,64px));margin:0 auto">
+      <div class="stack-narrow" style="display:grid;grid-template-columns:minmax(0,7fr) minmax(0,4fr);gap:clamp(24px,4vw,64px);align-items:end">
+        <div style="display:grid;gap:var(--space-6)">
+          <p class="anim-target" data-animate="fade-in" style="font:600 12px/1 var(--font-body);letter-spacing:0.14em;text-transform:uppercase;color:var(--color-accent-700)">01 / Hero</p>
+          <h1 id="hero-h" style="font-family:var(--font-heading);font-weight:800;font-size:clamp(38px,7vw,88px);line-height:0.98;letter-spacing:-0.03em;display:grid;gap:0.04em">
+            <span class="anim-target split-line" data-animate="mask-up" data-anim-stagger="0.09" style="display:block">Lorem ipsum dolor</span>
+            <span class="anim-target split-line" data-animate="mask-up" data-anim-stagger="0.09" style="display:block">sit amet consectetur</span>
+            <span class="anim-target split-line" data-animate="mask-up" data-anim-stagger="0.09" style="display:block">adipiscing elit</span>
+          </h1>
+          <p class="anim-target" data-animate="fade-up" data-anim-delay="0.3" style="font-size:clamp(15px,1.4vw,19px);line-height:1.6;max-width:56ch;color:var(--color-neutral-800);text-wrap:pretty">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua enim ad minim veniam.</p>
+          <div class="anim-target" data-animate="fade-up" data-anim-delay="0.4" style="display:flex;flex-wrap:wrap;gap:var(--space-3)">
+            <a href="#contact" style="background:var(--color-accent);color:#fff;padding:14px var(--space-6);font-size:14px;font-weight:600;text-decoration:none">Generic primary CTA</a>
+            <a href="Studio Work.dc.html" target="_blank" rel="noopener" style="border:2px solid var(--color-text);color:var(--color-text);padding:12px var(--space-6);font-size:14px;font-weight:600;text-decoration:none">Secondary CTA</a>
+          </div>
+        </div>
+        <div style="display:grid;gap:var(--space-4)">
+          <ul class="stagger-group" style="display:grid;gap:var(--space-3)">
+            <li class="stagger-item" data-animate="counter" style="border-top:2px solid var(--color-divider);padding-top:var(--space-3);display:flex;justify-content:space-between;gap:var(--space-3)"><span style="font-family:var(--font-heading);font-weight:800;font-size:28px">000</span><span style="font:400 11px/1.4 ui-monospace,Menlo,monospace;color:var(--color-neutral-600);text-align:right;max-width:14ch">Metric label</span></li>
+            <li class="stagger-item" data-animate="counter" style="border-top:2px solid var(--color-divider);padding-top:var(--space-3);display:flex;justify-content:space-between;gap:var(--space-3)"><span style="font-family:var(--font-heading);font-weight:800;font-size:28px">000</span><span style="font:400 11px/1.4 ui-monospace,Menlo,monospace;color:var(--color-neutral-600);text-align:right;max-width:14ch">Metric label</span></li>
+            <li class="stagger-item" data-animate="counter" style="border-top:2px solid var(--color-divider);padding-top:var(--space-3);display:flex;justify-content:space-between;gap:var(--space-3)"><span style="font-family:var(--font-heading);font-weight:800;font-size:28px">000</span><span style="font:400 11px/1.4 ui-monospace,Menlo,monospace;color:var(--color-neutral-600);text-align:right;max-width:14ch">Metric label</span></li>
+          </ul>
+          <sc-if value="{{ showNotes }}" hint-placeholder-val="{{ true }}">
+            <p class="anim-note" style="font:400 11px/1.6 ui-monospace,Menlo,monospace;color:var(--color-neutral-600);border-left:2px solid var(--color-accent);padding-left:var(--space-3)">anim: mask-up on 3 h1 lines · counters on metrics · clip wipe on video · cursor-glow layer</p>
+          </sc-if>
+        </div>
+      </div>
+      <!-- Hero media: fixed aspect box reserved up front. Swap the inner
+           placeholder for <video muted loop playsinline poster>. -->
+      <figure class="anim-target" data-animate="clip-reveal" data-scroll-trigger="top 90%" style="margin:clamp(28px,4vw,64px) 0 0;position:relative">
+        <div class="grayscale" role="img" aria-label="Placeholder for studio showreel video" style="aspect-ratio:16/7;border:2px dashed var(--color-neutral-400);background:repeating-linear-gradient(135deg, transparent 0 10px, color-mix(in srgb, var(--color-neutral-400) 26%, transparent) 10px 11px);display:grid;place-items:center;padding:var(--space-4)">
+          <span style="font:400 12px/1.6 ui-monospace,Menlo,monospace;color:var(--color-neutral-700);text-align:center">[VIDEO] showreel · 16:7 · muted / loop / poster</span>
+        </div>
+        <figcaption class="anim-target" data-animate="fade-in" style="font:400 11px/1.6 ui-monospace,Menlo,monospace;color:var(--color-neutral-600);padding-top:var(--space-2)">Fig. 01 — caption placeholder</figcaption>
+      </figure>
+      <div class="anim-target scroll-cue" data-animate="bob" style="display:flex;align-items:center;gap:var(--space-2);padding:var(--space-4) 0 clamp(28px,4vw,56px)">
+        <span aria-hidden="true" style="font-size:18px;line-height:1">&#8595;</span>
+        <span style="font:600 11px/1 var(--font-body);letter-spacing:0.14em;text-transform:uppercase;color:var(--color-neutral-700)">Scroll</span>
+      </div>
+    </div>
+  </section>
+  <!-- ===== /HERO ===== -->
+
+  <!-- ============================================================
+       02 · CLIENT / SOCIAL PROOF STRIP — logo row, credibility only.
+       Will animate: infinite horizontal marquee, or a simple opacity stagger.
+       Risk: a marquee forces layout on every frame if animated with left/
+       margin — transform only, and duplicate the track for a seamless loop.
+       ============================================================ -->
+  <section id="clients" class="anim-section" data-animate="section" aria-labelledby="clients-h" style="border-bottom:2px solid var(--color-divider);padding:clamp(24px,3vw,40px) 0;overflow:hidden">
+    <div style="width:min(1320px, 100% - clamp(20px,5vw,64px));margin:0 auto;display:grid;gap:var(--space-4)">
+      <h2 id="clients-h" class="anim-target" data-animate="fade-in" style="font:600 12px/1 var(--font-body);letter-spacing:0.14em;text-transform:uppercase;color:var(--color-neutral-600)">02 / Selected clients</h2>
+      <ul class="marquee-track" data-animate="marquee" style="display:flex;flex-wrap:nowrap;align-items:center;gap:clamp(16px,3vw,48px)">
+        <sc-for list="{{ clients }}" as="c" hint-placeholder-count="6">
+          <li style="border:2px dashed var(--color-neutral-400);padding:var(--space-3) var(--space-4);font:400 11px/1 ui-monospace,Menlo,monospace;color:var(--color-neutral-700);flex:0 0 auto;white-space:nowrap;text-align:left">{{ c }}</li>
+        </sc-for>
+      </ul>
+    </div>
+  </section>
+  <!-- ===== /CLIENTS ===== -->
+
+  <!-- ============================================================
+       03 · SERVICES / FEATURES GRID — what the studio sells.
+       Will animate: heading clip-reveal, then cards stagger up in DOM order.
+       Each card is one animatable unit; the icon slot animates separately.
+       ============================================================ -->
+  <section id="services" class="anim-section" data-animate="section" data-scroll-trigger="top 75%" aria-labelledby="services-h" style="border-bottom:2px solid var(--color-divider);padding:clamp(48px,6vw,96px) 0">
+    <div style="width:min(1320px, 100% - clamp(20px,5vw,64px));margin:0 auto">
+      <div style="display:flex;flex-wrap:wrap;gap:var(--space-6);justify-content:space-between;align-items:flex-end;padding-bottom:clamp(24px,3vw,48px)">
+        <div style="display:grid;gap:var(--space-3);max-width:52ch">
+          <p class="anim-target" data-animate="fade-in" style="font:600 12px/1 var(--font-body);letter-spacing:0.14em;text-transform:uppercase;color:var(--color-accent-700)">03 / Services</p>
+          <h2 id="services-h" class="anim-target" data-animate="clip-reveal" style="font-family:var(--font-heading);font-weight:800;font-size:clamp(28px,4vw,52px);line-height:1.04;letter-spacing:-0.02em">Lorem ipsum dolor sit amet</h2>
+        </div>
+        <sc-if value="{{ showNotes }}" hint-placeholder-val="{{ true }}">
+          <p class="anim-note" style="font:400 11px/1.6 ui-monospace,Menlo,monospace;color:var(--color-neutral-600);border-left:2px solid var(--color-accent);padding-left:var(--space-3);max-width:34ch">anim: stagger-up on .stagger-item, 0.08s step · hover lift + rule sweep per card</p>
+        </sc-if>
+      </div>
+      <ul class="stagger-group" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));gap:2px;background:var(--color-divider);border:2px solid var(--color-divider)">
+        <sc-for list="{{ services }}" as="s" hint-placeholder-count="4">
+          <li class="stagger-item" style="background:var(--color-bg);padding:clamp(20px,2.4vw,32px)">
+            <div data-anim-inner="" class="anim-target" data-animate="fade-up" data-anim-stagger="0.08" style="display:grid;gap:var(--space-4);align-content:start;height:100%">
+              <div aria-hidden="true" style="width:40px;height:40px;border:2px solid var(--color-text);display:grid;place-items:center;font:400 9px/1.1 ui-monospace,Menlo,monospace;color:var(--color-neutral-700);text-align:center">[ICON]</div>
+              <h3 style="font-family:var(--font-heading);font-weight:700;font-size:19px;line-height:1.2">{{ s.title }}</h3>
+              <p style="font-size:14px;line-height:1.65;color:var(--color-neutral-800);text-wrap:pretty">{{ s.body }}</p>
+              <p style="font:400 11px/1 ui-monospace,Menlo,monospace;color:var(--color-neutral-600)">{{ s.index }}</p>
+            </div>
+          </li>
+        </sc-for>
+      </ul>
+    </div>
+  </section>
+  <!-- ===== /SERVICES ===== -->
+
+  <!-- ============================================================
+       04 · PROCESS / HOW IT WORKS — numbered steps, left-to-right.
+       Will animate: a drawn progress rule scrubbed by scroll (ScrollTrigger
+       scrub), step numbers counting in, each step block fading up.
+       Strongest pin/scrub candidate on the page.
+       ============================================================ -->
+  <section id="process" class="anim-section" data-animate="section" data-scroll-trigger="top 70%" aria-labelledby="process-h" style="border-bottom:2px solid var(--color-divider);padding:clamp(48px,6vw,96px) 0">
+    <div style="width:min(1320px, 100% - clamp(20px,5vw,64px));margin:0 auto;display:grid;gap:clamp(24px,3vw,48px)">
+      <div style="display:grid;gap:var(--space-3);max-width:52ch">
+        <p class="anim-target" data-animate="fade-in" style="font:600 12px/1 var(--font-body);letter-spacing:0.14em;text-transform:uppercase;color:var(--color-accent-700)">04 / Process</p>
+        <h2 id="process-h" class="anim-target" data-animate="clip-reveal" style="font-family:var(--font-heading);font-weight:800;font-size:clamp(28px,4vw,52px);line-height:1.04;letter-spacing:-0.02em">Ut enim ad minim veniam</h2>
+      </div>
+      <div class="progress-rule" data-animate="scrub-draw" aria-hidden="true" style="height:2px;background:var(--color-divider)"></div>
+      <ol class="stagger-group" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:clamp(20px,2.5vw,40px);counter-reset:step">
+        <sc-for list="{{ steps }}" as="st" hint-placeholder-count="4">
+          <li class="stagger-item anim-target" data-animate="fade-up" data-anim-stagger="0.12" style="display:grid;gap:var(--space-3);align-content:start">
+            <span class="anim-target" data-animate="counter" style="font-family:var(--font-heading);font-weight:800;font-size:clamp(32px,3.4vw,44px);line-height:1;color:var(--color-accent)">{{ st.index }}</span>
+            <h3 class="anim-target" data-animate="fade-up" style="font-family:var(--font-heading);font-weight:700;font-size:17px;line-height:1.25">{{ st.title }}</h3>
+            <p class="anim-target" data-animate="fade-up" style="font-size:14px;line-height:1.65;color:var(--color-neutral-800);text-wrap:pretty">{{ st.body }}</p>
+          </li>
+        </sc-for>
+      </ol>
+    </div>
+  </section>
+  <!-- ===== /PROCESS ===== -->
+
+  <!-- ============================================================
+       05 · WORK / CASE STUDY GALLERY — the portfolio grid.
+       Will animate: per-card image scale-on-hover inside a fixed overflow
+       box, clip-reveal on scroll, optional flip transition into the case
+       study page. Risk: images must carry width/height or an aspect box or
+       the whole grid shifts as they decode.
+       ============================================================ -->
+  <section id="work" class="anim-section" data-animate="section" data-scroll-trigger="top 75%" aria-labelledby="work-h" style="border-bottom:2px solid var(--color-divider);padding:clamp(48px,6vw,96px) 0">
+    <div style="width:min(1320px, 100% - clamp(20px,5vw,64px));margin:0 auto;display:grid;gap:clamp(24px,3vw,48px)">
+      <div style="display:flex;flex-wrap:wrap;gap:var(--space-6);justify-content:space-between;align-items:flex-end">
+        <div style="display:grid;gap:var(--space-3);max-width:52ch">
+          <p class="anim-target" data-animate="fade-in" style="font:600 12px/1 var(--font-body);letter-spacing:0.14em;text-transform:uppercase;color:var(--color-accent-700)">05 / Selected work</p>
+          <h2 id="work-h" class="anim-target" data-animate="clip-reveal" style="font-family:var(--font-heading);font-weight:800;font-size:clamp(28px,4vw,52px);line-height:1.04;letter-spacing:-0.02em">Duis aute irure dolor</h2>
+        </div>
+        <a href="Studio Work.dc.html" target="_blank" rel="noopener" class="anim-target" data-animate="fade-in" style="border:2px solid var(--color-text);color:var(--color-text);padding:12px var(--space-4);font-size:13px;font-weight:600;text-decoration:none">All work</a>
+      </div>
+      <div class="stagger-group" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:clamp(20px,2.5vw,40px)">
+        <sc-for list="{{ projects }}" as="p" hint-placeholder-count="4">
+          <article class="stagger-item anim-target" data-animate="fade-up" data-anim-stagger="0.1" style="display:grid;gap:var(--space-3);align-content:start">
+            <a href="Studio Case Study.dc.html" target="_blank" rel="noopener" style="display:block;overflow:hidden;text-decoration:none">
+              <div class="grayscale media-zoom" data-animate="hover-scale" role="img" aria-label="Placeholder for project thumbnail" style="aspect-ratio:4/3;border:2px dashed var(--color-neutral-400);background:repeating-linear-gradient(135deg, transparent 0 10px, color-mix(in srgb, var(--color-neutral-400) 26%, transparent) 10px 11px);display:grid;place-items:center">
+                <span style="font:400 11px/1.5 ui-monospace,Menlo,monospace;color:var(--color-neutral-700)">[IMAGE] 4:3</span>
+              </div>
+            </a>
+            <h3 class="anim-target" data-animate="fade-up" style="font-family:var(--font-heading);font-weight:700;font-size:18px;line-height:1.25"><a href="Studio Case Study.dc.html" target="_blank" rel="noopener" style="color:var(--color-text);text-decoration:none">{{ p.title }}</a></h3>
+            <p class="anim-target" data-animate="fade-up" style="font:400 11px/1.5 ui-monospace,Menlo,monospace;color:var(--color-neutral-600)">{{ p.meta }}</p>
+          </article>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+  <!-- ===== /WORK ===== -->
+
+  <!-- ============================================================
+       06 · TESTIMONIALS — social proof, quotes as <blockquote>.
+       Will animate: horizontal pinned scroll or one-at-a-time crossfade.
+       Each quote is its own element so it can be timed independently.
+       ============================================================ -->
+  <section id="testimonials" class="anim-section" data-animate="section" data-scroll-trigger="top 75%" aria-labelledby="testimonials-h" style="border-bottom:2px solid var(--color-divider);padding:clamp(48px,6vw,96px) 0">
+    <div style="width:min(1320px, 100% - clamp(20px,5vw,64px));margin:0 auto;display:grid;gap:clamp(24px,3vw,48px)">
+      <div style="display:grid;gap:var(--space-3);max-width:52ch">
+        <p class="anim-target" data-animate="fade-in" style="font:600 12px/1 var(--font-body);letter-spacing:0.14em;text-transform:uppercase;color:var(--color-accent-700)">06 / Testimonials</p>
+        <h2 id="testimonials-h" class="anim-target" data-animate="clip-reveal" style="font-family:var(--font-heading);font-weight:800;font-size:clamp(28px,4vw,52px);line-height:1.04;letter-spacing:-0.02em">Excepteur sint occaecat</h2>
+      </div>
+      <ul class="stagger-group" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));gap:2px;background:var(--color-divider);border:2px solid var(--color-divider)">
+        <sc-for list="{{ quotes }}" as="q" hint-placeholder-count="3">
+          <li class="stagger-item" style="background:var(--color-bg);padding:clamp(20px,2.4vw,32px)">
+            <figure data-anim-inner="" class="anim-target" data-animate="fade-up" data-anim-stagger="0.1" style="display:grid;gap:var(--space-4);height:100%;align-content:space-between">
+              <blockquote style="font-family:var(--font-heading);font-weight:600;font-size:clamp(16px,1.6vw,21px);line-height:1.35;letter-spacing:-0.01em;text-wrap:pretty">{{ q.text }}</blockquote>
+              <figcaption style="display:flex;align-items:center;gap:var(--space-3);border-top:2px solid var(--color-divider);padding-top:var(--space-3)">
+                <span class="grayscale" role="img" aria-label="Placeholder for portrait" style="width:40px;height:40px;flex:0 0 auto;border:2px dashed var(--color-neutral-400);background:repeating-linear-gradient(135deg, transparent 0 6px, color-mix(in srgb, var(--color-neutral-400) 26%, transparent) 6px 7px)"></span>
+                <span style="font:400 11px/1.5 ui-monospace,Menlo,monospace;color:var(--color-neutral-700)">{{ q.who }}</span>
+              </figcaption>
+            </figure>
+          </li>
+        </sc-for>
+      </ul>
+    </div>
+  </section>
+  <!-- ===== /TESTIMONIALS ===== -->
+
+  <!-- ============================================================
+       07 · PRICING / ENGAGEMENT TIERS — three columns, one highlighted.
+       Will animate: columns rise in sequence, highlighted tier scales last,
+       feature rows stagger. Risk: animating a tier's scale can overlap its
+       neighbours' 2px rules — animate an inner wrapper, not the grid cell.
+       ============================================================ -->
+  <section id="pricing" class="anim-section" data-animate="section" data-scroll-trigger="top 75%" aria-labelledby="pricing-h" style="border-bottom:2px solid var(--color-divider);padding:clamp(48px,6vw,96px) 0">
+    <div style="width:min(1320px, 100% - clamp(20px,5vw,64px));margin:0 auto;display:grid;gap:clamp(24px,3vw,48px)">
+      <div style="display:grid;gap:var(--space-3);max-width:52ch">
+        <p class="anim-target" data-animate="fade-in" style="font:600 12px/1 var(--font-body);letter-spacing:0.14em;text-transform:uppercase;color:var(--color-accent-700)">07 / Engagements</p>
+        <h2 id="pricing-h" class="anim-target" data-animate="clip-reveal" style="font-family:var(--font-heading);font-weight:800;font-size:clamp(28px,4vw,52px);line-height:1.04;letter-spacing:-0.02em">Sed ut perspiciatis unde</h2>
+      </div>
+      <ul class="stagger-group" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));gap:2px;background:var(--color-divider);border:2px solid var(--color-divider)">
+        <sc-for list="{{ tiers }}" as="t" hint-placeholder-count="3">
+          <li class="stagger-item" style="background:var(--color-bg);padding:clamp(20px,2.4vw,32px)">
+            <div data-anim-inner="" class="tier-inner anim-target" data-animate="fade-up" data-anim-stagger="0.1" style="display:grid;gap:var(--space-4);align-content:start;height:100%">
+              <p style="font:600 11px/1 var(--font-body);letter-spacing:0.14em;text-transform:uppercase;color:var(--color-neutral-600)">{{ t.kicker }}</p>
+              <h3 style="font-family:var(--font-heading);font-weight:800;font-size:clamp(26px,2.8vw,38px);line-height:1">{{ t.price }}</h3>
+              <p style="font-size:14px;line-height:1.6;color:var(--color-neutral-800)">{{ t.body }}</p>
+              <ul class="stagger-group" style="display:grid;gap:var(--space-2);border-top:2px solid var(--color-divider);padding-top:var(--space-3)">
+                <li class="stagger-item" data-animate="fade-right" style="font-size:13px;line-height:1.5;color:var(--color-neutral-800)">Lorem ipsum dolor</li>
+                <li class="stagger-item" data-animate="fade-right" style="font-size:13px;line-height:1.5;color:var(--color-neutral-800)">Consectetur adipiscing</li>
+                <li class="stagger-item" data-animate="fade-right" style="font-size:13px;line-height:1.5;color:var(--color-neutral-800)">Sed do eiusmod tempor</li>
+                <li class="stagger-item" data-animate="fade-right" style="font-size:13px;line-height:1.5;color:var(--color-neutral-800)">Incididunt ut labore</li>
+              </ul>
+              <a href="#contact" style="border:2px solid var(--color-text);color:var(--color-text);padding:12px var(--space-4);font-size:13px;font-weight:600;text-decoration:none;justify-self:start">Generic label</a>
+            </div>
+          </li>
+        </sc-for>
+      </ul>
+    </div>
+  </section>
+  <!-- ===== /PRICING ===== -->
+
+  <!-- ============================================================
+       08 · CONTACT — the conversion block: form left, details aside right.
+       Will animate: field rows stagger in, label float on focus, submit
+       state transition. Keep animation OFF error/validation messaging —
+       aria-live regions must not be delayed by a reveal.
+       ============================================================ -->
+  <section id="contact" class="anim-section" data-animate="section" data-scroll-trigger="top 75%" aria-labelledby="contact-h" style="border-bottom:2px solid var(--color-divider);padding:clamp(48px,6vw,96px) 0">
+    <div style="width:min(1320px, 100% - clamp(20px,5vw,64px));margin:0 auto">
+      <div class="stack-narrow" style="display:grid;grid-template-columns:minmax(0,7fr) minmax(0,4fr);gap:clamp(24px,4vw,64px)">
+        <div style="display:grid;gap:clamp(20px,2.5vw,40px)">
+          <div style="display:grid;gap:var(--space-3);max-width:52ch">
+            <p class="anim-target" data-animate="fade-in" style="font:600 12px/1 var(--font-body);letter-spacing:0.14em;text-transform:uppercase;color:var(--color-accent-700)">08 / Contact</p>
+            <h2 id="contact-h" class="anim-target" data-animate="clip-reveal" style="font-family:var(--font-heading);font-weight:800;font-size:clamp(28px,4vw,52px);line-height:1.04;letter-spacing:-0.02em">Nemo enim ipsam voluptatem</h2>
+          </div>
+          <form class="stagger-group" novalidate="" aria-labelledby="contact-h" style="display:grid;gap:var(--space-4)">
+            <div class="stagger-item anim-target" data-animate="fade-up" data-anim-stagger="0.06" style="display:grid;gap:var(--space-2)">
+              <label for="f-name" style="font:600 11px/1 var(--font-body);letter-spacing:0.1em;text-transform:uppercase;color:var(--color-neutral-700)">Name</label>
+              <input id="f-name" name="name" type="text" autoComplete="name" placeholder="Lorem ipsum" style="border:2px solid var(--color-text);background:transparent;color:var(--color-text);font:400 15px/1 var(--font-body);padding:13px var(--space-3);width:100%" />
+            </div>
+            <div class="stagger-item anim-target" data-animate="fade-up" data-anim-stagger="0.06" style="display:grid;gap:var(--space-2)">
+              <label for="f-email" style="font:600 11px/1 var(--font-body);letter-spacing:0.1em;text-transform:uppercase;color:var(--color-neutral-700)">Email</label>
+              <input id="f-email" name="email" type="email" autoComplete="email" placeholder="lorem@ipsum.dolor" style="border:2px solid var(--color-text);background:transparent;color:var(--color-text);font:400 15px/1 var(--font-body);padding:13px var(--space-3);width:100%" />
+            </div>
+            <div class="stagger-item anim-target" data-animate="fade-up" data-anim-stagger="0.06" style="display:grid;gap:var(--space-2)">
+              <label for="f-budget" style="font:600 11px/1 var(--font-body);letter-spacing:0.1em;text-transform:uppercase;color:var(--color-neutral-700)">Budget range</label>
+              <select id="f-budget" name="budget" style="border:2px solid var(--color-text);background:transparent;color:var(--color-text);font:400 15px/1 var(--font-body);padding:13px var(--space-3);width:100%">
+                <option>Option one</option>
+                <option>Option two</option>
+                <option>Option three</option>
+              </select>
+            </div>
+            <div class="stagger-item anim-target" data-animate="fade-up" data-anim-stagger="0.06" style="display:grid;gap:var(--space-2)">
+              <label for="f-brief" style="font:600 11px/1 var(--font-body);letter-spacing:0.1em;text-transform:uppercase;color:var(--color-neutral-700)">Brief</label>
+              <textarea id="f-brief" name="brief" rows="5" placeholder="Lorem ipsum dolor sit amet" style="border:2px solid var(--color-text);background:transparent;color:var(--color-text);font:400 15px/1.5 var(--font-body);padding:13px var(--space-3);width:100%;resize:vertical"></textarea>
+            </div>
+            <p aria-live="polite" style="font:400 11px/1.5 ui-monospace,Menlo,monospace;color:var(--color-neutral-600);min-height:1em">Form status region — never animate this.</p>
+            <button type="submit" class="anim-target" data-animate="fade-up" style="background:var(--color-accent);color:#fff;border:0;padding:15px var(--space-6);font:600 14px/1 var(--font-body);text-align:left;cursor:pointer;justify-self:start">Send enquiry</button>
+          </form>
+        </div>
+        <aside aria-labelledby="contact-aside-h" style="display:grid;gap:var(--space-6);align-content:start;border-top:2px solid var(--color-divider);padding-top:var(--space-4)">
+          <h3 id="contact-aside-h" class="anim-target" data-animate="fade-up" style="font:600 12px/1 var(--font-body);letter-spacing:0.14em;text-transform:uppercase;color:var(--color-neutral-600)">Studio details</h3>
+          <ul class="stagger-group" style="display:grid;gap:var(--space-4)">
+            <li class="stagger-item" data-animate="fade-up" style="display:grid;gap:2px"><span style="font:400 11px/1.4 ui-monospace,Menlo,monospace;color:var(--color-neutral-600)">Label</span><span style="font-size:15px;line-height:1.5">Lorem ipsum dolor sit</span></li>
+            <li class="stagger-item" data-animate="fade-up" style="display:grid;gap:2px"><span style="font:400 11px/1.4 ui-monospace,Menlo,monospace;color:var(--color-neutral-600)">Label</span><span style="font-size:15px;line-height:1.5">Consectetur adipiscing</span></li>
+            <li class="stagger-item" data-animate="fade-up" style="display:grid;gap:2px"><span style="font:400 11px/1.4 ui-monospace,Menlo,monospace;color:var(--color-neutral-600)">Label</span><span style="font-size:15px;line-height:1.5">Sed do eiusmod, 00000</span></li>
+          </ul>
+          <div class="grayscale" role="img" aria-label="Placeholder for map or studio photograph" style="aspect-ratio:1/1;border:2px dashed var(--color-neutral-400);background:repeating-linear-gradient(135deg, transparent 0 10px, color-mix(in srgb, var(--color-neutral-400) 26%, transparent) 10px 11px);display:grid;place-items:center"><span style="font:400 11px/1.5 ui-monospace,Menlo,monospace;color:var(--color-neutral-700)">[IMAGE] map / studio</span></div>
+        </aside>
+      </div>
+    </div>
+  </section>
+  <!-- ===== /CONTACT ===== -->
+
+</main>
+
+<!-- ============================================================
+     FOOTER — sitemap columns + legal row. All page links open in a new tab.
+     Will animate: column stagger on enter, oversized wordmark mask-up.
+     ============================================================ -->
+<footer role="contentinfo" class="anim-section" data-animate="section" data-scroll-trigger="top 90%" style="padding:clamp(40px,5vw,72px) 0 var(--space-6)">
+  <div style="width:min(1320px, 100% - clamp(20px,5vw,64px));margin:0 auto;display:grid;gap:clamp(28px,4vw,56px)">
+    <div class="stagger-group" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(160px, 1fr));gap:clamp(20px,2.5vw,40px)">
+      <nav class="stagger-item" data-animate="fade-up" aria-label="Footer — pages" style="display:grid;gap:var(--space-3);align-content:start">
+        <h2 style="font:600 11px/1 var(--font-body);letter-spacing:0.14em;text-transform:uppercase;color:var(--color-neutral-600)">Pages</h2>
+        <ul style="display:grid;gap:var(--space-2)">
+          <li><a href="Studio Work.dc.html" target="_blank" rel="noopener" style="font-size:14px;color:var(--color-text);text-decoration:none">Work</a></li>
+          <li><a href="Studio Case Study.dc.html" target="_blank" rel="noopener" style="font-size:14px;color:var(--color-text);text-decoration:none">Case study</a></li>
+          <li><a href="Studio About.dc.html" target="_blank" rel="noopener" style="font-size:14px;color:var(--color-text);text-decoration:none">Studio</a></li>
+        </ul>
+      </nav>
+      <nav class="stagger-item" data-animate="fade-up" aria-label="Footer — sections" style="display:grid;gap:var(--space-3);align-content:start">
+        <h2 style="font:600 11px/1 var(--font-body);letter-spacing:0.14em;text-transform:uppercase;color:var(--color-neutral-600)">Sections</h2>
+        <ul style="display:grid;gap:var(--space-2)">
+          <li><a href="#services" style="font-size:14px;color:var(--color-text);text-decoration:none">Services</a></li>
+          <li><a href="#process" style="font-size:14px;color:var(--color-text);text-decoration:none">Process</a></li>
+          <li><a href="#pricing" style="font-size:14px;color:var(--color-text);text-decoration:none">Pricing</a></li>
+          <li><a href="#contact" style="font-size:14px;color:var(--color-text);text-decoration:none">Contact</a></li>
+        </ul>
+      </nav>
+      <div class="stagger-item" data-animate="fade-up" style="display:grid;gap:var(--space-3);align-content:start">
+        <h2 style="font:600 11px/1 var(--font-body);letter-spacing:0.14em;text-transform:uppercase;color:var(--color-neutral-600)">Elsewhere</h2>
+        <ul style="display:grid;gap:var(--space-2)">
+          <li><a href="#" target="_blank" rel="noopener" style="font-size:14px;color:var(--color-text);text-decoration:none">Social one</a></li>
+          <li><a href="#" target="_blank" rel="noopener" style="font-size:14px;color:var(--color-text);text-decoration:none">Social two</a></li>
+          <li><a href="#" target="_blank" rel="noopener" style="font-size:14px;color:var(--color-text);text-decoration:none">Social three</a></li>
+        </ul>
+      </div>
+      <form class="stagger-item" data-animate="fade-up" aria-labelledby="news-h" style="display:grid;gap:var(--space-3);align-content:start">
+        <h2 id="news-h" style="font:600 11px/1 var(--font-body);letter-spacing:0.14em;text-transform:uppercase;color:var(--color-neutral-600)">Newsletter</h2>
+        <label for="f-news" style="font-size:13px;line-height:1.5;color:var(--color-neutral-800)">Lorem ipsum dolor sit amet consectetur.</label>
+        <input id="f-news" type="email" name="email" placeholder="lorem@ipsum.dolor" style="border:2px solid var(--color-text);background:transparent;color:var(--color-text);font:400 14px/1 var(--font-body);padding:11px var(--space-3);width:100%" />
+        <button type="submit" style="border:2px solid var(--color-text);background:transparent;color:var(--color-text);font:600 13px/1 var(--font-body);padding:11px var(--space-4);text-align:left;cursor:pointer;justify-self:start">Subscribe</button>
+      </form>
+    </div>
+    <p class="anim-target" data-animate="mask-up" aria-hidden="true" style="font-family:var(--font-heading);font-weight:800;font-size:clamp(48px,13vw,190px);line-height:0.82;letter-spacing:-0.04em;color:var(--color-neutral-300);border-top:2px solid var(--color-divider);padding-top:var(--space-4)">[LOGO]</p>
+    <div style="display:flex;flex-wrap:wrap;gap:var(--space-4);justify-content:space-between;border-top:2px solid var(--color-divider);padding-top:var(--space-4)">
+      <p style="font:400 11px/1.5 ui-monospace,Menlo,monospace;color:var(--color-neutral-600)">&copy; 0000 Placeholder Studio</p>
+      <p style="font:400 11px/1.5 ui-monospace,Menlo,monospace;color:var(--color-neutral-600)">Animated build — GSAP + ScrollTrigger</p>
+    </div>
+  </div>
+</footer>
+<!-- ===== /FOOTER ===== -->
+
+<sc-if value="{{ showGrid }}" hint-placeholder-val="{{ false }}">
+  <div aria-hidden="true" style="position:fixed;inset:0;z-index:80;pointer-events:none;display:grid;place-items:center">
+    <div style="width:min(1320px, 100% - clamp(20px,5vw,64px));height:100%;display:grid;grid-template-columns:repeat(12, 1fr);gap:2px">
+      <sc-for list="{{ columns }}" as="col" hint-placeholder-count="12">
+        <div style="background:color-mix(in srgb, var(--color-accent) 7%, transparent)"></div>
+      </sc-for>
+    </div>
+  </div>
+</sc-if>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;showNotes&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Build notes&quot;},&quot;showGrid&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Build notes&quot;},&quot;cardCount&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:4,&quot;min&quot;:3,&quot;max&quot;:6,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Placeholder content&quot;}}">
+const LOREM = "Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod tempor.";
+
+class Component extends DCLogic {
+  renderVals() {
+    const n = Math.max(3, Math.min(6, this.props.cardCount ?? 4));
+    const pad = (i) => String(i + 1).padStart(2, "0");
+    return {
+      showNotes: this.props.showNotes ?? false,
+      showGrid: this.props.showGrid ?? false,
+      columns: Array.from({ length: 12 }, (_, i) => i),
+      clients: Array.from({ length: 6 }, (_, i) => "[CLIENT " + pad(i) + "]"),
+      services: Array.from({ length: n }, (_, i) => ({
+        index: "S/" + pad(i),
+        title: "Service title " + pad(i),
+        body: LOREM,
+      })),
+      steps: Array.from({ length: 4 }, (_, i) => ({
+        index: pad(i),
+        title: "Step title " + pad(i),
+        body: LOREM,
+      })),
+      projects: Array.from({ length: n }, (_, i) => ({
+        title: "Project name " + pad(i),
+        meta: "Sector · Discipline · 0000",
+      })),
+      quotes: Array.from({ length: 3 }, (_, i) => ({
+        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.",
+        who: "Name Surname, Role — [CLIENT " + pad(i) + "]",
+      })),
+      tiers: [
+        { kicker: "Tier one", price: "0,000", body: LOREM },
+        { kicker: "Tier two", price: "0,000", body: LOREM },
+        { kicker: "Tier three", price: "Custom", body: LOREM },
+      ],
+    };
+  }
+}
+
+</script>
+</body>
+</html>

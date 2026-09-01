@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kairo Studio — websites that turn visitors into customers</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Manrope:wght@400;500;600;700&display=swap">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --accent: #a855f7;
+    --accent-deep: #6d28d9;
+    --accent-soft: rgba(168, 85, 247, 0.16);
+    --warm: #ff8a3d;
+    --ink: #f5f3f9;
+    --ink-muted: #a09dae;
+    --glow: 1;
+    --card: linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.018));
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: "Manrope", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased; overflow-x: hidden;
+  }
+  h1, h2, h3, h4, p, ul, ol, dl, dd, dt, figure, blockquote { margin: 0; }
+  ul, ol { list-style: none; padding: 0; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { color: #cba6ff; }
+  :focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+  ::selection { background: rgba(168,85,247,0.34); }
+  summary { list-style: none; cursor: pointer; }
+  summary::-webkit-details-marker { display: none; }
+  .faq-plus { transition: transform 0.3s ease; }
+  details[open] .faq-plus { transform: rotate(45deg); }
+  .cta-pill { transition: transform 0.25s ease, box-shadow 0.25s ease; }
+  .cta-pill:hover { transform: translateY(-2px); }
+  @keyframes fade-up { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
+  @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes drift-a { 0%,100% { transform: translate3d(0,0,0) scale(1); } 50% { transform: translate3d(3%,-5%,0) scale(1.07); } }
+  @keyframes drift-b { 0%,100% { transform: translate3d(0,0,0) scale(1.04); } 50% { transform: translate3d(-4%,4%,0) scale(0.96); } }
+  @keyframes ribbon-shift { 0%,100% { opacity: 0.78; } 50% { opacity: 1; } }
+  .sticky-cta { display: none; }
+  @media (max-width: 900px) {
+    .two-col { grid-template-columns: 1fr !important; }
+    .steps { grid-template-columns: 1fr 1fr !important; }
+    .step-lift { margin-top: 0 !important; }
+  }
+  @media (max-width: 700px) {
+    .nav-links { display: none !important; }
+    .nav-cta { display: none !important; }
+    .steps { grid-template-columns: 1fr !important; }
+    .sticky-cta { display: block; }
+    main { padding-bottom: 78px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+</style>
+<script>
+(function () {
+  if (window.__kairoWarm) return;
+  window.__kairoWarm = true;
+  function init() {
+    if (!document.body) { setTimeout(init, 50); return; }
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (!window.matchMedia('(hover: hover)').matches) return;
+    var d = document.createElement('div');
+    d.setAttribute('aria-hidden', 'true');
+    d.style.cssText = 'position:fixed;top:0;left:0;width:520px;height:520px;margin:-260px 0 0 -260px;border-radius:50%;pointer-events:none;z-index:5;opacity:0;transition:opacity .5s ease;mix-blend-mode:screen;background:radial-gradient(circle,rgba(255,138,61,.20) 0%,rgba(255,110,40,.10) 34%,rgba(255,110,40,0) 68%);filter:blur(24px)';
+    document.body.appendChild(d);
+    var tx = 0, ty = 0, cx = 0, cy = 0, on = false;
+    window.addEventListener('mousemove', function (e) {
+      tx = e.clientX; ty = e.clientY;
+      if (!on) { on = true; cx = tx; cy = ty; d.style.opacity = '1'; }
+    }, { passive: true });
+    document.addEventListener('mouseleave', function () { d.style.opacity = '0'; on = false; });
+    (function loop() {
+      cx += (tx - cx) * 0.07; cy += (ty - cy) * 0.07;
+      d.style.transform = 'translate3d(' + cx + 'px,' + cy + 'px,0)';
+      requestAnimationFrame(loop);
+    })();
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>
+</helmet>
+
+<div style="--glow: {{ glow }}; --accent: {{ accent }}; --accent-deep: {{ accentDeep }}; position:relative; overflow:hidden">
+
+  <!-- STICKY NAV — CTA always one click away -->
+  <header style="position:fixed;top:0;left:0;right:0;z-index:60;backdrop-filter:blur(18px);background:linear-gradient(180deg, rgba(10,10,15,0.88), rgba(10,10,15,0.45));border-bottom:1px solid rgba(255,255,255,0.06)">
+    <div style="width:min(1200px, 100% - 36px);margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:22px;height:72px">
+      <a href="#top" style="display:flex;align-items:center;gap:10px;color:var(--ink)">
+        <span aria-hidden="true" style="width:25px;height:25px;border-radius:8px;background:linear-gradient(140deg, var(--accent), var(--accent-deep));box-shadow:0 0 20px rgba(168,85,247,calc(0.55 * var(--glow)));display:block"></span>
+        <span style="font-family:'Sora',sans-serif;font-weight:700;font-size:16.5px;letter-spacing:-0.01em;white-space:nowrap">Kairo Studio</span>
+      </a>
+      <nav class="nav-links" aria-label="Primary">
+        <ul style="display:flex;align-items:center;gap:28px;white-space:nowrap">
+          <li><a href="#problem" style="font-size:14px;font-weight:500;color:var(--ink-muted)">The problem</a></li>
+          <li><a href="#system" style="font-size:14px;font-weight:500;color:var(--ink-muted)">What we do</a></li>
+          <li><a href="#process" style="font-size:14px;font-weight:500;color:var(--ink-muted)">Process</a></li>
+          <li><a href="#results" style="font-size:14px;font-weight:500;color:var(--ink-muted)">Results</a></li>
+          <li><a href="#faq" style="font-size:14px;font-weight:500;color:var(--ink-muted)">FAQ</a></li>
+        </ul>
+      </nav>
+      <a href="#book" class="nav-cta cta-pill" style="background:#fff;color:#0a0a0f;font-weight:700;font-size:14px;padding:12px 22px;border-radius:999px;white-space:nowrap;box-shadow:0 0 0 1px rgba(255,255,255,0.75), 0 14px 34px -14px rgba(255,255,255,0.45)">Book a Call</a>
+    </div>
+  </header>
+
+  <main id="top" role="main">
+
+    <!-- 1 · HERO — outcome headline, one CTA, friction reducer, proof teaser -->
+    <section aria-labelledby="hero-h" style="position:relative;padding:clamp(126px,16vh,190px) 0 clamp(44px,6vh,72px);overflow:hidden">
+      <div aria-hidden="true" style="position:absolute;top:-390px;left:50%;transform:translateX(-50%);width:min(1500px,160vw);height:960px;background:radial-gradient(50% 50% at 50% 50%, rgba(196,141,255,calc(0.6 * var(--glow))) 0%, rgba(139,92,246,calc(0.34 * var(--glow))) 34%, rgba(109,40,217,calc(0.15 * var(--glow))) 54%, rgba(10,10,15,0) 74%);filter:blur(30px);pointer-events:none;z-index:0;animation:drift-a 18s ease-in-out infinite"></div>
+      <div style="position:relative;z-index:1;width:min(1200px, 100% - 36px);margin:0 auto">
+        <div style="max-width:880px;margin:0 auto;text-align:center;display:grid;gap:24px;justify-items:center">
+          <p style="font-size:11px;font-weight:700;letter-spacing:0.28em;text-transform:uppercase;color:rgba(214,196,255,0.75);animation:fade-in 0.9s ease both">Conversion-first websites &amp; SEO</p>
+          <h1 id="hero-h" style="font-family:'Sora',sans-serif;font-weight:800;font-size:clamp(38px,6.4vw,80px);line-height:1.03;letter-spacing:-0.035em;text-wrap:balance;animation:fade-up 0.9s cubic-bezier(.22,1,.36,1) both;animation-delay:0.06s;text-shadow:0 0 70px rgba(168,85,247,calc(0.38 * var(--glow)))">Websites that turn visitors into customers</h1>
+          <p style="font-size:clamp(16px,1.6vw,19px);line-height:1.6;color:#c9c6d6;max-width:58ch;animation:fade-up 0.9s cubic-bezier(.22,1,.36,1) both;animation-delay:0.14s">We design, rank and maintain your site as one system — so it brings you leads every month instead of sitting there looking nice.</p>
+          <div style="display:grid;gap:12px;justify-items:center;animation:fade-up 0.9s cubic-bezier(.22,1,.36,1) both;animation-delay:0.22s">
+            <a href="#book" class="cta-pill" style="background:#fff;color:#0a0a0f;font-family:'Sora',sans-serif;font-weight:700;font-size:17px;padding:19px 40px;border-radius:999px;white-space:nowrap;justify-self:center;width:max-content;box-shadow:0 0 0 1px rgba(255,255,255,0.9), 0 26px 60px -20px rgba(255,255,255,0.4)">Book Your Free Strategy Call</a>
+            <p style="font-size:13.5px;color:var(--ink-muted)">15 minutes. No pitch, no obligation — you keep the plan either way.</p>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:14px;padding-top:14px;animation:fade-up 0.9s cubic-bezier(.22,1,.36,1) both;animation-delay:0.3s">
+            <div style="display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--accent-soft);border-radius:999px;padding:11px 22px;backdrop-filter:blur(14px)">
+              <span style="font-family:'Sora',sans-serif;font-weight:700;font-size:22px;letter-spacing:-0.02em;color:#fff">+40%</span>
+              <span style="font-size:13px;line-height:1.35;color:var(--ink-muted);text-align:left">more leads in 90 days<br /><span style="font-size:10.5px;letter-spacing:0.1em;text-transform:uppercase;color:var(--warm)">[Placeholder stat]</span></span>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--accent-soft);border-radius:999px;padding:11px 22px;backdrop-filter:blur(14px)">
+              <span style="font-family:'Sora',sans-serif;font-weight:700;font-size:22px;letter-spacing:-0.02em;color:#fff">3 wks</span>
+              <span style="font-size:13px;line-height:1.35;color:var(--ink-muted);text-align:left">typical launch<br /><span style="font-size:10.5px;letter-spacing:0.1em;text-transform:uppercase;color:var(--warm)">[Placeholder stat]</span></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ribbon motif -->
+        <div aria-hidden="true" style="position:relative;margin-top:clamp(28px,4vw,52px);height:clamp(90px,10vw,140px)">
+          <svg viewBox="0 0 1200 160" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%;animation:ribbon-shift 9s ease-in-out infinite">
+            <defs>
+              <linearGradient id="kairoSalesRibbon" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" stopColor="#6d28d9" stopOpacity="0" />
+                <stop offset="0.24" stopColor="#8b5cf6" stopOpacity="0.9" />
+                <stop offset="0.56" stopColor="#c084fc" stopOpacity="1" />
+                <stop offset="1" stopColor="#6d28d9" stopOpacity="0" />
+              </linearGradient>
+            </defs>
+            <path d="M-20 118 C 210 118 240 34 430 52 C 620 70 640 140 830 126 C 990 114 1040 44 1220 56" fill="none" stroke="url(#kairoSalesRibbon)" strokeWidth="14" strokeLinecap="round" style="filter:blur(24px);opacity:calc(0.5 * var(--glow))" />
+            <path d="M-20 118 C 210 118 240 34 430 52 C 620 70 640 140 830 126 C 990 114 1040 44 1220 56" fill="none" stroke="url(#kairoSalesRibbon)" strokeWidth="1.5" strokeLinecap="round" style="filter:drop-shadow(0 0 9px rgba(192,132,252,0.9))" />
+          </svg>
+        </div>
+
+        <div style="border-top:1px solid rgba(255,255,255,0.06);padding-top:26px;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:clamp(18px,3.6vw,50px)">
+          <p style="font-size:11px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:rgba(160,157,174,0.7)">Trusted by [12] businesses</p>
+          <span style="font-family:'Sora',sans-serif;font-weight:600;font-size:14.5px;letter-spacing:0.04em;color:rgba(245,243,249,0.4)">[CLIENT LOGO]</span>
+          <span style="font-family:'Sora',sans-serif;font-weight:600;font-size:14.5px;letter-spacing:0.04em;color:rgba(245,243,249,0.4)">[CLIENT LOGO]</span>
+          <span style="font-family:'Sora',sans-serif;font-weight:600;font-size:14.5px;letter-spacing:0.04em;color:rgba(245,243,249,0.4)">[CLIENT LOGO]</span>
+          <span style="font-family:'Sora',sans-serif;font-weight:600;font-size:14.5px;letter-spacing:0.04em;color:rgba(245,243,249,0.4)">[CLIENT LOGO]</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2 · PROBLEM -->
+    <section id="problem" aria-labelledby="problem-h" style="position:relative;padding:clamp(70px,10vh,120px) 0">
+      <div style="width:min(1200px, 100% - 36px);margin:0 auto;display:grid;gap:clamp(26px,3.4vw,44px)">
+        <div style="display:grid;gap:16px;max-width:640px">
+          <p style="font-size:11px;font-weight:700;letter-spacing:0.28em;text-transform:uppercase;color:rgba(214,196,255,0.72)">Sound familiar?</p>
+          <h2 id="problem-h" style="font-family:'Sora',sans-serif;font-weight:700;font-size:clamp(27px,3.8vw,46px);line-height:1.1;letter-spacing:-0.03em;text-wrap:balance">Your website is the best salesperson you never trained</h2>
+        </div>
+        <ul style="display:grid;grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));gap:16px">
+          <li style="background:var(--card);border:1px solid rgba(255,255,255,0.08);border-radius:20px;backdrop-filter:blur(12px);padding:clamp(22px,2.2vw,30px);display:grid;gap:10px;align-content:start">
+            <h3 style="font-family:'Sora',sans-serif;font-weight:600;font-size:18px;letter-spacing:-0.01em">It looks good and sells nothing</h3>
+            <p style="font-size:15px;line-height:1.65;color:var(--ink-muted)">Pretty layout, no clear next step. Visitors read, nod, and leave without calling you.</p>
+          </li>
+          <li style="background:var(--card);border:1px solid rgba(255,255,255,0.08);border-radius:20px;backdrop-filter:blur(12px);padding:clamp(22px,2.2vw,30px);display:grid;gap:10px;align-content:start">
+            <h3 style="font-family:'Sora',sans-serif;font-weight:600;font-size:18px;letter-spacing:-0.01em">Nobody can find it</h3>
+            <p style="font-size:15px;line-height:1.65;color:var(--ink-muted)">No SEO foundation, slow on mobile. You are invisible for the searches that would have brought you work.</p>
+          </li>
+          <li style="background:var(--card);border:1px solid rgba(255,255,255,0.08);border-radius:20px;backdrop-filter:blur(12px);padding:clamp(22px,2.2vw,30px);display:grid;gap:10px;align-content:start">
+            <h3 style="font-family:'Sora',sans-serif;font-weight:600;font-size:18px;letter-spacing:-0.01em">It was built once, then abandoned</h3>
+            <p style="font-size:15px;line-height:1.65;color:var(--ink-muted)">The agency launched it and vanished. Two years on, it is out of date, broken in places, and nobody owns it.</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 3 · SOLUTION — three pillars, one system -->
+    <section id="system" aria-labelledby="system-h" style="position:relative;padding:clamp(70px,10vh,130px) 0">
+      <div aria-hidden="true" style="position:absolute;top:6%;right:-260px;width:660px;height:660px;border-radius:50%;background:radial-gradient(circle, rgba(168,85,247,calc(0.28 * var(--glow))) 0%, rgba(10,10,15,0) 66%);filter:blur(60px);pointer-events:none;z-index:0;animation:drift-b 26s ease-in-out infinite"></div>
+      <div style="position:relative;z-index:1;width:min(1200px, 100% - 36px);margin:0 auto;display:grid;gap:clamp(26px,3.4vw,48px)">
+        <div style="display:grid;gap:16px;max-width:680px">
+          <p style="font-size:11px;font-weight:700;letter-spacing:0.28em;text-transform:uppercase;color:rgba(214,196,255,0.72)">How we're different</p>
+          <h2 id="system-h" style="font-family:'Sora',sans-serif;font-weight:700;font-size:clamp(27px,3.8vw,46px);line-height:1.1;letter-spacing:-0.03em;text-wrap:balance">Design, SEO and care — one system, not three invoices</h2>
+          <p style="font-size:16px;line-height:1.7;color:var(--ink-muted);max-width:56ch">Most agencies sell you a website, then sell you SEO, then disappear. We run all three together, because that is the only way a site keeps producing leads.</p>
+        </div>
+        <ul style="display:grid;grid-template-columns:repeat(auto-fit, minmax(270px, 1fr));gap:18px">
+          <li style="background:var(--card);border:1px solid var(--accent-soft);border-radius:22px;backdrop-filter:blur(14px);box-shadow:0 34px 80px -46px rgba(109,40,217,0.85), inset 0 1px 0 rgba(255,255,255,0.06);padding:clamp(24px,2.4vw,34px);display:grid;gap:14px;align-content:start">
+            <span aria-hidden="true" style="width:36px;height:36px;border-radius:11px;background:linear-gradient(140deg, rgba(168,85,247,0.9), rgba(109,40,217,0.5));box-shadow:0 0 26px rgba(168,85,247,calc(0.5 * var(--glow)));display:block"></span>
+            <h3 style="font-family:'Sora',sans-serif;font-weight:700;font-size:20px;letter-spacing:-0.015em">Design that converts</h3>
+            <p style="font-size:15px;line-height:1.7;color:var(--ink-muted)">Every page built around one action. You get a site your customers move through, not admire.</p>
+            <ul style="display:grid;gap:9px;padding-top:4px">
+              <li style="font-size:14px;color:#d3d0de">Conversion-mapped page structure</li>
+              <li style="font-size:14px;color:#d3d0de">Mobile-first, under 2s load</li>
+              <li style="font-size:14px;color:#d3d0de">Copy written to sell, not fill space</li>
+            </ul>
+          </li>
+          <li style="background:var(--card);border:1px solid var(--accent-soft);border-radius:22px;backdrop-filter:blur(14px);box-shadow:0 34px 80px -46px rgba(109,40,217,0.85), inset 0 1px 0 rgba(255,255,255,0.06);padding:clamp(24px,2.4vw,34px);display:grid;gap:14px;align-content:start">
+            <span aria-hidden="true" style="width:36px;height:36px;border-radius:11px;background:linear-gradient(140deg, rgba(168,85,247,0.9), rgba(109,40,217,0.5));box-shadow:0 0 26px rgba(168,85,247,calc(0.5 * var(--glow)));display:block"></span>
+            <h3 style="font-family:'Sora',sans-serif;font-weight:700;font-size:20px;letter-spacing:-0.015em">SEO that gets you found</h3>
+            <p style="font-size:15px;line-height:1.7;color:var(--ink-muted)">We build for the searches your buyers actually type, then keep earning ground month over month.</p>
+            <ul style="display:grid;gap:9px;padding-top:4px">
+              <li style="font-size:14px;color:#d3d0de">Technical and local SEO from day one</li>
+              <li style="font-size:14px;color:#d3d0de">Pages targeted to real buying intent</li>
+              <li style="font-size:14px;color:#d3d0de">Monthly reporting in plain English</li>
+            </ul>
+          </li>
+          <li style="background:var(--card);border:1px solid var(--accent-soft);border-radius:22px;backdrop-filter:blur(14px);box-shadow:0 34px 80px -46px rgba(109,40,217,0.85), inset 0 1px 0 rgba(255,255,255,0.06);padding:clamp(24px,2.4vw,34px);display:grid;gap:14px;align-content:start">
+            <span aria-hidden="true" style="width:36px;height:36px;border-radius:11px;background:linear-gradient(140deg, rgba(168,85,247,0.9), rgba(109,40,217,0.5));box-shadow:0 0 26px rgba(168,85,247,calc(0.5 * var(--glow)));display:block"></span>
+            <h3 style="font-family:'Sora',sans-serif;font-weight:700;font-size:20px;letter-spacing:-0.015em">Care so it never goes stale</h3>
+            <p style="font-size:15px;line-height:1.7;color:var(--ink-muted)">Updates, backups, speed and fixes handled on a care plan. You never chase a developer again.</p>
+            <ul style="display:grid;gap:9px;padding-top:4px">
+              <li style="font-size:14px;color:#d3d0de">Security, backups and uptime watch</li>
+              <li style="font-size:14px;color:#d3d0de">Content and page changes included</li>
+              <li style="font-size:14px;color:#d3d0de">One number to call when something breaks</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 4 · PROCESS — 4 steps + CTA repeat -->
+    <section id="process" aria-labelledby="process-h" style="position:relative;padding:clamp(70px,10vh,130px) 0;overflow:hidden">
+      <div aria-hidden="true" style="position:absolute;top:18%;left:50%;transform:translateX(-50%);width:min(1100px,130vw);height:520px;background:radial-gradient(50% 50% at 50% 50%, rgba(109,40,217,calc(0.32 * var(--glow))) 0%, rgba(10,10,15,0) 70%);filter:blur(40px);pointer-events:none;z-index:0"></div>
+      <div style="position:relative;z-index:1;width:min(1200px, 100% - 36px);margin:0 auto;display:grid;gap:clamp(30px,4vw,56px)">
+        <div style="display:grid;gap:16px;max-width:660px">
+          <p style="font-size:11px;font-weight:700;letter-spacing:0.28em;text-transform:uppercase;color:rgba(214,196,255,0.72)">The process</p>
+          <h2 id="process-h" style="font-family:'Sora',sans-serif;font-weight:700;font-size:clamp(27px,3.8vw,46px);line-height:1.1;letter-spacing:-0.03em;text-wrap:balance">Live in three weeks, growing from week four</h2>
+        </div>
+        <div style="position:relative">
+          <svg viewBox="0 0 1200 240" preserveAspectRatio="none" aria-hidden="true" style="position:absolute;top:32%;left:0;width:100%;height:240px;z-index:0">
+            <defs>
+              <linearGradient id="kairoSalesRibbon2" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" stopColor="#6d28d9" stopOpacity="0" />
+                <stop offset="0.3" stopColor="#8b5cf6" stopOpacity="0.9" />
+                <stop offset="0.62" stopColor="#c084fc" stopOpacity="1" />
+                <stop offset="1" stopColor="#6d28d9" stopOpacity="0" />
+              </linearGradient>
+            </defs>
+            <path d="M-20 170 C 220 170 250 60 470 84 C 690 108 720 210 940 186 C 1080 170 1130 100 1220 96" fill="none" stroke="url(#kairoSalesRibbon2)" strokeWidth="14" strokeLinecap="round" style="filter:blur(24px);opacity:calc(0.48 * var(--glow))" />
+            <path d="M-20 170 C 220 170 250 60 470 84 C 690 108 720 210 940 186 C 1080 170 1130 100 1220 96" fill="none" stroke="url(#kairoSalesRibbon2)" strokeWidth="1.4" strokeLinecap="round" style="filter:drop-shadow(0 0 9px rgba(192,132,252,0.85))" />
+          </svg>
+          <ol class="steps" style="position:relative;z-index:1;display:grid;grid-template-columns:repeat(4, minmax(0,1fr));gap:16px">
+            <li style="background:var(--card);border:1px solid var(--accent-soft);border-radius:20px;backdrop-filter:blur(16px);box-shadow:0 30px 70px -42px rgba(109,40,217,0.85), inset 0 1px 0 rgba(255,255,255,0.06);padding:24px;display:grid;gap:11px;align-content:start">
+              <span style="font-family:'Sora',sans-serif;font-weight:700;font-size:13px;letter-spacing:0.16em;color:var(--accent)">01</span>
+              <h3 style="font-family:'Sora',sans-serif;font-weight:600;font-size:18px;letter-spacing:-0.01em">Discovery call</h3>
+              <p style="font-size:14px;line-height:1.65;color:var(--ink-muted)">15 minutes. We look at your site, your leads and where the money is leaking. You leave with the plan.</p>
+            </li>
+            <li class="step-lift" style="margin-top:clamp(18px,4vw,60px);background:var(--card);border:1px solid var(--accent-soft);border-radius:20px;backdrop-filter:blur(16px);box-shadow:0 30px 70px -42px rgba(109,40,217,0.85), inset 0 1px 0 rgba(255,255,255,0.06);padding:24px;display:grid;gap:11px;align-content:start">
+              <span style="font-family:'Sora',sans-serif;font-weight:700;font-size:13px;letter-spacing:0.16em;color:var(--accent)">02</span>
+              <h3 style="font-family:'Sora',sans-serif;font-weight:600;font-size:18px;letter-spacing:-0.01em">Strategy</h3>
+              <p style="font-size:14px;line-height:1.65;color:var(--ink-muted)">Week one. Keyword targets, page map, the one action each page has to earn. Fixed scope, fixed price.</p>
+            </li>
+            <li style="background:var(--card);border:1px solid var(--accent-soft);border-radius:20px;backdrop-filter:blur(16px);box-shadow:0 30px 70px -42px rgba(109,40,217,0.85), inset 0 1px 0 rgba(255,255,255,0.06);padding:24px;display:grid;gap:11px;align-content:start">
+              <span style="font-family:'Sora',sans-serif;font-weight:700;font-size:13px;letter-spacing:0.16em;color:var(--accent)">03</span>
+              <h3 style="font-family:'Sora',sans-serif;font-weight:600;font-size:18px;letter-spacing:-0.01em">Build</h3>
+              <p style="font-size:14px;line-height:1.65;color:var(--ink-muted)">Weeks two and three. Design, copy and build, reviewed with you twice a week. No black box.</p>
+            </li>
+            <li class="step-lift" style="margin-top:clamp(18px,4vw,60px);background:var(--card);border:1px solid var(--accent-soft);border-radius:20px;backdrop-filter:blur(16px);box-shadow:0 30px 70px -42px rgba(109,40,217,0.85), inset 0 1px 0 rgba(255,255,255,0.06);padding:24px;display:grid;gap:11px;align-content:start">
+              <span style="font-family:'Sora',sans-serif;font-weight:700;font-size:13px;letter-spacing:0.16em;color:var(--accent)">04</span>
+              <h3 style="font-family:'Sora',sans-serif;font-weight:600;font-size:18px;letter-spacing:-0.01em">Launch &amp; grow</h3>
+              <p style="font-size:14px;line-height:1.65;color:var(--ink-muted)">We ship, then stay. SEO and care plan running monthly, with reporting you can actually read.</p>
+            </li>
+          </ol>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;align-items:center;gap:18px;background:var(--card);border:1px solid var(--accent-soft);border-radius:20px;backdrop-filter:blur(14px);padding:clamp(20px,2.4vw,28px);justify-content:space-between">
+          <p style="font-family:'Sora',sans-serif;font-weight:600;font-size:clamp(17px,2vw,22px);line-height:1.35;letter-spacing:-0.015em;max-width:40ch">Want to see what this looks like for your business?</p>
+          <a href="#book" class="cta-pill" style="background:#fff;color:#0a0a0f;font-family:'Sora',sans-serif;font-weight:700;font-size:15px;padding:15px 28px;border-radius:999px;white-space:nowrap;box-shadow:0 0 0 1px rgba(255,255,255,0.85), 0 18px 44px -18px rgba(255,255,255,0.4)">Book a Call</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5 · PROOF / RESULTS + CTA repeat -->
+    <section id="results" aria-labelledby="results-h" style="position:relative;padding:clamp(70px,10vh,130px) 0">
+      <div style="width:min(1200px, 100% - 36px);margin:0 auto;display:grid;gap:clamp(24px,3vw,40px)">
+        <div style="display:grid;gap:16px;max-width:660px">
+          <p style="font-size:11px;font-weight:700;letter-spacing:0.28em;text-transform:uppercase;color:rgba(214,196,255,0.72)">Results</p>
+          <h2 id="results-h" style="font-family:'Sora',sans-serif;font-weight:700;font-size:clamp(27px,3.8vw,46px);line-height:1.1;letter-spacing:-0.03em;text-wrap:balance">Judge us on what happened after launch</h2>
+        </div>
+        <dl style="display:grid;grid-template-columns:repeat(auto-fit, minmax(190px, 1fr));gap:2px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.07);border-radius:22px;overflow:hidden">
+          <div style="background:#0c0b12;padding:clamp(22px,2.4vw,32px);display:grid;gap:8px">
+            <dd style="font-family:'Sora',sans-serif;font-weight:700;font-size:clamp(30px,3.6vw,44px);line-height:1;letter-spacing:-0.03em">+40%</dd>
+            <dt style="font-size:13.5px;line-height:1.5;color:var(--ink-muted)">More qualified leads in 90 days <span style="color:var(--warm);font-size:11px;letter-spacing:0.08em;text-transform:uppercase">[Placeholder]</span></dt>
+          </div>
+          <div style="background:#0c0b12;padding:clamp(22px,2.4vw,32px);display:grid;gap:8px">
+            <dd style="font-family:'Sora',sans-serif;font-weight:700;font-size:clamp(30px,3.6vw,44px);line-height:1;letter-spacing:-0.03em">1.4s</dd>
+            <dt style="font-size:13.5px;line-height:1.5;color:var(--ink-muted)">Median mobile load time we ship at <span style="color:var(--warm);font-size:11px;letter-spacing:0.08em;text-transform:uppercase">[Placeholder]</span></dt>
+          </div>
+          <div style="background:#0c0b12;padding:clamp(22px,2.4vw,32px);display:grid;gap:8px">
+            <dd style="font-family:'Sora',sans-serif;font-weight:700;font-size:clamp(30px,3.6vw,44px);line-height:1;letter-spacing:-0.03em">3 wks</dd>
+            <dt style="font-size:13.5px;line-height:1.5;color:var(--ink-muted)">From kickoff to live site <span style="color:var(--warm);font-size:11px;letter-spacing:0.08em;text-transform:uppercase">[Placeholder]</span></dt>
+          </div>
+          <div style="background:#0c0b12;padding:clamp(22px,2.4vw,32px);display:grid;gap:8px">
+            <dd style="font-family:'Sora',sans-serif;font-weight:700;font-size:clamp(30px,3.6vw,44px);line-height:1;letter-spacing:-0.03em">92%</dd>
+            <dt style="font-size:13.5px;line-height:1.5;color:var(--ink-muted)">Clients still on a care plan after a year <span style="color:var(--warm);font-size:11px;letter-spacing:0.08em;text-transform:uppercase">[Placeholder]</span></dt>
+          </div>
+        </dl>
+        <div class="two-col" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:18px">
+          <article style="background:var(--card);border:1px solid var(--accent-soft);border-radius:22px;backdrop-filter:blur(14px);padding:clamp(24px,2.4vw,32px);display:grid;gap:12px;align-content:start">
+            <p style="font-size:11px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--warm)">[Case study 1]</p>
+            <h3 style="font-family:'Sora',sans-serif;font-weight:700;font-size:clamp(20px,2.2vw,26px);line-height:1.2;letter-spacing:-0.02em">[Client name] — [X]% more enquiries in [X] months</h3>
+            <p style="font-size:14.5px;line-height:1.7;color:var(--ink-muted)">One line on where they started, one on what we changed, one on the result. Replace with a real client.</p>
+          </article>
+          <article style="background:var(--card);border:1px solid var(--accent-soft);border-radius:22px;backdrop-filter:blur(14px);padding:clamp(24px,2.4vw,32px);display:grid;gap:12px;align-content:start">
+            <p style="font-size:11px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--warm)">[Case study 2]</p>
+            <h3 style="font-family:'Sora',sans-serif;font-weight:700;font-size:clamp(20px,2.2vw,26px);line-height:1.2;letter-spacing:-0.02em">[Client name] — page one for [X] local searches</h3>
+            <p style="font-size:14.5px;line-height:1.7;color:var(--ink-muted)">One line on where they started, one on what we changed, one on the result. Replace with a real client.</p>
+          </article>
+        </div>
+        <blockquote style="background:linear-gradient(150deg, rgba(168,85,247,0.14), rgba(255,255,255,0.02) 55%);border:1px solid var(--accent-soft);border-radius:22px;padding:clamp(24px,3vw,40px);display:grid;gap:16px">
+          <p style="font-family:'Sora',sans-serif;font-weight:600;font-size:clamp(17px,2.1vw,25px);line-height:1.45;letter-spacing:-0.015em;max-width:58ch">"[Placeholder testimonial] The new site paid for itself in the first two months. We stopped chasing work and started picking it."</p>
+          <footer style="font-size:13.5px;color:var(--ink-muted)">[Name], [Role] — [Company]</footer>
+        </blockquote>
+        <div style="display:flex;flex-wrap:wrap;align-items:center;gap:18px;justify-content:space-between;border-top:1px solid rgba(255,255,255,0.07);padding-top:24px">
+          <p style="font-size:15.5px;line-height:1.6;color:var(--ink-muted);max-width:44ch">We will tell you on the call whether we can move numbers like these for you — or whether we can't.</p>
+          <a href="#book" class="cta-pill" style="background:#fff;color:#0a0a0f;font-family:'Sora',sans-serif;font-weight:700;font-size:15px;padding:15px 28px;border-radius:999px;white-space:nowrap;box-shadow:0 0 0 1px rgba(255,255,255,0.85), 0 18px 44px -18px rgba(255,255,255,0.4)">See If We're a Fit</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6 · FAQ / objection handling -->
+    <section id="faq" aria-labelledby="faq-h" style="position:relative;padding:clamp(70px,10vh,130px) 0">
+      <div style="width:min(1200px, 100% - 36px);margin:0 auto;display:grid;gap:clamp(26px,3.4vw,44px)">
+        <div style="display:grid;gap:16px;max-width:620px">
+          <p style="font-size:11px;font-weight:700;letter-spacing:0.28em;text-transform:uppercase;color:rgba(214,196,255,0.72)">Before you book</p>
+          <h2 id="faq-h" style="font-family:'Sora',sans-serif;font-weight:700;font-size:clamp(27px,3.8vw,46px);line-height:1.1;letter-spacing:-0.03em">The questions you are already asking</h2>
+        </div>
+        <div style="display:grid;gap:12px;max-width:900px">
+          <details style="background:var(--card);border:1px solid rgba(255,255,255,0.08);border-radius:18px;backdrop-filter:blur(12px);padding:20px clamp(18px,2vw,26px)">
+            <summary style="display:flex;align-items:center;justify-content:space-between;gap:18px;font-family:'Sora',sans-serif;font-weight:600;font-size:17px;letter-spacing:-0.01em">How much does it cost?<span class="faq-plus" aria-hidden="true" style="font-size:20px;color:var(--accent);flex:0 0 auto">+</span></summary>
+            <p style="font-size:15px;line-height:1.7;color:var(--ink-muted);padding-top:14px">Most builds land between [£X] and [£X], with care plans from [£X] a month. Fixed price, agreed before we start — no hourly surprises. We will quote you on the call in under 15 minutes.</p>
+          </details>
+          <details style="background:var(--card);border:1px solid rgba(255,255,255,0.08);border-radius:18px;backdrop-filter:blur(12px);padding:20px clamp(18px,2vw,26px)">
+            <summary style="display:flex;align-items:center;justify-content:space-between;gap:18px;font-family:'Sora',sans-serif;font-weight:600;font-size:17px;letter-spacing:-0.01em">How long does it take?<span class="faq-plus" aria-hidden="true" style="font-size:20px;color:var(--accent);flex:0 0 auto">+</span></summary>
+            <p style="font-size:15px;line-height:1.7;color:var(--ink-muted);padding-top:14px">Three weeks from kickoff for a standard build, longer if you need many pages or integrations. Book the call and we will give you a real date, not a range.</p>
+          </details>
+          <details style="background:var(--card);border:1px solid rgba(255,255,255,0.08);border-radius:18px;backdrop-filter:blur(12px);padding:20px clamp(18px,2vw,26px)">
+            <summary style="display:flex;align-items:center;justify-content:space-between;gap:18px;font-family:'Sora',sans-serif;font-weight:600;font-size:17px;letter-spacing:-0.01em">What if I already have a website?<span class="faq-plus" aria-hidden="true" style="font-size:20px;color:var(--accent);flex:0 0 auto">+</span></summary>
+            <p style="font-size:15px;line-height:1.7;color:var(--ink-muted);padding-top:14px">Then we start with what you have. Sometimes a rebuild is right, often it is faster to fix the pages that already get traffic. On the call we will tell you which, free.</p>
+          </details>
+          <details style="background:var(--card);border:1px solid rgba(255,255,255,0.08);border-radius:18px;backdrop-filter:blur(12px);padding:20px clamp(18px,2vw,26px)">
+            <summary style="display:flex;align-items:center;justify-content:space-between;gap:18px;font-family:'Sora',sans-serif;font-weight:600;font-size:17px;letter-spacing:-0.01em">Do you work with my industry?<span class="faq-plus" aria-hidden="true" style="font-size:20px;color:var(--accent);flex:0 0 auto">+</span></summary>
+            <p style="font-size:15px;line-height:1.7;color:var(--ink-muted);padding-top:14px">We work mostly with [service businesses, trades, clinics, B2B] — anywhere an enquiry is worth real money. If we are not a fit, we will say so on the call and point you to someone better.</p>
+          </details>
+          <details style="background:var(--card);border:1px solid rgba(255,255,255,0.08);border-radius:18px;backdrop-filter:blur(12px);padding:20px clamp(18px,2vw,26px)">
+            <summary style="display:flex;align-items:center;justify-content:space-between;gap:18px;font-family:'Sora',sans-serif;font-weight:600;font-size:17px;letter-spacing:-0.01em">What actually happens on the call?<span class="faq-plus" aria-hidden="true" style="font-size:20px;color:var(--accent);flex:0 0 auto">+</span></summary>
+            <p style="font-size:15px;line-height:1.7;color:var(--ink-muted);padding-top:14px">Fifteen minutes. We look at your site and your competitors, name the two or three things costing you leads, and tell you what fixing them takes. No deck, no pressure. You keep the plan whether you hire us or not.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7 · FINAL CTA -->
+    <section id="book" aria-labelledby="book-h" style="position:relative;padding:clamp(90px,13vh,160px) 0;overflow:hidden">
+      <div aria-hidden="true" style="position:absolute;inset:0;background:radial-gradient(62% 82% at 50% 100%, rgba(168,85,247,calc(0.42 * var(--glow))) 0%, rgba(109,40,217,calc(0.2 * var(--glow))) 42%, rgba(10,10,15,0) 76%);pointer-events:none;z-index:0"></div>
+      <div style="position:relative;z-index:1;width:min(1200px, 100% - 36px);margin:0 auto;text-align:center;display:grid;gap:24px;justify-items:center">
+        <p style="font-size:11px;font-weight:700;letter-spacing:0.28em;text-transform:uppercase;color:rgba(214,196,255,0.78)">Last step</p>
+        <h2 id="book-h" style="font-family:'Sora',sans-serif;font-weight:800;font-size:clamp(32px,5.4vw,68px);line-height:1.04;letter-spacing:-0.035em;max-width:24ch;text-wrap:balance;text-shadow:0 0 60px rgba(168,85,247,calc(0.36 * var(--glow)))">Your next customer is searching right now</h2>
+        <p style="font-size:16.5px;line-height:1.65;color:#c9c6d6;max-width:50ch">Fifteen minutes tells you whether your site can win them. Free, no obligation, and you keep the plan.</p>
+        <a href="#book" class="cta-pill" style="background:#fff;color:#0a0a0f;font-family:'Sora',sans-serif;font-weight:700;font-size:18px;padding:21px 44px;border-radius:999px;white-space:nowrap;justify-self:center;width:max-content;box-shadow:0 0 0 1px rgba(255,255,255,0.9), 0 30px 70px -22px rgba(255,255,255,0.45)">Book Your Free Strategy Call</a>
+        <p style="font-size:13.5px;color:var(--ink-muted)">Or email <a href="#book" style="color:#e2d9ff">hello@kairo.studio</a> — we reply the same day.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer role="contentinfo" style="border-top:1px solid rgba(255,255,255,0.06);padding:clamp(38px,6vh,64px) 0 30px">
+    <div style="width:min(1200px, 100% - 36px);margin:0 auto;display:grid;gap:34px">
+      <div class="two-col" style="display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:clamp(26px,5vw,64px)">
+        <div style="display:grid;gap:14px;align-content:start;max-width:40ch">
+          <a href="#top" style="display:flex;align-items:center;gap:10px;color:var(--ink)">
+            <span aria-hidden="true" style="width:23px;height:23px;border-radius:7px;background:linear-gradient(140deg, var(--accent), var(--accent-deep));box-shadow:0 0 18px rgba(168,85,247,calc(0.45 * var(--glow)));display:block"></span>
+            <span style="font-family:'Sora',sans-serif;font-weight:700;font-size:16px;letter-spacing:-0.01em;white-space:nowrap">Kairo Studio</span>
+          </a>
+          <p style="font-size:14px;line-height:1.7;color:var(--ink-muted)">Websites, SEO and care plans for businesses that need the phone to ring. [City, Country].</p>
+          <a href="#book" class="cta-pill" style="background:#fff;color:#0a0a0f;font-weight:700;font-size:14px;padding:13px 24px;border-radius:999px;justify-self:start;box-shadow:0 0 0 1px rgba(255,255,255,0.8)">Book a Call</a>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(130px, 1fr));gap:22px">
+          <nav aria-label="Footer — page" style="display:grid;gap:11px;align-content:start">
+            <h2 style="font-size:11px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:rgba(160,157,174,0.7)">Page</h2>
+            <ul style="display:grid;gap:9px">
+              <li><a href="#system" style="font-size:14px;color:var(--ink-muted)">What we do</a></li>
+              <li><a href="#process" style="font-size:14px;color:var(--ink-muted)">Process</a></li>
+              <li><a href="#results" style="font-size:14px;color:var(--ink-muted)">Results</a></li>
+              <li><a href="#faq" style="font-size:14px;color:var(--ink-muted)">FAQ</a></li>
+            </ul>
+          </nav>
+          <nav aria-label="Footer — contact" style="display:grid;gap:11px;align-content:start">
+            <h2 style="font-size:11px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:rgba(160,157,174,0.7)">Contact</h2>
+            <ul style="display:grid;gap:9px">
+              <li><a href="#book" style="font-size:14px;color:var(--ink-muted)">hello@kairo.studio</a></li>
+              <li><a href="#book" style="font-size:14px;color:var(--ink-muted)">[+00 0000 000000]</a></li>
+            </ul>
+          </nav>
+          <nav aria-label="Footer — social" style="display:grid;gap:11px;align-content:start">
+            <h2 style="font-size:11px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:rgba(160,157,174,0.7)">Social</h2>
+            <ul style="display:grid;gap:9px">
+              <li><a href="#book" style="font-size:14px;color:var(--ink-muted)">LinkedIn</a></li>
+              <li><a href="#book" style="font-size:14px;color:var(--ink-muted)">Instagram</a></li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:14px;justify-content:space-between;border-top:1px solid rgba(255,255,255,0.06);padding-top:18px">
+        <p style="font-size:12.5px;color:rgba(160,157,174,0.75)">© 2026 Kairo Studio</p>
+        <p style="font-size:12.5px;color:rgba(160,157,174,0.75)">Placeholder wordmark — drop the real logo in the nav and footer</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Persistent mobile CTA bar -->
+  <sc-if value="{{ showStickyCta }}" hint-placeholder-val="{{ true }}">
+    <div class="sticky-cta" style="position:fixed;bottom:0;left:0;right:0;z-index:70;padding:12px 16px calc(12px + env(safe-area-inset-bottom));background:linear-gradient(0deg, rgba(10,10,15,0.97), rgba(10,10,15,0.82));border-top:1px solid rgba(255,255,255,0.09);backdrop-filter:blur(14px)">
+      <a href="#book" style="display:block;background:#fff;color:#0a0a0f;font-family:'Sora',sans-serif;font-weight:700;font-size:16px;text-align:center;padding:16px;border-radius:999px">Book Your Free Strategy Call</a>
+    </div>
+  </sc-if>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;accentHue&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Violet&quot;,&quot;Indigo&quot;,&quot;Magenta&quot;],&quot;default&quot;:&quot;Violet&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Look&quot;},&quot;glowStrength&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:1,&quot;min&quot;:0.4,&quot;max&quot;:1.6,&quot;step&quot;:0.1,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Look&quot;},&quot;showStickyCta&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Conversion&quot;}}">
+const HUES = {
+  Violet: { accent: "#a855f7", deep: "#6d28d9" },
+  Indigo: { accent: "#818cf8", deep: "#4338ca" },
+  Magenta: { accent: "#e879b9", deep: "#9d1f6a" }
+};
+
+class Component extends DCLogic {
+  renderVals() {
+    const hue = HUES[this.props.accentHue] || HUES.Violet;
+    return {
+      glow: String(this.props.glowStrength ?? 1),
+      accent: hue.accent,
+      accentDeep: hue.deep,
+      showStickyCta: this.props.showStickyCta ?? true
+    };
+  }
+}
+
+</script>
+</body>
+</html>

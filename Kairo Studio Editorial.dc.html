@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kairo Studio — websites built to convert</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&display=swap">
+<style>
+  :root{ --ink:#0b0b0c; --muted:#5d5d66; --line:#e4e4e8; --paper:#fbfbf9; --accent:#ff5a1f; }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:"Archivo",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  h1,h2,h3,h4,p,ul,ol,dl,dd,dt,blockquote,figure{margin:0}
+  ul,ol{list-style:none;padding:0}
+  a{color:var(--ink);text-decoration:none}
+  a:hover{color:var(--accent)}
+  input{font-family:inherit}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+  ::selection{background:rgba(255,90,31,0.22)}
+  summary{list-style:none;cursor:pointer}
+  summary::-webkit-details-marker{display:none}
+  .faq-mark{transition:transform .3s cubic-bezier(.22,1,.36,1)}
+  details[open] .faq-mark{transform:rotate(45deg)}
+  details{border-bottom:1px solid var(--line)}
+  .btn{transition:background-color .22s ease,color .22s ease,transform .22s ease}
+  .btn:hover{transform:translateY(-2px)}
+  .card-link{transition:color .2s ease,gap .2s ease}
+  .svc:hover .card-link{color:var(--accent);gap:14px}
+  .svc{transition:background-color .25s ease}
+  .svc:hover{background:#fff}
+  .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s cubic-bezier(.22,1,.36,1),transform .7s cubic-bezier(.22,1,.36,1)}
+  .reveal.in{opacity:1;transform:none}
+  @media (max-width:900px){
+    .grid-2{grid-template-columns:1fr !important}
+    .svc-grid{grid-template-columns:1fr 1fr !important}
+    .foot-grid{grid-template-columns:1fr 1fr !important}
+  }
+  @media (max-width:640px){
+    .nav-links{display:none !important}
+    .svc-grid{grid-template-columns:1fr !important}
+    .logo-strip{gap:22px !important}
+  }
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto}
+    *,*::before,*::after{animation:none !important;transition:none !important}
+    .reveal{opacity:1;transform:none}
+  }
+</style>
+<script>
+(function(){
+  function boot(){
+    if(!document.body){setTimeout(boot,50);return}
+    if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+      document.querySelectorAll('.reveal').forEach(function(el){el.classList.add('in')});
+      return;
+    }
+    var io=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}
+      });
+    },{threshold:0.12,rootMargin:'0px 0px -8% 0px'});
+    function wire(){document.querySelectorAll('.reveal:not(.in)').forEach(function(el){io.observe(el)})}
+    wire();
+    new MutationObserver(wire).observe(document.body,{childList:true,subtree:true});
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
+})();
+</script>
+</helmet>
+
+<header style="position:sticky;top:0;z-index:50;background:rgba(251,251,249,0.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)">
+  <div style="width:min(1240px, 100% - 40px);margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:24px;height:74px">
+    <a href="#top" aria-label="Kairo Studio — home" style="display:flex;align-items:center;gap:10px">
+      <span aria-hidden="true" style="width:22px;height:22px;background:var(--accent);display:block"></span>
+      <span style="font-weight:800;font-size:18px;letter-spacing:-0.035em;white-space:nowrap">Kairo Studio</span>
+    </a>
+    <nav class="nav-links" aria-label="Primary">
+      <ul style="display:flex;align-items:center;gap:30px;white-space:nowrap">
+        <li><a href="#services" style="font-size:14.5px;font-weight:600;letter-spacing:-0.01em">Services</a></li>
+        <li><a href="#clients" style="font-size:14.5px;font-weight:600;letter-spacing:-0.01em">Clients</a></li>
+        <li><a href="#faq" style="font-size:14.5px;font-weight:600;letter-spacing:-0.01em">FAQ</a></li>
+        <li><a href="#contact" style="font-size:14.5px;font-weight:600;letter-spacing:-0.01em">Contact</a></li>
+      </ul>
+    </nav>
+    <a href="#contact" class="btn" style="background:var(--ink);color:#fff;font-weight:700;font-size:14px;letter-spacing:-0.01em;padding:13px 24px;border-radius:6px;white-space:nowrap">Book a Call</a>
+  </div>
+</header>
+
+<main id="top" role="main">
+
+  <!-- HERO -->
+  <section aria-labelledby="hero-h" style="position:relative;border-bottom:1px solid var(--line);padding:clamp(64px,11vh,132px) 0 0;overflow:hidden">
+    <div style="width:min(1240px, 100% - 40px);margin:0 auto;position:relative">
+      <div aria-hidden="true" style="position:absolute;top:-14px;right:0;width:clamp(90px,11vw,150px);height:clamp(90px,11vw,150px);pointer-events:none">
+        <svg viewBox="0 0 120 120" style="width:100%;height:100%;display:block">
+          <g fill="none" stroke="var(--accent)" strokeWidth="1.6">
+            <path d="M60 12 L104 36 L104 84 L60 108 L16 84 L16 36 Z" />
+            <path d="M60 12 L60 60 L104 36" />
+            <path d="M60 60 L60 108" />
+            <path d="M60 60 L16 36" />
+          </g>
+        </svg>
+      </div>
+      <div class="reveal" style="max-width:19ch">
+        <p style="font-size:12px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);padding-bottom:26px">Design · SEO · Maintenance</p>
+        <h1 id="hero-h" style="font-weight:900;font-size:clamp(46px,9vw,124px);line-height:0.9;letter-spacing:-0.055em;text-wrap:balance">Websites built to convert.</h1>
+      </div>
+      <div class="grid-2 reveal" style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(24px,4vw,60px);align-items:end;padding:clamp(32px,5vw,56px) 0 clamp(40px,6vw,64px)">
+        <p style="font-size:clamp(17px,1.8vw,21px);line-height:1.5;color:var(--muted);max-width:44ch;letter-spacing:-0.015em">We design, rank and maintain sites that bring your business customers — not compliments.</p>
+        <div style="justify-self:start">
+          <a href="#contact" class="btn" style="display:inline-block;background:var(--ink);color:#fff;font-weight:700;font-size:16.5px;letter-spacing:-0.015em;padding:19px 38px;border-radius:6px;white-space:nowrap">Book a Call</a>
+        </div>
+      </div>
+      <sc-if value="{{ showScrollCue }}" hint-placeholder-val="{{ true }}">
+        <div style="border-top:1px solid var(--line);padding:20px 0 26px">
+          <a href="#services" style="display:inline-flex;align-items:center;gap:10px;font-size:13px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted)">
+            <span>Scroll down</span>
+            <span aria-hidden="true" style="font-size:15px">↓</span>
+          </a>
+        </div>
+      </sc-if>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section id="services" aria-labelledby="services-h" style="border-bottom:1px solid var(--line);padding:clamp(56px,8vh,104px) 0">
+    <div style="width:min(1240px, 100% - 40px);margin:0 auto;display:grid;gap:clamp(28px,4vw,52px)">
+      <div class="grid-2 reveal" style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(20px,4vw,60px);align-items:end">
+        <h2 id="services-h" style="font-weight:900;font-size:clamp(34px,5.4vw,72px);line-height:0.94;letter-spacing:-0.05em">Services</h2>
+        <p style="font-size:16.5px;line-height:1.6;color:var(--muted);max-width:42ch;letter-spacing:-0.01em">Three parts of one system. Buy them together and your site keeps earning after launch.</p>
+      </div>
+      <ul class="svc-grid" style="display:grid;grid-template-columns:repeat(3, minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line)">
+        <li class="svc reveal" style="background:var(--paper);padding:clamp(26px,3vw,42px);display:grid;gap:16px;align-content:start;min-height:clamp(240px,26vw,320px)">
+          <span style="font-weight:700;font-size:13px;letter-spacing:0.12em;color:var(--accent)">01</span>
+          <h3 style="font-weight:800;font-size:clamp(22px,2.4vw,30px);line-height:1.05;letter-spacing:-0.035em">Website Design</h3>
+          <p style="font-size:15.5px;line-height:1.6;color:var(--muted);letter-spacing:-0.01em">We build websites that turn visitors into paying customers.</p>
+          <a href="#contact" class="card-link" style="display:inline-flex;align-items:center;gap:9px;font-size:14px;font-weight:700;letter-spacing:-0.005em;margin-top:auto">Read More <span aria-hidden="true">→</span></a>
+        </li>
+        <li class="svc reveal" style="background:var(--paper);padding:clamp(26px,3vw,42px);display:grid;gap:16px;align-content:start;min-height:clamp(240px,26vw,320px)">
+          <span style="font-weight:700;font-size:13px;letter-spacing:0.12em;color:var(--accent)">02</span>
+          <h3 style="font-weight:800;font-size:clamp(22px,2.4vw,30px);line-height:1.05;letter-spacing:-0.035em">SEO</h3>
+          <p style="font-size:15.5px;line-height:1.6;color:var(--muted);letter-spacing:-0.01em">We get you found by the people already searching for what you sell.</p>
+          <a href="#contact" class="card-link" style="display:inline-flex;align-items:center;gap:9px;font-size:14px;font-weight:700;letter-spacing:-0.005em;margin-top:auto">Read More <span aria-hidden="true">→</span></a>
+        </li>
+        <li class="svc reveal" style="background:var(--paper);padding:clamp(26px,3vw,42px);display:grid;gap:16px;align-content:start;min-height:clamp(240px,26vw,320px)">
+          <span style="font-weight:700;font-size:13px;letter-spacing:0.12em;color:var(--accent)">03</span>
+          <h3 style="font-weight:800;font-size:clamp(22px,2.4vw,30px);line-height:1.05;letter-spacing:-0.035em">Website Maintenance</h3>
+          <p style="font-size:15.5px;line-height:1.6;color:var(--muted);letter-spacing:-0.01em">Your site stays fast, current and online — you never chase a developer again.</p>
+          <a href="#contact" class="card-link" style="display:inline-flex;align-items:center;gap:9px;font-size:14px;font-weight:700;letter-spacing:-0.005em;margin-top:auto">Read More <span aria-hidden="true">→</span></a>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- TRUSTED BY -->
+  <section id="clients" aria-labelledby="clients-h" style="border-bottom:1px solid var(--line);padding:clamp(48px,6vh,80px) 0">
+    <div style="width:min(1240px, 100% - 40px);margin:0 auto;display:grid;gap:clamp(24px,3vw,40px)">
+      <h2 id="clients-h" class="reveal" style="font-weight:700;font-size:13px;letter-spacing:0.16em;text-transform:uppercase;color:var(--muted)">Trusted by growing businesses</h2>
+      <ul class="logo-strip reveal" style="display:flex;flex-wrap:wrap;align-items:center;gap:clamp(28px,5vw,72px)">
+        <li style="font-weight:800;font-size:clamp(15px,1.5vw,18px);letter-spacing:-0.02em;color:#b6b6bd">[CLIENT LOGO]</li>
+        <li style="font-weight:800;font-size:clamp(15px,1.5vw,18px);letter-spacing:-0.02em;color:#b6b6bd">[CLIENT LOGO]</li>
+        <li style="font-weight:800;font-size:clamp(15px,1.5vw,18px);letter-spacing:-0.02em;color:#b6b6bd">[CLIENT LOGO]</li>
+        <li style="font-weight:800;font-size:clamp(15px,1.5vw,18px);letter-spacing:-0.02em;color:#b6b6bd">[CLIENT LOGO]</li>
+        <li style="font-weight:800;font-size:clamp(15px,1.5vw,18px);letter-spacing:-0.02em;color:#b6b6bd">[CLIENT LOGO]</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" aria-labelledby="faq-h" style="border-bottom:1px solid var(--line);padding:clamp(56px,8vh,104px) 0">
+    <div style="width:min(1240px, 100% - 40px);margin:0 auto;display:grid;gap:clamp(28px,4vw,48px)">
+      <h2 id="faq-h" class="reveal" style="font-weight:900;font-size:clamp(32px,5.2vw,68px);line-height:0.94;letter-spacing:-0.05em;max-width:20ch">Frequently Asked Questions</h2>
+      <div class="reveal" style="display:grid;border-top:1px solid var(--line)">
+        <details style="padding:clamp(20px,2.2vw,28px) 0">
+          <summary style="display:flex;align-items:center;justify-content:space-between;gap:24px;font-weight:800;font-size:clamp(18px,2vw,24px);letter-spacing:-0.03em">How much does it cost?<span class="faq-mark" aria-hidden="true" style="font-weight:400;font-size:26px;color:var(--accent);flex:0 0 auto;line-height:1">+</span></summary>
+          <p style="font-size:16px;line-height:1.65;color:var(--muted);max-width:66ch;padding-top:14px;letter-spacing:-0.01em">Most builds land between [£X] and [£X], care plans from [£X]/month. Fixed price agreed before we start — no hourly surprises.</p>
+        </details>
+        <details style="padding:clamp(20px,2.2vw,28px) 0">
+          <summary style="display:flex;align-items:center;justify-content:space-between;gap:24px;font-weight:800;font-size:clamp(18px,2vw,24px);letter-spacing:-0.03em">How long does it take?<span class="faq-mark" aria-hidden="true" style="font-weight:400;font-size:26px;color:var(--accent);flex:0 0 auto;line-height:1">+</span></summary>
+          <p style="font-size:16px;line-height:1.65;color:var(--muted);max-width:66ch;padding-top:14px;letter-spacing:-0.01em">Three weeks from kickoff to live for a standard build. Bigger sites take longer, and we give you a real date on the call.</p>
+        </details>
+        <details style="padding:clamp(20px,2.2vw,28px) 0">
+          <summary style="display:flex;align-items:center;justify-content:space-between;gap:24px;font-weight:800;font-size:clamp(18px,2vw,24px);letter-spacing:-0.03em">What's included?<span class="faq-mark" aria-hidden="true" style="font-weight:400;font-size:26px;color:var(--accent);flex:0 0 auto;line-height:1">+</span></summary>
+          <p style="font-size:16px;line-height:1.65;color:var(--muted);max-width:66ch;padding-top:14px;letter-spacing:-0.01em">Strategy, design, copy, build, technical SEO and launch. Hosting, updates and ongoing changes sit on the care plan.</p>
+        </details>
+        <details style="padding:clamp(20px,2.2vw,28px) 0">
+          <summary style="display:flex;align-items:center;justify-content:space-between;gap:24px;font-weight:800;font-size:clamp(18px,2vw,24px);letter-spacing:-0.03em">Do you work with my industry?<span class="faq-mark" aria-hidden="true" style="font-weight:400;font-size:26px;color:var(--accent);flex:0 0 auto;line-height:1">+</span></summary>
+          <p style="font-size:16px;line-height:1.65;color:var(--muted);max-width:66ch;padding-top:14px;letter-spacing:-0.01em">Mostly [service businesses, trades, clinics, B2B] — anywhere one enquiry is worth real money. If we're not a fit, we'll tell you and point you elsewhere.</p>
+        </details>
+        <details style="padding:clamp(20px,2.2vw,28px) 0">
+          <summary style="display:flex;align-items:center;justify-content:space-between;gap:24px;font-weight:800;font-size:clamp(18px,2vw,24px);letter-spacing:-0.03em">What if I already have a website?<span class="faq-mark" aria-hidden="true" style="font-weight:400;font-size:26px;color:var(--accent);flex:0 0 auto;line-height:1">+</span></summary>
+          <p style="font-size:16px;line-height:1.65;color:var(--muted);max-width:66ch;padding-top:14px;letter-spacing:-0.01em">Then we start there. Sometimes a rebuild is right; often it's faster to fix the pages already getting traffic. We'll say which.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINAL CTA -->
+  <section id="contact" aria-labelledby="cta-h" style="border-bottom:1px solid var(--line);padding:clamp(80px,13vh,168px) 0">
+    <div class="reveal" style="width:min(1240px, 100% - 40px);margin:0 auto;display:grid;gap:clamp(28px,4vw,44px);justify-items:start">
+      <h2 id="cta-h" style="font-weight:900;font-size:clamp(42px,8vw,110px);line-height:0.9;letter-spacing:-0.055em;max-width:17ch;text-wrap:balance">Ready to build something that sells?</h2>
+      <a href="#contact" class="btn" style="background:var(--accent);color:#fff;font-weight:700;font-size:17px;letter-spacing:-0.015em;padding:20px 42px;border-radius:6px;white-space:nowrap">Book a Call</a>
+    </div>
+  </section>
+
+  <!-- NEWSLETTER -->
+  <sc-if value="{{ showNewsletter }}" hint-placeholder-val="{{ true }}">
+  <section aria-labelledby="news-h" style="border-bottom:1px solid var(--line);padding:clamp(32px,4vh,52px) 0">
+    <div class="grid-2" style="width:min(1240px, 100% - 40px);margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(16px,3vw,48px);align-items:center">
+      <h2 id="news-h" style="font-weight:700;font-size:15.5px;letter-spacing:-0.015em;color:var(--muted);max-width:40ch">Not ready to talk? Get one practical way to win more leads, monthly.</h2>
+      <form style="display:flex;gap:10px;flex-wrap:wrap" onSubmit="{{ noop }}">
+        <label for="news-email" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap">Email address</label>
+        <input id="news-email" type="email" placeholder="you@company.com" style="flex:1 1 200px;min-width:0;border:1px solid var(--line);background:#fff;border-radius:6px;padding:13px 15px;font-size:15px;color:var(--ink)" />
+        <button type="submit" class="btn" style="border:0;background:var(--ink);color:#fff;font-weight:700;font-size:14.5px;padding:13px 24px;border-radius:6px;cursor:pointer;white-space:nowrap">Sign up</button>
+      </form>
+    </div>
+  </section>
+  </sc-if>
+</main>
+
+<footer role="contentinfo" style="padding:clamp(48px,7vh,84px) 0 30px">
+  <div style="width:min(1240px, 100% - 40px);margin:0 auto;display:grid;gap:clamp(36px,5vw,60px)">
+    <div class="foot-grid" style="display:grid;grid-template-columns:minmax(0,1.5fr) repeat(3, minmax(0,1fr));gap:clamp(28px,4vw,48px)">
+      <div style="display:grid;gap:14px;align-content:start;max-width:34ch">
+        <a href="#top" aria-label="Kairo Studio — home" style="display:flex;align-items:center;gap:10px">
+          <span aria-hidden="true" style="width:20px;height:20px;background:var(--accent);display:block"></span>
+          <span style="font-weight:800;font-size:17px;letter-spacing:-0.035em">Kairo Studio</span>
+        </a>
+        <p style="font-size:14.5px;line-height:1.65;color:var(--muted);letter-spacing:-0.01em">Websites, SEO and care plans for businesses that need the phone to ring.</p>
+      </div>
+      <nav aria-label="Footer — company" style="display:grid;gap:12px;align-content:start">
+        <h2 style="font-weight:700;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted)">Company</h2>
+        <ul style="display:grid;gap:10px">
+          <li><a href="#top" style="font-size:14.5px;font-weight:500">About</a></li>
+          <li><a href="#services" style="font-size:14.5px;font-weight:500">Services</a></li>
+          <li><a href="#top" style="font-size:14.5px;font-weight:500">Careers</a></li>
+          <li><a href="#contact" style="font-size:14.5px;font-weight:500">Contact</a></li>
+        </ul>
+      </nav>
+      <nav aria-label="Footer — services" style="display:grid;gap:12px;align-content:start">
+        <h2 style="font-weight:700;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted)">Services</h2>
+        <ul style="display:grid;gap:10px">
+          <li><a href="#services" style="font-size:14.5px;font-weight:500">Website Design</a></li>
+          <li><a href="#services" style="font-size:14.5px;font-weight:500">SEO</a></li>
+          <li><a href="#services" style="font-size:14.5px;font-weight:500">Maintenance</a></li>
+          <li><a href="#services" style="font-size:14.5px;font-weight:500">Care Plans</a></li>
+        </ul>
+      </nav>
+      <div style="display:grid;gap:12px;align-content:start">
+        <h2 style="font-weight:700;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted)">Contact</h2>
+        <ul style="display:grid;gap:10px">
+          <li><a href="#contact" style="font-size:14.5px;font-weight:500">hello@kairo.studio</a></li>
+          <li><a href="#contact" style="font-size:14.5px;font-weight:500">[+00 0000 000000]</a></li>
+          <li style="font-size:14.5px;color:var(--muted)">[City, Country]</li>
+        </ul>
+        <ul style="display:flex;gap:16px;padding-top:4px">
+          <li><a href="#contact" style="font-size:13.5px;font-weight:600">LinkedIn</a></li>
+          <li><a href="#contact" style="font-size:13.5px;font-weight:600">Instagram</a></li>
+        </ul>
+      </div>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:14px;justify-content:space-between;border-top:1px solid var(--line);padding-top:20px">
+      <p style="font-size:13px;color:var(--muted)">© 2026 Kairo Studio</p>
+      <p style="font-size:13px;color:var(--muted)">Placeholder wordmark — drop the real logo in the nav and footer</p>
+    </div>
+  </div>
+</footer>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;showNewsletter&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Sections&quot;},&quot;showScrollCue&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Sections&quot;}}">
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      noop: (e) => e.preventDefault(),
+      showNewsletter: this.props.showNewsletter ?? true,
+      showScrollCue: this.props.showScrollCue ?? true
+    };
+  }
+}
+
+</script>
+</body>
+</html>

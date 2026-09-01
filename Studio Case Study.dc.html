@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Studio — case study skeleton</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="styles.css">
+<script src="_ds/modernist-77638109-339f-484d-bf96-8f45c98374a1/_ds_bundle.js"></script>
+<style>
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--color-bg); color: var(--color-text); font-family: var(--font-body); -webkit-font-smoothing: antialiased; }
+  * { box-sizing: border-box; }
+  h1, h2, h3, h4, p, ul, ol, figure, blockquote, dl, dd, dt { margin: 0; }
+  ul, ol { list-style: none; padding: 0; }
+  a { color: var(--color-accent-700); text-decoration: none; }
+  a:hover { color: var(--color-accent-600); text-decoration: underline; }
+  :focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+  @media (max-width: 860px) {
+    .stack-narrow { grid-template-columns: 1fr !important; }
+    .sticky-aside { position: static !important; }
+  }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script src="anim.js"></script>
+</helmet>
+
+<!-- ===== HEADER ===== -->
+<header class="anim-section" data-animate="header-pin" style="position:sticky;top:0;z-index:50;background:var(--color-bg);border-bottom:2px solid var(--color-divider)">
+  <div style="width:min(1320px, 100% - clamp(20px,5vw,64px));margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:var(--space-4);min-height:64px">
+    <a href="Studio Home.dc.html" target="_blank" rel="noopener" style="font-family:var(--font-heading);font-weight:800;font-size:18px;color:var(--color-text);text-decoration:none">[LOGO]</a>
+    <nav aria-label="Primary">
+      <ul style="display:flex;flex-wrap:wrap;gap:clamp(12px,2vw,28px)">
+        <li><a href="Studio Work.dc.html" target="_blank" rel="noopener" style="font-size:14px;font-weight:500;color:var(--color-text);text-decoration:none">Work</a></li>
+        <li><a href="Studio About.dc.html" target="_blank" rel="noopener" style="font-size:14px;font-weight:500;color:var(--color-text);text-decoration:none">Studio</a></li>
+      </ul>
+    </nav>
+  </div>
+  <!-- Reading progress rail: animation hook only, 0 width in the skeleton. -->
+  <div class="read-progress" data-animate="scrub-progress" aria-hidden="true" style="height:2px;background:var(--color-accent);width:0"></div>
+</header>
+
+<main role="main">
+  <!-- ===== 01 · CASE HEADER — title, meta table, hero image.
+       Animates: title mask-up, meta rows stagger, hero clip wipe (and the
+       flip target if the grid card morphs into this image). ===== -->
+  <article>
+    <header class="anim-section" data-anim-load-group="" style="border-bottom:2px solid var(--color-divider);padding:clamp(40px,6vw,80px) 0 0">
+      <div style="width:min(1320px, 100% - clamp(20px,5vw,64px));margin:0 auto;display:grid;gap:clamp(24px,3vw,48px)">
+        <nav aria-label="Breadcrumb"><ol style="display:flex;flex-wrap:wrap;gap:var(--space-2);font:400 11px/1.5 ui-monospace,Menlo,monospace;color:var(--color-neutral-600)"><li><a href="Studio Home.dc.html" target="_blank" rel="noopener" style="color:var(--color-neutral-600);text-decoration:none">Home</a></li><li aria-hidden="true">/</li><li><a href="Studio Work.dc.html" target="_blank" rel="noopener" style="color:var(--color-neutral-600);text-decoration:none">Work</a></li><li aria-hidden="true">/</li><li>Project name 01</li></ol></nav>
+        <h1 class="anim-target" data-animate="mask-up" style="font-family:var(--font-heading);font-weight:800;font-size:clamp(34px,6.5vw,84px);line-height:0.98;letter-spacing:-0.03em;max-width:22ch">Lorem ipsum dolor sit amet</h1>
+        <dl class="stagger-group" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(150px, 1fr));gap:2px;background:var(--color-divider);border:2px solid var(--color-divider)">
+          <sc-for list="{{ meta }}" as="m" hint-placeholder-count="4">
+            <div class="stagger-item" style="background:var(--color-bg);padding:var(--space-4)">
+              <div data-anim-inner="" data-animate="fade-up" data-anim-stagger="0.06" style="display:grid;gap:var(--space-2)">
+                <dt style="font:400 11px/1.4 ui-monospace,Menlo,monospace;color:var(--color-neutral-600)">{{ m.label }}</dt>
+                <dd style="font-size:15px;line-height:1.4;font-weight:600">{{ m.value }}</dd>
+              </div>
+            </div>
+          </sc-for>
+        </dl>
+        <figure class="anim-target" data-animate="clip-reveal" style="padding-bottom:clamp(28px,4vw,56px)">
+          <div class="grayscale" role="img" aria-label="Placeholder for hero project image" style="aspect-ratio:16/9;border:2px dashed var(--color-neutral-400);background:repeating-linear-gradient(135deg, transparent 0 10px, color-mix(in srgb, var(--color-neutral-400) 26%, transparent) 10px 11px);display:grid;place-items:center"><span style="font:400 12px/1.5 ui-monospace,Menlo,monospace;color:var(--color-neutral-700)">[IMAGE] hero · 16:9</span></div>
+          <figcaption style="font:400 11px/1.6 ui-monospace,Menlo,monospace;color:var(--color-neutral-600);padding-top:var(--space-2)">Fig. 01 — caption placeholder</figcaption>
+        </figure>
+      </div>
+    </header>
+
+    <!-- ===== 02 · BODY — prose column + sticky aside. Animates: paragraph
+         fade-up per block, aside pinned (sticky, not GSAP pin, to avoid a
+         second pin-spacer fighting the header). ===== -->
+    <section class="anim-section" data-animate="section" data-scroll-trigger="top 80%" aria-labelledby="body-h" style="border-bottom:2px solid var(--color-divider);padding:clamp(40px,5vw,80px) 0">
+      <div style="width:min(1320px, 100% - clamp(20px,5vw,64px));margin:0 auto">
+        <div class="stack-narrow" style="display:grid;grid-template-columns:minmax(0,7fr) minmax(0,4fr);gap:clamp(24px,4vw,64px)">
+          <div style="display:grid;gap:clamp(20px,2.5vw,36px)">
+            <h2 id="body-h" class="anim-target" data-animate="clip-reveal" style="font-family:var(--font-heading);font-weight:800;font-size:clamp(24px,3vw,38px);line-height:1.08;letter-spacing:-0.02em;max-width:34ch">Ut enim ad minim veniam</h2>
+            <sc-for list="{{ paras }}" as="t" hint-placeholder-count="4">
+              <p class="anim-target stagger-item" data-animate="fade-up" data-anim-stagger="0.08" style="font-size:16px;line-height:1.72;color:var(--color-neutral-800);max-width:66ch;text-wrap:pretty">{{ t }}</p>
+            </sc-for>
+            <blockquote class="anim-target" data-animate="mask-up" style="border-left:2px solid var(--color-accent);padding-left:var(--space-4);font-family:var(--font-heading);font-weight:600;font-size:clamp(18px,2.2vw,28px);line-height:1.3;max-width:40ch">Quisquam est qui dolorem ipsum quia dolor sit amet.</blockquote>
+            <figure class="anim-target" data-animate="clip-reveal">
+              <div class="grayscale" role="img" aria-label="Placeholder for inline project image" style="aspect-ratio:3/2;border:2px dashed var(--color-neutral-400);background:repeating-linear-gradient(135deg, transparent 0 10px, color-mix(in srgb, var(--color-neutral-400) 26%, transparent) 10px 11px);display:grid;place-items:center"><span style="font:400 11px/1.5 ui-monospace,Menlo,monospace;color:var(--color-neutral-700)">[IMAGE] inline · 3:2</span></div>
+              <figcaption style="font:400 11px/1.6 ui-monospace,Menlo,monospace;color:var(--color-neutral-600);padding-top:var(--space-2)">Fig. 02 — caption placeholder</figcaption>
+            </figure>
+          </div>
+          <aside class="sticky-aside" aria-labelledby="aside-h" style="position:sticky;top:96px;align-self:start;display:grid;gap:var(--space-4);border-top:2px solid var(--color-divider);padding-top:var(--space-4)">
+            <h2 id="aside-h" style="font:600 11px/1 var(--font-body);letter-spacing:0.14em;text-transform:uppercase;color:var(--color-neutral-600)">On this project</h2>
+            <ul class="stagger-group" style="display:grid;gap:var(--space-3)">
+              <li class="stagger-item" data-animate="fade-up" style="font-size:14px;line-height:1.5;border-top:2px solid var(--color-divider);padding-top:var(--space-2)">Lorem ipsum dolor</li>
+              <li class="stagger-item" data-animate="fade-up" style="font-size:14px;line-height:1.5;border-top:2px solid var(--color-divider);padding-top:var(--space-2)">Consectetur adipiscing</li>
+              <li class="stagger-item" data-animate="fade-up" style="font-size:14px;line-height:1.5;border-top:2px solid var(--color-divider);padding-top:var(--space-2)">Sed do eiusmod tempor</li>
+            </ul>
+            <a href="Studio Home.dc.html#contact" target="_blank" rel="noopener" style="border:2px solid var(--color-text);color:var(--color-text);padding:12px var(--space-4);font-size:13px;font-weight:600;text-decoration:none;justify-self:start">Start a project</a>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 03 · IMAGE SET — gallery strip. Animates: horizontal pinned
+         scroll (strongest pin candidate here). Risk: pinning a wide track
+         disables native scroll on mobile — gate it by width. ===== -->
+    <section class="anim-section" data-animate="pin-horizontal" data-scroll-trigger="top top" aria-label="Project gallery" style="border-bottom:2px solid var(--color-divider);padding:clamp(40px,5vw,80px) 0;overflow:hidden">
+      <div style="width:min(1320px, 100% - clamp(20px,5vw,64px));margin:0 auto;display:grid;gap:var(--space-4)">
+        <h2 style="font:600 12px/1 var(--font-body);letter-spacing:0.14em;text-transform:uppercase;color:var(--color-neutral-600)">Gallery</h2>
+        <ul class="stagger-group" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));gap:clamp(16px,2vw,32px)">
+          <sc-for list="{{ shots }}" as="s" hint-placeholder-count="3">
+            <li class="stagger-item anim-target" data-animate="fade-up" data-anim-stagger="0.1"><div class="grayscale" role="img" aria-label="Placeholder for gallery image" style="aspect-ratio:1/1;border:2px dashed var(--color-neutral-400);background:repeating-linear-gradient(135deg, transparent 0 10px, color-mix(in srgb, var(--color-neutral-400) 26%, transparent) 10px 11px);display:grid;place-items:center"><span style="font:400 11px/1.5 ui-monospace,Menlo,monospace;color:var(--color-neutral-700)">{{ s }}</span></div></li>
+          </sc-for>
+        </ul>
+      </div>
+    </section>
+  </article>
+
+  <!-- ===== 04 · NEXT PROJECT — page-to-page transition hook. ===== -->
+  <section class="anim-section" data-animate="section" aria-labelledby="next-h" style="padding:clamp(40px,5vw,80px) 0">
+    <div style="width:min(1320px, 100% - clamp(20px,5vw,64px));margin:0 auto;display:grid;gap:var(--space-4)">
+      <p style="font:600 12px/1 var(--font-body);letter-spacing:0.14em;text-transform:uppercase;color:var(--color-neutral-600)">Next project</p>
+      <h2 id="next-h" class="anim-target" data-animate="mask-up" style="font-family:var(--font-heading);font-weight:800;font-size:clamp(30px,5vw,64px);line-height:1;letter-spacing:-0.03em"><a href="Studio Case Study.dc.html" target="_blank" rel="noopener" style="color:var(--color-text);text-decoration:none">Project name 02</a></h2>
+    </div>
+  </section>
+</main>
+
+<footer role="contentinfo" style="padding:clamp(32px,4vw,56px) 0">
+  <div style="width:min(1320px, 100% - clamp(20px,5vw,64px));margin:0 auto;display:flex;flex-wrap:wrap;gap:var(--space-4);justify-content:space-between;border-top:2px solid var(--color-divider);padding-top:var(--space-4)">
+    <p style="font:400 11px/1.5 ui-monospace,Menlo,monospace;color:var(--color-neutral-600)">&copy; 0000 Placeholder Studio</p>
+    <nav aria-label="Footer"><ul style="display:flex;flex-wrap:wrap;gap:var(--space-4)"><li><a href="Studio Home.dc.html" target="_blank" rel="noopener" style="font:400 11px/1.5 ui-monospace,Menlo,monospace;color:var(--color-neutral-600);text-decoration:none">Home</a></li><li><a href="Studio Work.dc.html" target="_blank" rel="noopener" style="font:400 11px/1.5 ui-monospace,Menlo,monospace;color:var(--color-neutral-600);text-decoration:none">Work</a></li></ul></nav>
+  </div>
+</footer>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      meta: [
+        { label: "Client", value: "[CLIENT 01]" },
+        { label: "Year", value: "0000" },
+        { label: "Discipline", value: "Lorem ipsum" },
+        { label: "Team", value: "0 people" },
+      ],
+      paras: Array.from({ length: 4 }, () =>
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+      ),
+      shots: ["[IMAGE] 1:1", "[IMAGE] 1:1", "[IMAGE] 1:1"],
+    };
+  }
+}
+
+</script>
+</body>
+</html>

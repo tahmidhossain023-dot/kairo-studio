@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kairo Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Manrope:wght@400;500;600;700&display=swap">
+<style>
+  :root{ --ink:#f5f3fa; --ink-muted:#a7a3ba; --accent:#a855f7; --accent-deep:#6d28d9; --card:linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.018)); }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:#0a0612;color:var(--ink);font-family:"Manrope",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  h1,h2,h3,p,ul,ol,dl,dd,dt,blockquote{margin:0}
+  ul,ol{list-style:none;padding:0}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{color:#cba6ff}
+  :focus-visible{outline:2px solid #fff;outline-offset:3px}
+  .glow-layer{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+  .blob{position:absolute;border-radius:50%;filter:blur(110px);will-change:transform,opacity}
+  .blob-a{width:70vmax;height:70vmax;left:-15vmax;top:-20vmax;background:radial-gradient(circle,rgba(168,85,247,0.55) 0%,rgba(109,40,217,0.28) 45%,rgba(10,6,18,0) 72%);animation:drift-a 22s ease-in-out infinite}
+  .blob-b{width:60vmax;height:60vmax;right:-18vmax;bottom:-15vmax;background:radial-gradient(circle,rgba(139,92,246,0.5) 0%,rgba(88,28,135,0.26) 48%,rgba(10,6,18,0) 74%);animation:drift-b 26s ease-in-out infinite}
+  .blob-c{width:46vmax;height:46vmax;left:32vw;top:38vh;background:radial-gradient(circle,rgba(196,141,255,0.4) 0%,rgba(109,40,217,0.2) 50%,rgba(10,6,18,0) 76%);animation:drift-c 19s ease-in-out infinite}
+  @keyframes drift-a{0%{transform:translate3d(0,0,0) scale(1);opacity:0.85}33%{transform:translate3d(6vw,4vh,0) scale(1.08);opacity:1}66%{transform:translate3d(2vw,8vh,0) scale(0.96);opacity:0.7}100%{transform:translate3d(0,0,0) scale(1);opacity:0.85}}
+  @keyframes drift-b{0%{transform:translate3d(0,0,0) scale(1.05);opacity:0.75}50%{transform:translate3d(-7vw,-6vh,0) scale(0.94);opacity:1}100%{transform:translate3d(0,0,0) scale(1.05);opacity:0.75}}
+  @keyframes drift-c{0%{transform:translate3d(0,0,0) scale(1);opacity:0.6}50%{transform:translate3d(5vw,-5vh,0) scale(1.12);opacity:0.9}100%{transform:translate3d(0,0,0) scale(1);opacity:0.6}}
+  .cursor-glow{position:fixed;top:0;left:0;width:460px;height:460px;margin:-230px 0 0 -230px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,0.42) 0%,rgba(233,213,255,0.2) 36%,rgba(255,255,255,0) 70%);filter:blur(40px);mix-blend-mode:screen;pointer-events:none;z-index:3;opacity:0;transition:opacity .5s ease;will-change:transform}
+  main,header,footer{position:relative;z-index:2}
+  .aurora{position:absolute;left:50%;bottom:-6vh;width:170vw;height:62vh;transform:translateX(-50%);pointer-events:none}
+  .wave{transform-box:fill-box;transform-origin:center;will-change:transform,opacity}
+  .wave-1{animation:wave-a 16s ease-in-out infinite}
+  .wave-2{animation:wave-b 21s ease-in-out infinite}
+  .wave-3{animation:wave-c 13s ease-in-out infinite}
+  .flow{transform-box:fill-box;transform-origin:center;will-change:stroke-dashoffset}
+  .flow-1{opacity:0.5;stroke-dasharray:520 1160;animation:flow-run 16s linear infinite, wave-c 13s ease-in-out infinite}
+  @keyframes flow-run{from{stroke-dashoffset:1680}to{stroke-dashoffset:0}}
+  @keyframes wave-a{0%,100%{transform:translate3d(0,0,0) scaleY(1);opacity:0.8}50%{transform:translate3d(-46px,16px,0) scaleY(1.16);opacity:1}}
+  @keyframes wave-b{0%,100%{transform:translate3d(0,0,0) scaleY(1.06);opacity:0.5}50%{transform:translate3d(58px,-20px,0) scaleY(0.88);opacity:0.8}}
+  @keyframes wave-c{0%,100%{transform:translate3d(0,0,0) scaleY(0.92);opacity:0.3}50%{transform:translate3d(-30px,-12px,0) scaleY(1.2);opacity:0.6}}
+  @keyframes fade-up{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+  @keyframes fade-in{from{opacity:0}to{opacity:1}}
+  .cta-pill{transition:transform .25s ease}
+  .cta-pill:hover{transform:translateY(-2px)}
+  @media (max-width:900px){ .two-col{grid-template-columns:1fr !important} .steps{grid-template-columns:1fr 1fr !important} }
+  @media (max-width:700px){ .nav-links{display:none !important} .steps{grid-template-columns:1fr !important} }
+  @media (prefers-reduced-motion: reduce){ *,*::before,*::after{animation:none !important;transition:none !important} }
+</style>
+</helmet>
+
+<div class="glow-layer" aria-hidden="true">
+  <div class="blob blob-a"></div>
+  <div class="blob blob-b"></div>
+  <div class="blob blob-c"></div>
+  <svg class="aurora" viewBox="0 0 1200 520" preserveAspectRatio="none">
+    <defs>
+      <linearGradient id="auroraCore" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stopColor="#f3e8ff" stopOpacity="0" />
+        <stop offset="0.22" stopColor="#f3e8ff" stopOpacity="0.62" />
+        <stop offset="0.48" stopColor="#c084fc" stopOpacity="0.55" />
+        <stop offset="0.78" stopColor="#7c3aed" stopOpacity="0.28" />
+        <stop offset="1" stopColor="#7c3aed" stopOpacity="0" />
+      </linearGradient>
+      <linearGradient id="auroraBright" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stopColor="#ddd6fe" stopOpacity="0" />
+        <stop offset="0.3" stopColor="#f5f3ff" stopOpacity="0.85" />
+        <stop offset="0.66" stopColor="#ddd6fe" stopOpacity="0.6" />
+        <stop offset="1" stopColor="#c4b5fd" stopOpacity="0" />
+      </linearGradient>
+      <radialGradient id="auroraEdge" cx="0.5" cy="0.5" r="0.5">
+        <stop offset="0" stopColor="#ffffff" stopOpacity="1" />
+        <stop offset="0.52" stopColor="#ffffff" stopOpacity="1" />
+        <stop offset="0.78" stopColor="#ffffff" stopOpacity="0.45" />
+        <stop offset="1" stopColor="#ffffff" stopOpacity="0" />
+      </radialGradient>
+      <mask id="auroraMask" maskUnits="userSpaceOnUse" x="-400" y="-300" width="2000" height="1120">
+        <rect x="-400" y="-300" width="2000" height="1120" fill="url(#auroraEdge)" />
+      </mask>
+      <filter id="softBig" x="-60%" y="-200%" width="220%" height="500%" filterUnits="objectBoundingBox">
+        <feGaussianBlur stdDeviation="34" />
+      </filter>
+      <filter id="softMid" x="-60%" y="-200%" width="220%" height="500%" filterUnits="objectBoundingBox">
+        <feGaussianBlur stdDeviation="22" />
+      </filter>
+      <filter id="softSmall" x="-60%" y="-200%" width="220%" height="500%" filterUnits="objectBoundingBox">
+        <feGaussianBlur stdDeviation="15" />
+      </filter>
+      <filter id="softFlow" x="-60%" y="-200%" width="220%" height="500%" filterUnits="objectBoundingBox">
+        <feGaussianBlur stdDeviation="13" />
+      </filter>
+      <filter id="softFlowThin" x="-60%" y="-200%" width="220%" height="500%" filterUnits="objectBoundingBox">
+        <feGaussianBlur stdDeviation="9" />
+      </filter>
+    </defs>
+    <g mask="url(#auroraMask)">
+      <path class="wave wave-1" filter="url(#softBig)" d="M-240 260 C 180 220 260 100 480 130 C 700 158 720 280 940 260 C 1120 246 1200 170 1440 180" fill="none" stroke="url(#auroraCore)" strokeWidth="150" strokeLinecap="butt" />
+      <path class="wave wave-2" filter="url(#softMid)" d="M-240 280 C 200 250 280 130 500 158 C 720 186 740 300 960 276 C 1140 258 1220 190 1440 198" fill="none" stroke="url(#auroraCore)" strokeWidth="96" strokeLinecap="butt" />
+      <path class="wave wave-3" filter="url(#softSmall)" d="M-240 246 C 170 208 250 96 470 122 C 690 148 710 268 930 248 C 1110 232 1190 162 1440 172" fill="none" stroke="url(#auroraBright)" strokeWidth="46" strokeLinecap="butt" />
+      <path class="flow flow-1" filter="url(#softFlow)" d="M-240 246 C 170 208 250 96 470 122 C 690 148 710 268 930 248 C 1110 232 1190 162 1440 172" fill="none" stroke="#ffffff" strokeWidth="38" strokeLinecap="round" />
+    </g>
+  </svg>
+</div>
+<div class="cursor-glow" aria-hidden="true"></div>
+
+<header style="position:fixed;top:0;left:0;right:0;z-index:60;backdrop-filter:blur(18px);background:linear-gradient(180deg, rgba(10,6,18,0.85), rgba(10,6,18,0.4));border-bottom:1px solid rgba(255,255,255,0.06)">
+  <div style="width:min(1200px, 100% - 36px);margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:22px;height:72px">
+    <a href="#top" style="display:flex;align-items:center;gap:10px;color:var(--ink)">
+      <span aria-hidden="true" style="width:25px;height:25px;border-radius:8px;background:linear-gradient(140deg, var(--accent), var(--accent-deep));box-shadow:0 0 20px rgba(168,85,247,0.55);display:block"></span>
+      <span style="font-family:'Sora',sans-serif;font-weight:700;font-size:16.5px;letter-spacing:-0.01em;white-space:nowrap">Kairo Studio</span>
+    </a>
+    <nav class="nav-links" aria-label="Primary">
+      <ul style="display:flex;align-items:center;gap:28px;white-space:nowrap">
+        <li><a href="#about" style="font-size:14px;font-weight:500;color:var(--ink-muted)">Studio</a></li>
+        <li><a href="#services" style="font-size:14px;font-weight:500;color:var(--ink-muted)">Services</a></li>
+        <li><a href="#process" style="font-size:14px;font-weight:500;color:var(--ink-muted)">Process</a></li>
+        <li><a href="#contact" style="font-size:14px;font-weight:500;color:var(--ink-muted)">Contact</a></li>
+      </ul>
+    </nav>
+    <a href="#contact" class="cta-pill" style="background:#fff;color:#0a0612;font-weight:700;font-size:14px;padding:12px 22px;border-radius:999px;white-space:nowrap">Start a project</a>
+  </div>
+</header>
+
+<main id="top" role="main">
+  <section aria-labelledby="hero-h" style="position:relative;padding:clamp(126px,16vh,190px) 0 clamp(70px,9vh,110px)">
+    <div style="position:relative;z-index:1;width:min(1200px, 100% - 36px);margin:0 auto;text-align:center;display:grid;gap:24px;justify-items:center;max-width:880px">
+      <p style="font-size:11px;font-weight:700;letter-spacing:0.28em;text-transform:uppercase;color:rgba(214,196,255,0.75);animation:fade-in .9s ease both">Digital product studio</p>
+      <h1 id="hero-h" style="font-family:'Sora',sans-serif;font-weight:800;font-size:clamp(38px,6.4vw,80px);line-height:1.03;letter-spacing:-0.035em;text-wrap:balance;text-shadow:0 2px 28px rgba(10,6,18,0.75);animation:fade-up .9s cubic-bezier(.22,1,.36,1) both;animation-delay:.06s">Software that carries your reputation</h1>
+      <p style="font-size:clamp(16px,1.6vw,19px);line-height:1.6;color:#c9c6d6;max-width:56ch;animation:fade-up .9s cubic-bezier(.22,1,.36,1) both;animation-delay:.14s">Kairo Studio designs and ships interfaces for teams whose product is the first thing a customer judges them on.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:14px;justify-content:center;animation:fade-up .9s cubic-bezier(.22,1,.36,1) both;animation-delay:.22s">
+        <a href="#contact" class="cta-pill" style="background:#fff;color:#0a0612;font-weight:700;font-size:15px;padding:16px 30px;border-radius:999px;white-space:nowrap">Start a project</a>
+        <a href="#services" class="cta-pill" style="border:1px solid rgba(255,255,255,0.16);background:rgba(10,6,18,0.7);color:var(--ink);font-weight:600;font-size:15px;padding:16px 28px;border-radius:999px;backdrop-filter:blur(10px);white-space:nowrap">See the work</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="about" aria-labelledby="about-h" style="padding:clamp(80px,11vh,140px) 0">
+    <div style="width:min(1200px, 100% - 36px);margin:0 auto;display:grid;gap:clamp(26px,3.4vw,48px)">
+      <p style="font-size:11px;font-weight:700;letter-spacing:0.28em;text-transform:uppercase;color:rgba(214,196,255,0.72)">Who we are</p>
+      <div class="two-col" style="display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:clamp(28px,5vw,72px);align-items:start">
+        <h2 id="about-h" style="font-family:'Sora',sans-serif;font-weight:700;font-size:clamp(27px,3.8vw,46px);line-height:1.1;letter-spacing:-0.03em;text-wrap:balance">A small studio, deliberately. The people who scope the work are the people who make it.</h2>
+        <p style="font-size:16px;line-height:1.75;color:var(--ink-muted)">We work in short, senior engagements: one designer and one engineer embedded with your team, shipping to production rather than handing over a folder of screens.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="services" aria-labelledby="services-h" style="padding:clamp(70px,10vh,120px) 0">
+    <div style="width:min(1200px, 100% - 36px);margin:0 auto;display:grid;gap:clamp(26px,3.4vw,48px)">
+      <div style="display:grid;gap:16px;max-width:620px">
+        <p style="font-size:11px;font-weight:700;letter-spacing:0.28em;text-transform:uppercase;color:rgba(214,196,255,0.72)">What we do</p>
+        <h2 id="services-h" style="font-family:'Sora',sans-serif;font-weight:700;font-size:clamp(27px,3.8vw,46px);line-height:1.1;letter-spacing:-0.03em">Three things, done properly</h2>
+      </div>
+      <ul style="display:grid;grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));gap:18px">
+        <li style="background:var(--card);border:1px solid rgba(168,85,247,0.16);border-radius:22px;backdrop-filter:blur(14px);padding:clamp(24px,2.4vw,34px);display:grid;gap:14px;align-content:start">
+          <span aria-hidden="true" style="width:38px;height:38px;border-radius:12px;background:linear-gradient(140deg,rgba(168,85,247,0.85),rgba(109,40,217,0.5));display:block"></span>
+          <h3 style="font-family:'Sora',sans-serif;font-weight:600;font-size:20px;letter-spacing:-0.01em">Product design</h3>
+          <p style="font-size:15px;line-height:1.7;color:var(--ink-muted)">End-to-end interface design for new surfaces and rebuilds.</p>
+        </li>
+        <li style="background:var(--card);border:1px solid rgba(168,85,247,0.16);border-radius:22px;backdrop-filter:blur(14px);padding:clamp(24px,2.4vw,34px);display:grid;gap:14px;align-content:start">
+          <span aria-hidden="true" style="width:38px;height:38px;border-radius:12px;background:linear-gradient(140deg,rgba(168,85,247,0.85),rgba(109,40,217,0.5));display:block"></span>
+          <h3 style="font-family:'Sora',sans-serif;font-weight:600;font-size:20px;letter-spacing:-0.01em">Design systems</h3>
+          <p style="font-size:15px;line-height:1.7;color:var(--ink-muted)">A component library your engineers actually use.</p>
+        </li>
+        <li style="background:var(--card);border:1px solid rgba(168,85,247,0.16);border-radius:22px;backdrop-filter:blur(14px);padding:clamp(24px,2.4vw,34px);display:grid;gap:14px;align-content:start">
+          <span aria-hidden="true" style="width:38px;height:38px;border-radius:12px;background:linear-gradient(140deg,rgba(168,85,247,0.85),rgba(109,40,217,0.5));display:block"></span>
+          <h3 style="font-family:'Sora',sans-serif;font-weight:600;font-size:20px;letter-spacing:-0.01em">Motion &amp; front-end</h3>
+          <p style="font-size:15px;line-height:1.7;color:var(--ink-muted)">Interaction and motion built in code, tuned on real devices.</p>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="process" aria-labelledby="process-h" style="padding:clamp(70px,10vh,120px) 0">
+    <div style="width:min(1200px, 100% - 36px);margin:0 auto;display:grid;gap:clamp(30px,4vw,52px)">
+      <div style="display:grid;gap:16px;max-width:640px">
+        <p style="font-size:11px;font-weight:700;letter-spacing:0.28em;text-transform:uppercase;color:rgba(214,196,255,0.72)">How we work</p>
+        <h2 id="process-h" style="font-family:'Sora',sans-serif;font-weight:700;font-size:clamp(27px,3.8vw,46px);line-height:1.1;letter-spacing:-0.03em">Four weeks to a decision, six to a release</h2>
+      </div>
+      <ol class="steps" style="display:grid;grid-template-columns:repeat(4, minmax(0,1fr));gap:16px">
+        <li style="background:var(--card);border:1px solid rgba(168,85,247,0.16);border-radius:20px;backdrop-filter:blur(16px);padding:24px;display:grid;gap:11px">
+          <span style="font-family:'Sora',sans-serif;font-weight:700;font-size:13px;letter-spacing:0.16em;color:var(--accent)">01</span>
+          <h3 style="font-family:'Sora',sans-serif;font-weight:600;font-size:18px">Frame</h3>
+          <p style="font-size:14px;line-height:1.65;color:var(--ink-muted)">A week of audit and interviews.</p>
+        </li>
+        <li style="background:var(--card);border:1px solid rgba(168,85,247,0.16);border-radius:20px;backdrop-filter:blur(16px);padding:24px;display:grid;gap:11px">
+          <span style="font-family:'Sora',sans-serif;font-weight:700;font-size:13px;letter-spacing:0.16em;color:var(--accent)">02</span>
+          <h3 style="font-family:'Sora',sans-serif;font-weight:600;font-size:18px">Design</h3>
+          <p style="font-size:14px;line-height:1.65;color:var(--ink-muted)">Two weeks of flows and prototypes.</p>
+        </li>
+        <li style="background:var(--card);border:1px solid rgba(168,85,247,0.16);border-radius:20px;backdrop-filter:blur(16px);padding:24px;display:grid;gap:11px">
+          <span style="font-family:'Sora',sans-serif;font-weight:700;font-size:13px;letter-spacing:0.16em;color:var(--accent)">03</span>
+          <h3 style="font-family:'Sora',sans-serif;font-weight:600;font-size:18px">Build</h3>
+          <p style="font-size:14px;line-height:1.65;color:var(--ink-muted)">Written into your codebase, behind flags.</p>
+        </li>
+        <li style="background:var(--card);border:1px solid rgba(168,85,247,0.16);border-radius:20px;backdrop-filter:blur(16px);padding:24px;display:grid;gap:11px">
+          <span style="font-family:'Sora',sans-serif;font-weight:700;font-size:13px;letter-spacing:0.16em;color:var(--accent)">04</span>
+          <h3 style="font-family:'Sora',sans-serif;font-weight:600;font-size:18px">Release</h3>
+          <p style="font-size:14px;line-height:1.65;color:var(--ink-muted)">We ship with you and watch week one.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section id="contact" aria-labelledby="cta-h" style="padding:clamp(90px,13vh,160px) 0">
+    <div style="width:min(1200px, 100% - 36px);margin:0 auto;text-align:center;display:grid;gap:24px;justify-items:center">
+      <p style="font-size:11px;font-weight:700;letter-spacing:0.28em;text-transform:uppercase;color:rgba(214,196,255,0.75)">Start here</p>
+      <h2 id="cta-h" style="font-family:'Sora',sans-serif;font-weight:800;font-size:clamp(32px,5.4vw,64px);line-height:1.04;letter-spacing:-0.035em;max-width:22ch;text-wrap:balance">Tell us what you are shipping next</h2>
+      <a href="#contact" class="cta-pill" style="background:#fff;color:#0a0612;font-weight:700;font-size:16px;padding:18px 34px;border-radius:999px;white-space:nowrap">Book a call</a>
+    </div>
+  </section>
+</main>
+
+<footer role="contentinfo" style="border-top:1px solid rgba(255,255,255,0.06);padding:clamp(38px,6vh,60px) 0 30px">
+  <div style="width:min(1200px, 100% - 36px);margin:0 auto;display:flex;flex-wrap:wrap;gap:18px;align-items:center;justify-content:space-between">
+    <a href="#top" style="display:flex;align-items:center;gap:10px;color:var(--ink)">
+      <span aria-hidden="true" style="width:22px;height:22px;border-radius:7px;background:linear-gradient(140deg, var(--accent), var(--accent-deep));display:block"></span>
+      <span style="font-family:'Sora',sans-serif;font-weight:700;font-size:15px;letter-spacing:-0.01em">Kairo Studio</span>
+    </a>
+    <p style="font-size:12.5px;color:rgba(167,163,186,0.75)">© 2026 Kairo Studio</p>
+  </div>
+</footer>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  componentDidMount() {
+    this._startCursorGlow();
+  }
+  _startCursorGlow() {
+    var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var hasHover = window.matchMedia("(hover: hover)").matches;
+    if (reduced || !hasHover) return;
+    var el = document.querySelector(".cursor-glow");
+    if (!el) {
+      this._glowRetry = setTimeout(this._startCursorGlow.bind(this), 80);
+      return;
+    }
+    var tx = window.innerWidth / 2, ty = window.innerHeight / 2, cx = tx, cy = ty, active = false, raf;
+    function onMove(e) {
+      tx = e.clientX; ty = e.clientY;
+      if (!active) { active = true; cx = tx; cy = ty; el.style.opacity = "1"; }
+    }
+    function onLeave() { el.style.opacity = "0"; active = false; }
+    window.addEventListener("mousemove", onMove, { passive: true });
+    document.addEventListener("mouseleave", onLeave);
+    function loop() {
+      cx += (tx - cx) * 0.09;
+      cy += (ty - cy) * 0.09;
+      el.style.transform = "translate3d(" + cx + "px," + cy + "px,0)";
+      raf = requestAnimationFrame(loop);
+    }
+    loop();
+    this._cleanupCursorGlow = function () {
+      window.removeEventListener("mousemove", onMove);
+      document.removeEventListener("mouseleave", onLeave);
+      cancelAnimationFrame(raf);
+    };
+  }
+  componentWillUnmount() {
+    clearTimeout(this._glowRetry);
+    if (this._cleanupCursorGlow) this._cleanupCursorGlow();
+  }
+}
+
+</script>
+</body>
+</html>

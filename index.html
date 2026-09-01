@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KAIRO STUDIO — websites that print customers</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;500;600;700&display=swap">
+<style>
+  :root{
+    /* Palette pulled from the footage: dusk-sky base, window-light amber,
+       blue-hour cyan, warm off-white type. These four are the whole page. */
+    --ink:#0a0e1a;
+    --ink-2:#070a14;
+    --paper:#f5f0e8;
+    --amber:#ffb347;       /* primary — CTAs, key highlights */
+    --cyan:#3ec9ff;        /* secondary — hovers, borders, small details */
+    --mute:#98a3b8;
+    --line:rgba(245,240,232,0.13);
+    --disp:"Archivo",system-ui,sans-serif;
+    --body:"Archivo",system-ui,sans-serif;
+    --pad:clamp(96px,12vw,180px);
+    --exp:cubic-bezier(.16,1,.3,1);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--ink);color:var(--paper);font-family:var(--body);font-weight:400;line-height:1.65;-webkit-font-smoothing:antialiased}
+  h1,h2,h3,h4,p,ul,ol,dl,dd,dt,figure,blockquote{margin:0}
+  ul,ol{list-style:none;padding:0}
+  a{color:var(--amber);text-decoration:none}
+  a:hover{color:#ffd08a}
+  summary{list-style:none;cursor:pointer}
+  summary::-webkit-details-marker{display:none}
+  :focus-visible{outline:2px solid var(--amber);outline-offset:3px}
+  ::selection{background:var(--amber);color:var(--ink)}
+  .wrap{width:min(1340px,100% - clamp(20px,5vw,56px));margin:0 auto}
+  .disp{font-family:var(--disp);font-weight:600;letter-spacing:-0.034em;line-height:1.04;text-wrap:pretty}
+  .kick{font-size:11.5px;font-weight:600;letter-spacing:0.13em;text-transform:uppercase;line-height:1.6}
+
+  /* ── backdrop: video + procedural streak canvas, both scroll-reactive ── */
+  .stage{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;background:var(--ink)}
+  .stage video,.stage .poster,.stage .xfade{position:absolute;inset:-6%;width:112%;height:112%;object-fit:cover;opacity:0;transition:opacity 1.15s linear;will-change:transform,filter}
+  .stage .xfade{pointer-events:none}
+  .stage video[data-live]{opacity:.62}
+  .stage .poster{opacity:.62;background:
+     radial-gradient(70% 55% at 50% 8%, rgba(62,201,255,.22), transparent 64%),
+     radial-gradient(38% 30% at 22% 72%, rgba(255,179,71,.20), transparent 66%),
+     radial-gradient(42% 34% at 80% 66%, rgba(255,179,71,.16), transparent 68%),
+     linear-gradient(180deg,#12203a 0%,#0d1526 42%,#080c16 100%)}
+  .stage canvas.streaks{position:absolute;inset:0;width:100%;height:100%}
+  .stage .veil{position:absolute;inset:0;background:
+     linear-gradient(180deg, rgba(8,12,22,.90) 0%, rgba(10,14,26,.62) 20%, rgba(10,14,26,.46) 44%, rgba(9,13,24,.70) 74%, rgba(7,10,20,.94) 100%)}
+  /* Hidden reveal states (scale 1.14, translateX 46px) push past the viewport.
+     overflow-x:clip contains them WITHOUT creating a scroll container, so the
+     sticky header still resolves against the document. */
+  .above{position:relative;z-index:1;overflow-x:clip}
+
+  /* ── reveals. Hidden state never zeroes the element's own area (that would
+     zero its intersection rect and deadlock the observer). Gated on
+     html[data-anim]; revealed via data-in, which React does not reset. ── */
+  .r,.rl,.rr,.punch{transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1)}
+  html[data-anim] .r:not([data-in]){opacity:0;transform:translateY(30px)}
+  html[data-anim] .rl:not([data-in]){opacity:0;transform:translateX(-46px)}
+  html[data-anim] .rr:not([data-in]){opacity:0;transform:translateX(46px)}
+  html[data-anim] .punch:not([data-in]){opacity:0;transform:scale(1.14)}
+  .bar{height:2px;background:var(--amber);box-shadow:0 0 14px var(--amber);position:relative;overflow:hidden}
+  .bar::after{content:"";position:absolute;inset:0;background:var(--ink);transform:translateX(101%);transition:transform 1s cubic-bezier(.16,1,.3,1)}
+  html[data-anim] .bar:not([data-in])::after{transform:translateX(0)}
+
+  /* ── buttons: alive at rest ── */
+  /* white-space:nowrap pins the label to one line: the text node is an
+     anonymous, shrinkable flex item, so at any padding/font-size it can give up
+     a pixel and wrap, stranding the arrow beside a two-line block. */
+  .cta{display:inline-flex;align-items:center;gap:12px;white-space:nowrap;font-family:var(--disp);font-weight:600;letter-spacing:0.06em;text-transform:uppercase;background:var(--amber);color:var(--ink);padding:19px 32px;border:0;font-size:clamp(13px,1.2vw,15px);position:relative;overflow:hidden;will-change:transform;box-shadow:0 0 28px rgba(255,179,71,.22)}
+  .cta::before{content:"";position:absolute;top:0;left:-130%;width:60%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.75),transparent);transform:skewX(-18deg);transition:left .7s ease}
+  .cta:hover::before{left:150%}
+  .cta:hover{color:var(--ink)}
+  .cta-ghost{background:transparent;color:var(--paper);border:2px solid var(--cyan);box-shadow:none;animation:none}
+  .cta-ghost:hover{background:var(--cyan);color:var(--ink)}
+  .arrow{display:inline-block;transition:transform .35s cubic-bezier(.16,1,.3,1)}
+  .cta:hover .arrow{transform:translateX(6px)}
+
+  /* ── tilt cards ── */
+  .tilt{position:relative;overflow:hidden;border:1px solid var(--line);background:linear-gradient(180deg,rgba(245,240,232,.06),rgba(245,240,232,.02));backdrop-filter:blur(14px);box-shadow:0 22px 50px -30px rgba(0,0,0,.9),inset 0 1px 0 rgba(245,240,232,.07);transition:transform .5s var(--exp),border-color .4s ease,box-shadow .5s ease}
+  .tilt:hover{border-color:var(--cyan);box-shadow:0 0 0 1px rgba(62,201,255,.5),0 34px 76px -38px rgba(62,201,255,.42),inset 0 1px 0 rgba(245,240,232,.1)}
+  .tilt::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .4s ease;background:radial-gradient(340px circle at var(--mx,50%) var(--my,50%),rgba(255,179,71,.14),transparent 66%)}
+  .tilt:hover::after{opacity:1}
+
+  /* ── industries: static, flush left ── */
+  .mcell{display:grid;grid-template-rows:auto 1fr;gap:10px;align-content:start;padding:20px clamp(14px,1.8vw,26px) 22px;border-right:1px solid var(--line)}
+  .mcell:nth-child(4n+1){padding-left:0}
+  .mcell:nth-child(4n){border-right:0;padding-right:0}
+  .inds{display:flex;flex-wrap:wrap;gap:0 clamp(20px,2.6vw,38px);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:clamp(14px,1.8vw,20px) 0}
+  .inds li{font-size:clamp(12.5px,1.2vw,15px);font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:var(--mute);line-height:2.2;white-space:nowrap}
+  .inds li:nth-child(2n){color:var(--paper)}
+
+  /* ── index rows ── */
+  .row{border-top:1px solid var(--line);transition:background-color .35s ease,padding-left .35s cubic-bezier(.16,1,.3,1)}
+  .row:hover{background:rgba(255,179,71,.06);padding-left:clamp(8px,1.4vw,20px)}
+  .row:hover .rn{color:var(--amber);text-shadow:0 0 16px rgba(255,179,71,.8)}
+  .rn{transition:color .3s ease,text-shadow .3s ease}
+  .ra{opacity:0;transform:translateX(-10px);transition:opacity .35s ease,transform .35s cubic-bezier(.16,1,.3,1);color:var(--amber)}
+  .row:hover .ra{opacity:1;transform:none}
+
+  /* ── faq ── */
+  details{border-top:1px solid var(--line)}
+  details:last-of-type{border-bottom:1px solid var(--line)}
+  details .mk{transition:transform .35s cubic-bezier(.16,1,.3,1),color .3s ease;display:inline-block;color:var(--amber)}
+  details[open] .mk{transform:rotate(45deg);color:var(--cyan)}
+  details summary{transition:color .3s ease}
+  details:hover summary{color:var(--amber)}
+  details[open] > div{animation:fq .5s cubic-bezier(.16,1,.3,1) both}
+  @keyframes fq{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:none}}
+
+  /* ── cursor glow: one soft amber pool, native pointer left alone ── */
+  .glow{position:fixed;top:0;left:0;width:300px;height:300px;margin:-150px 0 0 -150px;border-radius:50%;z-index:60;pointer-events:none;opacity:0;transition:opacity .6s ease;will-change:transform;background:radial-gradient(circle,rgba(255,179,71,.15) 0%,rgba(255,179,71,.06) 40%,rgba(255,179,71,0) 70%)}
+
+  .scroll-rail{position:fixed;top:0;left:0;height:2px;width:100%;z-index:70;pointer-events:none}
+  .scroll-bar{height:100%;width:0%;background:linear-gradient(90deg,var(--cyan),var(--amber));box-shadow:0 0 12px var(--amber)}
+  .sticky-cta{display:none}
+
+  @media (max-width:1000px){
+    .g2{grid-template-columns:1fr !important}
+    .g3{grid-template-columns:1fr !important}
+    .g4{grid-template-columns:1fr 1fr !important}
+    .gmeta{grid-template-columns:1fr 1fr !important}
+    .mcell:nth-child(2n+1){padding-left:0}
+    .mcell:nth-child(2n){border-right:0;padding-right:0}
+    .irow{grid-template-columns:auto 1fr !important}
+    .inote{grid-column:1 / -1 !important;padding-top:12px}
+  }
+  @media (max-width:680px){
+    .navlinks{display:none !important}
+    .nav-cta{display:none !important}
+    .g4{grid-template-columns:1fr !important}
+    .gmeta{grid-template-columns:1fr !important}
+    .mcell{padding:16px 0 18px;border-right:0}
+    .mcell + .mcell{border-top:1px solid var(--line)}
+    .sticky-cta{display:block}
+    footer{padding-bottom:110px !important}
+  }
+  @media (prefers-reduced-motion: reduce){
+    *,*::before,*::after{animation:none !important;transition:none !important}
+    html[data-anim] .r:not([data-in]),html[data-anim] .rl:not([data-in]),html[data-anim] .rr:not([data-in]),html[data-anim] .punch:not([data-in]){opacity:1 !important;transform:none !important}
+    .bar::after,html[data-anim] .bar:not([data-in])::after{display:none !important}
+    .stage canvas,.glow{display:none !important}
+  }
+</style>
+</helmet>
+
+<!-- ══ BACKDROP ══ -->
+<div class="stage" aria-hidden="true">
+  <div class="poster"></div>
+  <video class="bgv" muted loop playsinline autoplay preload="metadata"
+         data-src="assets/backdrop.mp4"
+         data-src-mobile="assets/backdrop.mp4"></video>
+  <canvas class="xfade"></canvas>
+  <canvas class="streaks"></canvas>
+  <div class="veil"></div>
+</div>
+<div class="glow" aria-hidden="true"></div>
+<div class="scroll-rail" aria-hidden="true"><div class="scroll-bar"></div></div>
+
+<div class="above">
+
+  <!-- ══ NAV ══ -->
+  <header style="position:sticky;top:0;z-index:50;background:rgba(5,5,5,.72);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)">
+    <div class="wrap" style="display:flex;align-items:center;justify-content:space-between;gap:22px;min-height:70px">
+      <a href="#top" style="display:flex;align-items:center;gap:10px;color:var(--paper)">
+        <span aria-hidden="true" style="width:13px;height:13px;background:var(--amber);box-shadow:0 0 14px var(--amber);display:block"></span>
+        <span class="disp" style="font-size:21px;white-space:nowrap">KAIRO STUDIO</span>
+      </a>
+      <nav class="navlinks" aria-label="Primary">
+        <ul style="display:flex;align-items:center;gap:clamp(16px,2.4vw,34px);white-space:nowrap">
+          <li><a href="#tension" style="font-size:11.5px;font-weight:600;letter-spacing:0.13em;text-transform:uppercase;color:var(--mute)">Problem</a></li>
+          <li><a href="#drop" style="font-size:11.5px;font-weight:600;letter-spacing:0.13em;text-transform:uppercase;color:var(--mute)">Services</a></li>
+          <li><a href="#method" style="font-size:11.5px;font-weight:600;letter-spacing:0.13em;text-transform:uppercase;color:var(--mute)">Method</a></li>
+          <li><a href="#legit" style="font-size:11.5px;font-weight:600;letter-spacing:0.13em;text-transform:uppercase;color:var(--mute)">Proof</a></li>
+          <li><a href="#faq" style="font-size:11.5px;font-weight:600;letter-spacing:0.13em;text-transform:uppercase;color:var(--mute)">FAQ</a></li>
+
+        </ul>
+      </nav>
+      <a href="#book" class="cta nav-cta" style="padding:12px 20px;font-size:13px">Book a Call <span class="arrow" aria-hidden="true">→</span></a>
+    </div>
+  </header>
+
+  <main id="top" role="main">
+
+    <!-- ══ HOOK ══ -->
+    <section aria-labelledby="hero-h" style="min-height:calc(100svh - 70px);display:grid;align-content:center;padding:var(--pad) 0">
+      <div class="wrap" style="display:grid;gap:clamp(22px,3vw,38px)">
+        <div class="r" style="display:flex;flex-wrap:wrap;align-items:center;gap:14px">
+          <span class="kick" style="color:var(--amber);border:1px solid var(--amber);padding:7px 13px">Websites · Sales · SEO</span>
+          <span class="kick" style="color:var(--mute)">Independent studio</span>
+        </div>
+        <h1 id="hero-h" class="disp" style="font-size:clamp(37px,7.2vw,101px)">Your website should be<br /><span style="color:var(--amber);text-shadow:0 0 42px rgba(255,179,71,.32)">your best salesperson</span>.<br />Most never are.</h1>
+        <div class="bar" style="max-width:min(100%,720px)"></div>
+        <div class="g2" style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(22px,4vw,60px);align-items:end">
+          <p class="r" style="font-size:clamp(16px,1.7vw,20px);line-height:1.65;color:#d6d6d9;max-width:46ch">We build sites that sell, get found, and stay maintained — so you can run your business instead of managing a website.</p>
+          <div class="r" style="display:grid;gap:12px;justify-items:start">
+            <a href="#book" class="cta" data-magnetic>Book Your Call <span class="arrow" aria-hidden="true">→</span></a>
+            <p style="font-size:13px;color:var(--mute);max-width:36ch">15 minutes. No pitch, no obligation.</p>
+          </div>
+        </div>
+        <div class="gmeta r" style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--line);margin-top:clamp(10px,2vw,26px)">
+          <div class="mcell"><p class="kick" style="color:var(--mute)">Built for</p><p class="disp" style="font-size:17px">Owner-led businesses</p></div>
+          <div class="mcell"><p class="kick" style="color:var(--mute)">Studio</p><p class="disp" style="font-size:17px"><span data-count="7">7</span> specialists</p></div>
+          <div class="mcell"><p class="kick" style="color:var(--mute)">Terms</p><p class="disp" style="font-size:17px">Pay when you approve</p></div>
+          <div class="mcell"><p class="kick" style="color:var(--mute)">Based</p><p class="disp" style="font-size:17px">Remote · United States</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ TENSION ══ -->
+    <section id="tension" aria-labelledby="tension-h" style="padding:var(--pad) 0;border-top:1px solid var(--line)">
+      <div class="wrap" style="display:grid;gap:clamp(26px,4vw,48px)">
+        <div class="g2" style="display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:clamp(22px,4vw,60px);align-items:end">
+          <h2 id="tension-h" class="disp punch" style="font-size:clamp(25px,4.0vw,53px)">Your website isn't the problem. It's the reason.</h2>
+          <p class="rr kick" style="color:var(--cyan);max-width:46ch">An honest diagnosis</p>
+        </div>
+        <div class="g3" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px">
+          <div class="tilt rl" style="padding:clamp(22px,2.4vw,32px);display:grid;gap:14px;align-content:start">
+            <p class="disp" style="font-size:52px;color:var(--cyan)">01</p>
+            <h3 class="disp" style="font-size:22px">Looks good. Sells nothing.</h3>
+            <p style="font-size:15px;line-height:1.6;color:#b9b9bf">People land, scroll, leave. No hook, no push, no sale.</p>
+          </div>
+          <div class="tilt r" style="padding:clamp(22px,2.4vw,32px);display:grid;gap:14px;align-content:start">
+            <p class="disp" style="font-size:52px;color:var(--cyan)">02</p>
+            <h3 class="disp" style="font-size:22px">Nobody can find you.</h3>
+            <p style="font-size:15px;line-height:1.6;color:#b9b9bf">Slow load, zero SEO. You're invisible for the exact searches that pay your bills.</p>
+          </div>
+          <div class="tilt rr" style="padding:clamp(22px,2.4vw,32px);display:grid;gap:14px;align-content:start">
+            <p class="disp" style="font-size:52px;color:var(--cyan)">03</p>
+            <h3 class="disp" style="font-size:22px">Built once, then abandoned.</h3>
+            <p style="font-size:15px;line-height:1.6;color:#b9b9bf">Your last agency launched it and moved on. Now it's out of date and quietly failing.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ THE DROP ══ -->
+    <section id="drop" aria-labelledby="drop-h" style="padding:var(--pad) 0;border-top:1px solid var(--line)">
+      <div class="wrap" style="display:grid;gap:clamp(24px,3.4vw,44px)">
+        <div style="display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:18px">
+          <h2 id="drop-h" class="disp punch" style="font-size:clamp(25px,4.0vw,53px)">Three services. One team.</h2>
+          <p class="kick r" style="color:var(--amber)">What's included</p>
+        </div>
+        <ul>
+          <li class="row r">
+            <a href="#book" class="irow" style="display:grid;grid-template-columns:auto minmax(0,1fr) minmax(0,1.15fr) auto;gap:clamp(14px,2.4vw,34px);align-items:baseline;padding:clamp(18px,2.4vw,30px) 0;color:var(--paper)">
+              <span class="rn disp" style="font-size:15px;color:var(--mute)">01</span>
+              <h3 class="disp" style="font-size:clamp(23px,3.5vw,47px)">Design that closes</h3>
+              <div class="inote" style="display:grid;gap:8px">
+                <p style="font-size:15.5px;line-height:1.6;color:#b9b9bf">Every page built around one move — get them to act, not admire.</p>
+                <p style="font-size:12.5px;line-height:1.5;color:var(--mute)">One clear next step, every page · Built fast, built for phones · Words that sell, not fill space</p>
+              </div>
+              <span class="ra disp" aria-hidden="true" style="font-size:22px">→</span>
+            </a>
+          </li>
+          <li class="row r">
+            <a href="#book" class="irow" style="display:grid;grid-template-columns:auto minmax(0,1fr) minmax(0,1.15fr) auto;gap:clamp(14px,2.4vw,34px);align-items:baseline;padding:clamp(18px,2.4vw,30px) 0;color:var(--paper)">
+              <span class="rn disp" style="font-size:15px;color:var(--mute)">02</span>
+              <h3 class="disp" style="font-size:clamp(23px,3.5vw,47px)">SEO that puts you first</h3>
+              <div class="inote" style="display:grid;gap:8px">
+                <p style="font-size:15.5px;line-height:1.6;color:#b9b9bf">You show up where the money is searching. Every month, more ground.</p>
+                <p style="font-size:12.5px;line-height:1.5;color:var(--mute)">Technical + local SEO from day one · Pages built for buying intent · Reports you'll actually read</p>
+              </div>
+              <span class="ra disp" aria-hidden="true" style="font-size:22px">→</span>
+            </a>
+          </li>
+          <li class="row r" style="border-bottom:1px solid var(--line)">
+            <a href="#book" class="irow" style="display:grid;grid-template-columns:auto minmax(0,1fr) minmax(0,1.15fr) auto;gap:clamp(14px,2.4vw,34px);align-items:baseline;padding:clamp(18px,2.4vw,30px) 0;color:var(--paper)">
+              <span class="rn disp" style="font-size:15px;color:var(--mute)">03</span>
+              <h3 class="disp" style="font-size:clamp(23px,3.5vw,47px)">Maintenance that never sleeps</h3>
+              <div class="inote" style="display:grid;gap:8px">
+                <p style="font-size:15.5px;line-height:1.6;color:#b9b9bf">We handle the upkeep so your site never costs you a customer.</p>
+                <p style="font-size:12.5px;line-height:1.5;color:var(--mute)">Security, backups, uptime — covered · Updates and changes included · One team. One call. Handled.</p>
+              </div>
+              <span class="ra disp" aria-hidden="true" style="font-size:22px">→</span>
+            </a>
+          </li>
+        </ul>
+        <div class="r" style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:20px">
+          <p class="disp" style="font-size:clamp(20px,2.6vw,34px);max-width:26ch">Want all three running for your business?</p>
+          <a href="#book" class="cta" data-magnetic>Book a Call <span class="arrow" aria-hidden="true">→</span></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ INDUSTRIES ══ -->
+    <section aria-label="Industries served" style="padding:clamp(52px,7vw,92px) 0;border-top:1px solid var(--line)">
+      <div class="wrap r" style="display:grid;gap:clamp(22px,3vw,34px)">
+        <div style="display:grid;gap:12px">
+          <p class="kick" style="color:var(--amber)">Who we build for</p>
+          <p class="disp" style="font-size:clamp(21px,2.2vw,30px);max-width:32ch">Different industry, different specialist. Not a generalist guessing.</p>
+        </div>
+        <ul class="inds">
+          <li>Real Estate</li>
+          <li>Restaurants</li>
+          <li>Fashion</li>
+          <li>Legal</li>
+          <li>Retail</li>
+          <li>Clinics</li>
+          <li>Trades</li>
+          <li>Studios</li>
+          <li>B2B</li>
+          <li>And more</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ══ METHOD ══ -->
+    <section id="method" aria-labelledby="method-h" style="padding:var(--pad) 0;border-top:1px solid var(--line)">
+      <div class="wrap" style="display:grid;gap:clamp(26px,4vw,48px)">
+        <div class="g2" style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(22px,4vw,60px);align-items:end">
+          <h2 id="method-h" class="disp punch" style="font-size:clamp(25px,4.0vw,53px)">No guesswork. No black box.</h2>
+          <p class="rr kick" style="color:var(--cyan);max-width:46ch">How the work runs</p>
+        </div>
+        <ol class="g4" style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px">
+          <li class="tilt r" style="padding:clamp(20px,2.2vw,28px);display:grid;gap:12px;align-content:start">
+            <p class="disp" style="font-size:clamp(34px,3.1vw,39px);color:rgba(255,255,255,.14)">1</p>
+            <h3 class="disp" style="font-size:19px;color:var(--amber)">Discovery call</h3>
+            <p style="font-size:14.5px;line-height:1.6;color:#b9b9bf">15 free minutes. We review your site and show you exactly where customers drop off.</p>
+          </li>
+          <li class="tilt r" style="padding:clamp(20px,2.2vw,28px);display:grid;gap:12px;align-content:start">
+            <p class="disp" style="font-size:clamp(34px,3.1vw,39px);color:rgba(255,255,255,.14)">2</p>
+            <h3 class="disp" style="font-size:19px;color:var(--amber)">Strategy</h3>
+            <p style="font-size:14.5px;line-height:1.6;color:#b9b9bf">Search targets, page map, the one job every page has to do. You approve it before we touch a thing.</p>
+          </li>
+          <li class="tilt r" style="padding:clamp(20px,2.2vw,28px);display:grid;gap:12px;align-content:start">
+            <p class="disp" style="font-size:clamp(34px,3.1vw,39px);color:rgba(255,255,255,.14)">3</p>
+            <h3 class="disp" style="font-size:19px;color:var(--amber)">Build</h3>
+            <p style="font-size:14.5px;line-height:1.6;color:#b9b9bf">You see it come together in real time. Change direction while it's still inexpensive to.</p>
+          </li>
+          <li class="tilt r" style="padding:clamp(20px,2.2vw,28px);display:grid;gap:12px;align-content:start">
+            <p class="disp" style="font-size:clamp(34px,3.1vw,39px);color:rgba(255,255,255,.14)">4</p>
+            <h3 class="disp" style="font-size:19px;color:var(--amber)">Launch &amp; grow</h3>
+            <p style="font-size:14.5px;line-height:1.6;color:#b9b9bf">We launch. Then we stay. SEO and maintenance run every month, reported straight.</p>
+          </li>
+        </ol>
+        <div class="bar"></div>
+        <div class="r" style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:20px">
+          <p class="disp" style="font-size:clamp(20px,2.6vw,34px);max-width:26ch">Want to see this for your business?</p>
+          <a href="#book" class="cta" data-magnetic>Book Your Call <span class="arrow" aria-hidden="true">→</span></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ GUARANTEE POSTER ══ -->
+    <section aria-labelledby="guar-h" style="background:var(--amber);color:var(--ink)">
+      <div class="wrap" style="padding:var(--pad) 0;display:grid;gap:clamp(18px,2.6vw,32px)">
+        <p class="kick rl" style="opacity:.7">The guarantee</p>
+        <h2 id="guar-h" class="disp punch" style="font-size:clamp(23px,4.3vw,60px);max-width:24ch">You don't pay until you love it.</h2>
+        <p class="r" style="font-size:clamp(16px,1.8vw,21px);line-height:1.65;max-width:56ch;font-weight:600">We keep refining — unlimited revisions — until the result is one you're glad to put your name on. That is the arrangement.</p>
+      </div>
+    </section>
+
+    <!-- ══ RECEIPTS ══ -->
+    <section id="legit" aria-labelledby="legit-h" style="padding:var(--pad) 0">
+      <div class="wrap" style="display:grid;gap:clamp(26px,4vw,48px)">
+        <h2 id="legit-h" class="disp punch" style="font-size:clamp(25px,4.0vw,53px)">Proof over promises</h2>
+        <div class="g2" style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px">
+
+          <div class="tilt rl" style="padding:clamp(24px,2.8vw,38px);display:grid;gap:16px;align-content:start">
+            <p class="kick" style="color:var(--cyan)">Free audit</p>
+            <h3 class="disp" style="font-size:clamp(24px,3vw,38px)">Find out what's costing you customers. Free.</h3>
+            <p style="font-size:15.5px;line-height:1.65;color:#c2c2c8">We send a written PDF breakdown of what's holding your conversions back, then walk you through it live on Zoom or Meet. No obligation, no spam — just a clear read on your site.</p>
+            <a href="#book" class="cta cta-ghost" data-magnetic style="justify-self:start">Request the Free Audit <span class="arrow" aria-hidden="true">→</span></a>
+            <p style="font-size:13px;color:var(--mute)">The PDF is yours to keep.</p>
+          </div>
+
+          <div class="rr" style="display:grid;gap:16px;align-content:start">
+            <p class="kick" style="color:var(--amber)">Who's actually doing the work</p>
+            <h3 class="disp" style="font-size:clamp(24px,3vw,38px)"><span data-count="7">7</span> specialists. Zero middlemen.</h3>
+            <p style="font-size:15.5px;line-height:1.65;color:#c2c2c8;max-width:46ch">Sales. Marketing. Design. SEO. Development. Kairo isn't one generalist wearing five hats — it's seven people who are actually good at one thing each, working as a unit on your project. No account manager between you and the work. You talk to the people building it.</p>
+            <ul style="display:grid;gap:0">
+              <li class="row" style="display:flex;justify-content:space-between;gap:20px;padding:14px 0"><span class="disp" style="font-size:19px">Sales</span><span class="rn kick" style="color:var(--mute)">01</span></li>
+              <li class="row" style="display:flex;justify-content:space-between;gap:20px;padding:14px 0"><span class="disp" style="font-size:19px">Marketing</span><span class="rn kick" style="color:var(--mute)">02</span></li>
+              <li class="row" style="display:flex;justify-content:space-between;gap:20px;padding:14px 0"><span class="disp" style="font-size:19px">Graphic design</span><span class="rn kick" style="color:var(--mute)">03</span></li>
+              <li class="row" style="display:flex;justify-content:space-between;gap:20px;padding:14px 0"><span class="disp" style="font-size:19px">SEO</span><span class="rn kick" style="color:var(--mute)">04</span></li>
+              <li class="row" style="display:flex;justify-content:space-between;gap:20px;padding:14px 0;border-bottom:1px solid var(--line)"><span class="disp" style="font-size:19px">Web development</span><span class="rn kick" style="color:var(--mute)">05</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ FAQ ══ -->
+    <section id="faq" aria-labelledby="faq-h" style="padding:0 0 var(--pad)">
+      <div class="wrap" style="display:grid;gap:clamp(22px,3vw,36px)">
+        <div style="display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:18px">
+          <h2 id="faq-h" class="disp punch" style="font-size:clamp(23px,3.3vw,43px)">Common questions</h2>
+          <p class="kick r" style="color:var(--mute)">Before you book</p>
+        </div>
+        <div class="r">
+          <details>
+            <summary class="disp" style="display:flex;align-items:baseline;justify-content:space-between;gap:20px;padding:clamp(16px,2vw,26px) 0;font-size:clamp(18px,2.2vw,28px)">What does this cost?<span class="mk" aria-hidden="true" style="font-family:var(--body);font-weight:400;font-size:26px">+</span></summary>
+            <div style="padding:0 0 clamp(16px,2vw,26px)"><p style="font-size:15.5px;line-height:1.65;color:#c2c2c8;max-width:66ch">Depends on what you actually need — we're not selling generic packages. You'll get a real number on the call, not a guess.</p></div>
+          </details>
+          <details>
+            <summary class="disp" style="display:flex;align-items:baseline;justify-content:space-between;gap:20px;padding:clamp(16px,2vw,26px) 0;font-size:clamp(18px,2.2vw,28px)">How long does it take?<span class="mk" aria-hidden="true" style="font-family:var(--body);font-weight:400;font-size:26px">+</span></summary>
+            <div style="padding:0 0 clamp(16px,2vw,26px)"><p style="font-size:15.5px;line-height:1.65;color:#c2c2c8;max-width:66ch">Depends on scope. Some builds move fast, some need more. You'll get a real timeline on the call, not a vague range.</p></div>
+          </details>
+          <details>
+            <summary class="disp" style="display:flex;align-items:baseline;justify-content:space-between;gap:20px;padding:clamp(16px,2vw,26px) 0;font-size:clamp(18px,2.2vw,28px)">I already have a website.<span class="mk" aria-hidden="true" style="font-family:var(--body);font-weight:400;font-size:26px">+</span></summary>
+            <div style="padding:0 0 clamp(16px,2vw,26px)"><p style="font-size:15.5px;line-height:1.65;color:#c2c2c8;max-width:66ch">Then we start there. Sometimes it's a rebuild, sometimes it's smarter to fix what's already working. We'll tell you which on the call — free.</p></div>
+          </details>
+          <details>
+            <summary class="disp" style="display:flex;align-items:baseline;justify-content:space-between;gap:20px;padding:clamp(16px,2vw,26px) 0;font-size:clamp(18px,2.2vw,28px)">Do you work with my industry?<span class="mk" aria-hidden="true" style="font-family:var(--body);font-weight:400;font-size:26px">+</span></summary>
+            <div style="padding:0 0 clamp(16px,2vw,26px)"><p style="font-size:15.5px;line-height:1.65;color:#c2c2c8;max-width:66ch">Almost certainly. Real estate, restaurants, fashion, legal, and more — each with a specialist assigned, not a generalist. Tell us your industry on the call.</p></div>
+          </details>
+          <details>
+            <summary class="disp" style="display:flex;align-items:baseline;justify-content:space-between;gap:20px;padding:clamp(16px,2vw,26px) 0;font-size:clamp(18px,2.2vw,28px)">What's actually included?<span class="mk" aria-hidden="true" style="font-family:var(--body);font-weight:400;font-size:26px">+</span></summary>
+            <div style="padding:0 0 clamp(16px,2vw,26px)"><p style="font-size:15.5px;line-height:1.65;color:#c2c2c8;max-width:66ch">Strategy, design, copy, build, technical SEO, launch. Maintenance — hosting, updates, backups, changes — sits on its own plan. We break it all down on the call.</p></div>
+          </details>
+          <details>
+            <summary class="disp" style="display:flex;align-items:baseline;justify-content:space-between;gap:20px;padding:clamp(16px,2vw,26px) 0;font-size:clamp(18px,2.2vw,28px)">You're a new studio. Why trust you?<span class="mk" aria-hidden="true" style="font-family:var(--body);font-weight:400;font-size:26px">+</span></summary>
+            <div style="padding:0 0 clamp(16px,2vw,26px)"><p style="font-size:15.5px;line-height:1.65;color:#c2c2c8;max-width:66ch">Fair. That's exactly why the guarantee exists — you don't pay until you love it. And you're not getting handed to a junior, you're working with the actual team. Book the call and judge it yourself.</p></div>
+          </details>
+        </div>
+        <div class="r" style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:20px">
+          <p class="disp" style="font-size:clamp(19px,2.4vw,30px);max-width:26ch">Anything else? Ask on the call.</p>
+          <a href="#book" class="cta" data-magnetic>Book Your Free Call <span class="arrow" aria-hidden="true">→</span></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ CLOSE ══ -->
+    <section id="book" aria-labelledby="book-h" style="padding:var(--pad) 0;border-top:1px solid var(--line)">
+      <div class="wrap" style="display:grid;gap:clamp(22px,3vw,38px)">
+        <p class="kick rl" style="color:var(--cyan)">Get started</p>
+        <h2 id="book-h" class="disp punch" style="font-size:clamp(30px,5.2vw,76px)">Stop losing customers to a website that isn't <span style="color:var(--amber);text-shadow:0 0 42px rgba(255,179,71,.35)">working</span> for you.</h2>
+        <div class="bar"></div>
+        <div class="r" style="display:flex;flex-wrap:wrap;align-items:center;gap:24px">
+          <a href="#book" class="cta" data-magnetic style="padding:24px 42px;font-size:clamp(17px,1.9vw,23px)">Book Your Free Call <span class="arrow" aria-hidden="true">→</span></a>
+          <p style="font-size:15px;line-height:1.65;color:#c2c2c8;max-width:38ch">Fifteen minutes tells you whether your site can compete. Free, with no pitch and no obligation.</p>
+        </div>
+        <p class="r" style="font-size:14px;color:var(--mute)">Or email <a href="#book">contact@kairostudio.com</a> — we reply same day.</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- ══ FOOTER ══ -->
+  <footer role="contentinfo" style="border-top:1px solid var(--line);padding:clamp(34px,5vw,60px) 0 28px">
+    <div class="wrap" style="display:grid;gap:clamp(26px,4vw,44px)">
+      <div class="g4" style="display:grid;grid-template-columns:minmax(0,1.6fr) repeat(3,minmax(0,1fr));gap:clamp(22px,3vw,40px)">
+        <div style="display:grid;gap:14px;align-content:start;max-width:36ch">
+          <a href="#top" style="display:flex;align-items:center;gap:10px;color:var(--paper)">
+            <span aria-hidden="true" style="width:11px;height:11px;background:var(--amber);box-shadow:0 0 12px var(--amber);display:block"></span>
+            <span class="disp" style="font-size:18px">KAIRO STUDIO</span>
+          </a>
+          <p style="font-size:14px;line-height:1.65;color:var(--mute)">Websites, SEO and maintenance for businesses that need the phone to ring. Remote, serving clients across the US.</p>
+          <p style="font-size:14px;line-height:1.65;color:#c2c2c8">Fifteen free minutes on what your site could be earning.</p>
+          <a href="#book" class="cta cta-ghost" style="justify-self:start;padding:13px 22px;font-size:13px">Book a Call <span class="arrow" aria-hidden="true">→</span></a>
+        </div>
+        <nav aria-label="Footer — page" style="display:grid;gap:12px;align-content:start">
+          <h2 class="kick" style="color:var(--mute)">Page</h2>
+          <ul style="display:grid;gap:10px">
+            <li><a href="#drop" style="font-size:14px;color:var(--paper)">What you get</a></li>
+            <li><a href="#method" style="font-size:14px;color:var(--paper)">How it works</a></li>
+            <li><a href="#legit" style="font-size:14px;color:var(--paper)">Why trust us</a></li>
+            <li><a href="#faq" style="font-size:14px;color:var(--paper)">FAQ</a></li>
+          </ul>
+        </nav>
+        <nav aria-label="Footer — contact" style="display:grid;gap:12px;align-content:start">
+          <h2 class="kick" style="color:var(--mute)">Contact</h2>
+          <ul style="display:grid;gap:10px">
+            <li><a href="#book" style="font-size:14px;color:var(--paper)">contact@kairostudio.com</a></li>
+            <li style="font-size:14px;color:var(--mute)">Remote — serving US clients</li>
+          </ul>
+        </nav>
+        <nav aria-label="Footer — social" style="display:grid;gap:12px;align-content:start">
+          <h2 class="kick" style="color:var(--mute)">Social</h2>
+          <ul style="display:grid;gap:10px">
+            <li><a href="https://www.instagram.com/kairostudio.io/" target="_blank" rel="noopener" style="font-size:14px;color:var(--paper)">Instagram</a></li>
+            <li><a href="https://www.linkedin.com/company/kairostudio-io/" target="_blank" rel="noopener" style="font-size:14px;color:var(--paper)">LinkedIn</a></li>
+          </ul>
+        </nav>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:14px;justify-content:space-between;border-top:1px solid var(--line);padding-top:20px">
+        <p style="font-size:12.5px;color:var(--mute)">© 2026 Kairo Studio</p>
+        <p style="font-size:12.5px;color:var(--mute)">Placeholder wordmark — drop in the real logo</p>
+      </div>
+    </div>
+  </footer>
+
+  <div class="sticky-cta" style="position:fixed;bottom:0;left:0;right:0;z-index:65;background:rgba(5,5,5,.94);backdrop-filter:blur(12px);border-top:1px solid var(--amber);padding:12px 16px calc(12px + env(safe-area-inset-bottom))">
+    <a href="#book" class="cta" style="width:100%;justify-content:center;padding:17px">Book Your Call <span class="arrow" aria-hidden="true">→</span></a>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;cursorGlow&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Motion&quot;},&quot;videoBackdrop&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Motion&quot;}}">
+class Component extends DCLogic {
+  componentDidMount() { this._wire(); }
+  componentWillUnmount() {
+    clearTimeout(this._retry); clearTimeout(this._failSafe);
+    if (this._io) this._io.disconnect();
+    if (this._dom) this._dom.disconnect();
+    if (this._cleanup) this._cleanup();
+  }
+
+  _wire() {
+    var main = document.querySelector("main");
+    if (!main) { this._retry = setTimeout(this._wire.bind(this), 80); return; }
+
+    var self = this;
+    var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var fine = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+    var small = window.innerWidth < 760;
+    var root = document.documentElement;
+    var SEL = ".r,.rl,.rr,.punch,.bar";
+
+    if (this.props.videoBackdrop === false) {
+      var stage = document.querySelector(".stage");
+      if (stage) {
+        var vid = stage.querySelector("video");
+        if (vid) { try { vid.pause(); } catch (e) {} vid.style.display = "none"; }
+        var cvs = stage.querySelector("canvas");
+        if (cvs) cvs.style.display = "none";
+      }
+    } else if (this.props.videoBackdrop === true) {
+      var stageOn = document.querySelector(".stage");
+      if (stageOn) {
+        var vidOn = stageOn.querySelector("video");
+        if (vidOn) vidOn.style.display = "";
+        var cvsOn = stageOn.querySelector("canvas");
+        if (cvsOn) cvsOn.style.display = "";
+      }
+    }
+
+    if (this._cleanup) this._cleanup();
+    var teardown = [];
+
+    /* ── arm reveals; fail-safe only reveals what's on screen, never disarms ── */
+    if (!reduced) {
+      root.setAttribute("data-anim", "");
+      clearTimeout(this._failSafe);
+      this._fired = false;
+      this._failSafe = setTimeout(function () {
+        if (self._fired) return;
+        document.querySelectorAll(SEL).forEach(function (el) {
+          if (el.getBoundingClientRect().top < window.innerHeight) el.setAttribute("data-in", "1");
+        });
+      }, 3000);
+    }
+
+    /* ── stagger siblings ── */
+    /* 60–80ms between siblings — sequence, not a simultaneous fade. */
+    [[".g3 > *", 0.08], [".g4 > *", 0.07], ["#drop .row", 0.08], ["#legit ul .row", 0.06], ["#faq details", 0.06], ["footer .g4 > *", 0.07]]
+      .forEach(function (p) {
+        document.querySelectorAll(p[0]).forEach(function (el, i) {
+          if (!el.style.transitionDelay) el.style.transitionDelay = i * p[1] + "s";
+        });
+      });
+
+    /* ── reveal observer. data-in survives React re-render; targets stay
+         observed so a wiped state recovers; rebuilt each run so it never
+         watches detached nodes. ── */
+    var targets = document.querySelectorAll(SEL);
+    if (reduced) {
+      targets.forEach(function (el) { el.setAttribute("data-in", "1"); });
+    } else {
+      if (this._io) this._io.disconnect();
+      var io = new IntersectionObserver(function (es) {
+        self._fired = true;
+        es.forEach(function (e) { if (e.isIntersecting) e.target.setAttribute("data-in", "1"); });
+      }, { threshold: 0.08, rootMargin: "0px 0px -6% 0px" });
+      targets.forEach(function (el) { io.observe(el); });
+      this._io = io;
+
+      /* IntersectionObserver is inert in some embedded viewers, which would
+         leave every reveal target at opacity:0 forever. A rect-measuring
+         sweep on scroll/resize is the belt to the observer's braces. */
+      var queued = false;
+      var sweep = function () {
+        queued = false;
+        var h = window.innerHeight;
+        document.querySelectorAll(SEL).forEach(function (el) {
+          if (el.hasAttribute("data-in")) return;
+          var r = el.getBoundingClientRect();
+          if (r.top < h * 0.94 && r.bottom > -h * 0.2) el.setAttribute("data-in", "1");
+        });
+      };
+      var onScroll = function () {
+        if (queued) return;
+        queued = true;
+        requestAnimationFrame(sweep);
+      };
+      addEventListener("scroll", onScroll, { passive: true });
+      addEventListener("resize", onScroll);
+      requestAnimationFrame(sweep);
+      var late = setTimeout(sweep, 400);
+      teardown.push(function () {
+        removeEventListener("scroll", onScroll);
+        removeEventListener("resize", onScroll);
+        clearTimeout(late);
+      });
+    }
+
+    /* Observe document.body, not <main>: the backdrop (.stage/.glow)
+       are siblings OUTSIDE main, so a React remount replaced those nodes
+       without ever mutating main — leaving the canvas and video unwired. */
+    if (!this._dom) {
+      var rewire = this._wire.bind(this), pend = null;
+      this._dom = new MutationObserver(function () { clearTimeout(pend); pend = setTimeout(rewire, 150); });
+      this._dom.observe(document.body, { childList: true, subtree: true });
+    }
+
+    if (reduced) { this._cleanup = function () {}; return; }
+
+    /* ── count-up on real numbers only ── */
+    document.querySelectorAll("[data-count]").forEach(function (el) {
+      if (el.dataset.counted) return;
+      el.dataset.counted = "pending";
+      var target = parseInt(el.getAttribute("data-count"), 10);
+      var cio = new IntersectionObserver(function (es) {
+        es.forEach(function (e) {
+          if (!e.isIntersecting || el.dataset.counted === "done") return;
+          el.dataset.counted = "done";
+          cio.disconnect();
+          var n = 0;
+          var id = setInterval(function () {
+            n++;
+            el.textContent = String(n);
+            if (n >= target) clearInterval(id);
+          }, 90);
+          teardown.push(function () { clearInterval(id); });
+        });
+      }, { threshold: 0.6 });
+      cio.observe(el);
+      teardown.push(function () { cio.disconnect(); });
+    });
+
+    /* ── magnetic buttons ── */
+    if (fine) {
+      document.querySelectorAll("[data-magnetic]").forEach(function (btn) {
+        function move(e) {
+          var r = btn.getBoundingClientRect();
+          var dx = e.clientX - (r.left + r.width / 2);
+          var dy = e.clientY - (r.top + r.height / 2);
+          var dist = Math.hypot(dx, dy);
+          var pull = Math.max(0, 1 - dist / 260);
+          btn.style.transform = "translate(" + dx * 0.18 * pull + "px," + dy * 0.22 * pull + "px)";
+        }
+        function reset() { btn.style.transform = ""; }
+        window.addEventListener("mousemove", move, { passive: true });
+        btn.addEventListener("mouseleave", reset);
+        teardown.push(function () {
+          window.removeEventListener("mousemove", move);
+          btn.removeEventListener("mouseleave", reset);
+          reset();
+        });
+      });
+    }
+
+    /* ── 3D tilt + pointer sheen ── */
+    var cards = document.querySelectorAll(".tilt");
+    function tiltMove(e) {
+      var c = e.currentTarget, r = c.getBoundingClientRect();
+      var px = (e.clientX - r.left) / r.width, py = (e.clientY - r.top) / r.height;
+      c.style.setProperty("--mx", px * 100 + "%");
+      c.style.setProperty("--my", py * 100 + "%");
+      c.style.transform = "perspective(900px) rotateX(" + (0.5 - py) * 7 + "deg) rotateY(" + (px - 0.5) * 7 + "deg) translateY(-5px)";
+    }
+    function tiltOut(e) { e.currentTarget.style.transform = ""; }
+    if (fine) {
+      cards.forEach(function (c) {
+        c.addEventListener("mousemove", tiltMove);
+        c.addEventListener("mouseleave", tiltOut);
+      });
+      teardown.push(function () {
+        cards.forEach(function (c) {
+          c.removeEventListener("mousemove", tiltMove);
+          c.removeEventListener("mouseleave", tiltOut);
+        });
+      });
+    }
+
+    /* ── Backdrop: video loop + procedural streak field.
+         Both are measured from post-layout geometry and re-evaluated on every
+         resize. The resize/ResizeObserver hooks live OUTSIDE the width and
+         connection gates — registering them inside meant a first measurement
+         taken pre-layout (or below the breakpoint) skipped the backdrop with
+         no way to ever recover. ── */
+    var stage = document.querySelector(".stage");
+    var vid = document.querySelector(".bgv");
+    var canvas = document.querySelector(".streaks");
+    var conn = navigator.connection || {};
+    var cheap = conn.saveData || /2g/.test(conn.effectiveType || "");
+    var ctx = canvas ? canvas.getContext("2d") : null;
+    var raf = null, W = 0, H = 0, streaks = [], running = false;
+
+    /* ── seamless loop on ONE video file. Just before the clip wraps, its
+       current frame is snapshotted onto a canvas twin sized with the same
+       cover crop; the video layer is hidden instantly (so the jump cut plays
+       out invisibly) and then dissolves back in under the still. What reads on
+       screen is the last frame melting into the first, never a cut. The video
+       keeps loop=true, so if this ever stalls the fallback is a plain loop. ── */
+    if (!cheap) {
+      var xf = document.querySelector(".xfade");
+      var xctx = xf ? xf.getContext("2d") : null;
+      var OP = 0.62, DISS = 1.15, phase = 0;   // 0 idle, 1 frozen, 2 dissolving
+      var hold = function (el, prop, val) { el.style.transition = "none"; el.style[prop] = val; void el.offsetWidth; };
+
+      var grab = function () {
+        if (!xctx || !vid.videoWidth) return false;
+        var r = xf.getBoundingClientRect();
+        var w = r.width, h = r.height;
+        if (!w || !h) return false;
+        var d = Math.min(window.devicePixelRatio || 1, 2);
+        if (xf.width !== Math.round(w * d)) { xf.width = Math.round(w * d); xf.height = Math.round(h * d); }
+        xctx.setTransform(d, 0, 0, d, 0, 0);
+        var sc = Math.max(w / vid.videoWidth, h / vid.videoHeight);   // object-fit: cover
+        var dw = vid.videoWidth * sc, dh = vid.videoHeight * sc;
+        xctx.clearRect(0, 0, w, h);
+        try { xctx.drawImage(vid, (w - dw) / 2, (h - dh) / 2, dw, dh); } catch (e) { return false; }
+        return true;
+      };
+
+      var freeze = function () {
+        if (phase !== 0 || !xf) return;
+        if (!grab()) return;
+        phase = 1;
+        hold(xf, "opacity", String(OP));
+        hold(vid, "opacity", "0");
+      };
+      var dissolve = function () {
+        if (phase !== 1) return;
+        phase = 2;
+        xf.style.transition = "opacity " + DISS + "s linear";
+        vid.style.transition = "opacity " + DISS + "s linear";
+        xf.style.opacity = "0";
+        vid.style.opacity = String(OP);
+        setTimeout(function () {
+          hold(xf, "opacity", "0");
+          vid.style.transition = "";
+          vid.style.opacity = "";
+          phase = 0;
+        }, DISS * 1000 + 120);
+      };
+
+      var keep = function () {
+        vid.muted = true; vid.loop = true; vid.playsInline = true;
+        if (vid.paused && !document.hidden) { var p = vid.play(); if (p && p.catch) p.catch(function () {}); }
+        var d = vid.duration;
+        if (!d) return;
+        if (phase === 0 && d - vid.currentTime <= 0.34) freeze();
+        else if (phase === 1 && vid.currentTime < d * 0.5) dissolve();
+      };
+
+      if (!vid.dataset.xfWired) {
+        vid.dataset.xfWired = "1";
+        vid.addEventListener("timeupdate", keep);
+        vid.addEventListener("seeked", keep);
+      }
+      var loopWatch = setInterval(keep, 120);
+      var onXfResize = function () { if (phase === 0 && xf) { xf.width = 0; } };
+      window.addEventListener("resize", onXfResize);
+      teardown.push(function () {
+        clearInterval(loopWatch);
+        window.removeEventListener("resize", onXfResize);
+      });
+    }
+
+    function measure() {
+      if (!canvas) return 0;
+      var r = canvas.getBoundingClientRect();
+      return r.width || canvas.clientWidth || 0;
+    }
+    function seed() {
+      streaks = [];
+      for (var i = 0; i < 34; i++) {
+        streaks.push({
+          x: Math.random() * W, y: Math.random() * H,
+          len: 60 + Math.random() * 260, sp: 0.6 + Math.random() * 3.4,
+          w: Math.random() < 0.22 ? 2 : 1,
+          hot: Math.random() < 0.18
+        });
+      }
+    }
+    function draw() {
+      ctx.clearRect(0, 0, W, H);
+      for (var i = 0; i < streaks.length; i++) {
+        var s = streaks[i];
+        s.x += s.sp * 2.1;
+        if (s.x - s.len > W) { s.x = -s.len; s.y = Math.random() * H; }
+        var g = ctx.createLinearGradient(s.x - s.len, s.y, s.x, s.y);
+        var col = s.hot ? "62,201,255" : "255,179,71";
+        g.addColorStop(0, "rgba(" + col + ",0)");
+        g.addColorStop(1, "rgba(" + col + ",0.5)");
+        ctx.strokeStyle = g; ctx.lineWidth = s.w;
+        ctx.beginPath(); ctx.moveTo(s.x - s.len, s.y); ctx.lineTo(s.x, s.y); ctx.stroke();
+      }
+      raf = requestAnimationFrame(draw);
+    }
+
+    /* Idempotent: safe to call on every resize, every frame after mount, and
+       after any remount. Starts the field the moment real geometry exists. */
+    function syncBackdrop() {
+      var w = measure();
+      var narrow = window.innerWidth < 760;
+
+      /* Phones get the light encode, desktop the full one. Save-Data, 2G/3G
+         and reduced-motion never fetch either — the gradient poster stands in.
+         preload="none" keeps the file off the critical path entirely. */
+      /* Assignment and activation are separate: guarding the whole block on
+         !vid.src meant a re-wire skipped attaching the reveal listeners on a
+         video that already had a src but had never started loading. */
+      if (vid && !cheap && !vid.dataset.wired) {
+        vid.dataset.wired = "1";
+        var srcAttr = narrow ? "data-src-mobile" : "data-src";
+        var chosen = vid.getAttribute(srcAttr) || vid.getAttribute("data-src");
+        if (chosen) {
+          /* React does not reflect the `muted` attribute to the DOM property,
+             so the element was unmuted and the autoplay policy refused every
+             play() with NotAllowedError. Set the property explicitly. */
+          vid.muted = true;
+          vid.defaultMuted = true;
+          vid.volume = 0;
+          /* Same reflection gap as `muted`: set loop/playsinline as properties
+             so the footage never stops at the end of a pass. */
+          vid.loop = true;
+          vid.playsInline = true;
+          /* Reveal on the first decoded frame, NOT on the play() promise:
+             preload="none" leaves the network idle and that promise may never
+             settle (or is rejected by autoplay policy), which would strand the
+             layer at opacity 0 with the footage never showing. */
+          var reveal = function () { vid.setAttribute("data-live", "1"); };
+          vid.addEventListener("loadeddata", reveal, { once: true });
+          vid.addEventListener("canplay", reveal, { once: true });
+          vid.src = chosen;
+          vid.load();
+          /* A React re-render resets muted/loop on the element, so every kick
+             re-asserts them and rewinds if the last pass parked at the end. */
+          var kick = function () {
+            var el = document.querySelector(".stage video") || vid;
+            el.muted = true;
+            el.loop = true;
+            if (el.ended || (el.duration && el.currentTime >= el.duration - 0.08)) el.currentTime = 0;
+            var p = el.play();
+            if (p && p.catch) p.catch(function () {});
+          };
+          kick();
+          vid.addEventListener("canplay", kick, { once: true });
+
+          /* Autoplay is refused in some contexts even when muted. Resume on the
+             first sign of interaction of any kind, then stop listening. */
+          var EVENTS = ["pointerdown", "touchstart", "keydown", "wheel", "scroll", "mousemove"];
+          var once = function () {
+            kick();
+            if (!vid.paused) EVENTS.forEach(function (e) { window.removeEventListener(e, once); });
+          };
+          EVENTS.forEach(function (e) { window.addEventListener(e, once, { passive: true }); });
+
+          /* Belt to loop's braces: restart on `ended`, resume if anything
+             pauses it, and pick back up when the tab becomes visible again. */
+          var onEnded = function () { vid.currentTime = 0; kick(); };
+          var onPause = function () { if (!vid.ended) kick(); };
+          var onVis = function () { if (!document.hidden) kick(); };
+          vid.addEventListener("ended", onEnded);
+          vid.addEventListener("pause", onPause);
+          document.addEventListener("visibilitychange", onVis);
+          teardown.push(function () {
+            EVENTS.forEach(function (e) { window.removeEventListener(e, once); });
+            vid.removeEventListener("ended", onEnded);
+            vid.removeEventListener("pause", onPause);
+            document.removeEventListener("visibilitychange", onVis);
+          });
+        }
+      }
+
+      if (!canvas || !ctx) return;
+      if (narrow || w === 0) {                       // not ready, or too small
+        if (running) { cancelAnimationFrame(raf); running = false; }
+        return;
+      }
+      var dpr = Math.min(window.devicePixelRatio || 1, 2);
+      var h = canvas.getBoundingClientRect().height || canvas.clientHeight || 0;
+      if (Math.round(w) !== Math.round(W) || Math.round(h) !== Math.round(H)) {
+        W = w; H = h;
+        canvas.width = W * dpr; canvas.height = H * dpr;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        seed();
+      }
+      if (!running) { running = true; draw(); }
+    }
+
+    syncBackdrop();
+    requestAnimationFrame(syncBackdrop);             // retry once layout settles
+    var settle = setTimeout(syncBackdrop, 400);      // and once more after fonts
+
+    var onResize = function () { syncBackdrop(); };
+    window.addEventListener("resize", onResize);
+    var ro = null;
+    if (window.ResizeObserver && stage) {
+      ro = new ResizeObserver(syncBackdrop);
+      ro.observe(stage);
+    }
+    teardown.push(function () {
+      cancelAnimationFrame(raf);
+      clearTimeout(settle);
+      running = false;
+      window.removeEventListener("resize", onResize);
+      if (ro) ro.disconnect();
+    });
+
+    /* ── cursor glow ── */
+    if (fine && this.props.cursorGlow !== false) {
+      var glow = document.querySelector(".glow");
+      if (glow) {
+        var gx = innerWidth / 2, gy = innerHeight / 2, tx = gx, ty = gy, graf = null;
+        var onGMove = function (e) { tx = e.clientX; ty = e.clientY; glow.style.opacity = "1"; };
+        var onGOut = function () { glow.style.opacity = "0"; };
+        window.addEventListener("mousemove", onGMove, { passive: true });
+        document.addEventListener("mouseleave", onGOut);
+        (function gloop() {
+          gx += (tx - gx) * 0.12; gy += (ty - gy) * 0.12;
+          glow.style.transform = "translate3d(" + gx.toFixed(1) + "px," + gy.toFixed(1) + "px,0)";
+          graf = requestAnimationFrame(gloop);
+        })();
+        teardown.push(function () {
+          window.removeEventListener("mousemove", onGMove);
+          document.removeEventListener("mouseleave", onGOut);
+          cancelAnimationFrame(graf);
+        });
+      }
+    }
+
+    /* ── scroll: progress rail + backdrop parallax / zoom / brightness ── */
+    var bar = document.querySelector(".scroll-bar");
+    var layers = document.querySelectorAll(".stage video,.stage .poster,.stage .xfade");
+    var ticking = false;
+    function onScroll() {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(function () {
+        ticking = false;
+        var max = document.documentElement.scrollHeight - window.innerHeight;
+        var p = max > 0 ? window.scrollY / max : 0;
+        if (bar) bar.style.width = (p * 100).toFixed(2) + "%";
+        var zoom = 1 + p * 0.14;
+        var bright = 1 - p * 0.35;
+        var contrast = 1 + p * 0.45;
+        layers.forEach(function (l) {
+          l.style.transform = "translate3d(0," + window.scrollY * 0.06 + "px,0) scale(" + zoom.toFixed(3) + ")";
+          l.style.filter = "brightness(" + bright.toFixed(2) + ") contrast(" + contrast.toFixed(2) + ") saturate(" + (1 + p * 0.5).toFixed(2) + ")";
+        });
+      });
+    }
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    teardown.push(function () { window.removeEventListener("scroll", onScroll); });
+
+    this._cleanup = function () { teardown.forEach(function (fn) { fn(); }); };
+  }
+}
+
+</script>
+</body>
+</html>

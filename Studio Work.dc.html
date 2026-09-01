@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Studio — work index skeleton</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="styles.css">
+<script src="_ds/modernist-77638109-339f-484d-bf96-8f45c98374a1/_ds_bundle.js"></script>
+<style>
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--color-bg); color: var(--color-text); font-family: var(--font-body); -webkit-font-smoothing: antialiased; }
+  * { box-sizing: border-box; }
+  h1, h2, h3, h4, p, ul, ol, figure, blockquote, dl, dd, dt { margin: 0; }
+  ul, ol { list-style: none; padding: 0; }
+  a { color: var(--color-accent-700); text-decoration: none; }
+  a:hover { color: var(--color-accent-600); text-decoration: underline; }
+  :focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+  .only-narrow { display: none; }
+  @media (max-width: 860px) {
+    .only-narrow { display: block; }
+    .only-wide { display: none; }
+    .stack-narrow { grid-template-columns: 1fr !important; }
+  }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script src="anim.js"></script>
+</helmet>
+
+<!-- ===== HEADER — same chrome as home; animates: pin/shrink on scroll ===== -->
+<header class="anim-section" data-animate="header-pin" style="position:sticky;top:0;z-index:50;background:var(--color-bg);border-bottom:2px solid var(--color-divider)">
+  <div style="width:min(1320px, 100% - clamp(20px,5vw,64px));margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:var(--space-4);min-height:64px">
+    <a href="Studio Home.dc.html" target="_blank" rel="noopener" style="font-family:var(--font-heading);font-weight:800;font-size:18px;color:var(--color-text);text-decoration:none">[LOGO]</a>
+    <nav aria-label="Primary">
+      <ul style="display:flex;flex-wrap:wrap;gap:clamp(12px,2vw,28px)">
+        <li><a href="Studio Work.dc.html" target="_blank" rel="noopener" aria-current="page" style="font-size:14px;font-weight:600;color:var(--color-accent-700);text-decoration:none">Work</a></li>
+        <li><a href="Studio About.dc.html" target="_blank" rel="noopener" style="font-size:14px;font-weight:500;color:var(--color-text);text-decoration:none">Studio</a></li>
+        <li><a href="Studio Home.dc.html" target="_blank" rel="noopener" style="font-size:14px;font-weight:500;color:var(--color-text);text-decoration:none">Home</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main role="main">
+  <!-- ============================================================
+       01 · PAGE HEADER — title + intro. Animates: mask-up on h1,
+       fade-up on intro. Enters on load, not on scroll.
+       ============================================================ -->
+  <section class="anim-section" data-anim-load-group="" aria-labelledby="page-h" style="border-bottom:2px solid var(--color-divider);padding:clamp(40px,6vw,88px) 0">
+    <div style="width:min(1320px, 100% - clamp(20px,5vw,64px));margin:0 auto">
+      <div class="stack-narrow" style="display:grid;grid-template-columns:minmax(0,7fr) minmax(0,4fr);gap:clamp(24px,4vw,64px);align-items:end">
+        <div style="display:grid;gap:var(--space-4)">
+          <p class="anim-target" data-animate="fade-in" style="font:600 12px/1 var(--font-body);letter-spacing:0.14em;text-transform:uppercase;color:var(--color-accent-700)">Work index</p>
+          <h1 id="page-h" class="anim-target" data-animate="mask-up" style="font-family:var(--font-heading);font-weight:800;font-size:clamp(34px,6vw,78px);line-height:1;letter-spacing:-0.03em">Lorem ipsum dolor sit</h1>
+        </div>
+        <p class="anim-target" data-animate="fade-up" style="font-size:15px;line-height:1.65;color:var(--color-neutral-800);text-wrap:pretty">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       02 · FILTER BAR — discipline / year toggles (no JS yet).
+       Animates: active pill morph, grid re-shuffle (FLIP) on filter change.
+       Risk: FLIP needs stable keys and fixed card aspect boxes.
+       ============================================================ -->
+  <section class="anim-section" data-animate="section" aria-label="Filter work" style="border-bottom:2px solid var(--color-divider);padding:var(--space-4) 0">
+    <div style="width:min(1320px, 100% - clamp(20px,5vw,64px));margin:0 auto;display:flex;flex-wrap:wrap;gap:var(--space-2)">
+      <sc-for list="{{ filters }}" as="f" hint-placeholder-count="5">
+        <button type="button" class="stagger-item anim-target" data-animate="fade-in" data-anim-stagger="0.04" style="border:2px solid var(--color-text);background:transparent;color:var(--color-text);font:600 12px/1 var(--font-body);padding:10px var(--space-3);cursor:pointer;text-align:left">{{ f }}</button>
+      </sc-for>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       03 · PROJECT GRID — the page's payload. Each <article> is one
+       animatable unit; media box is separate from the text block.
+       Animates: batched scroll reveal (ScrollTrigger.batch), hover scale
+       inside the overflow box, flip-to-detail transition.
+       Risk: reveal-on-scroll for a long grid must be batched, not one
+       trigger per card, or scroll performance drops on mobile.
+       ============================================================ -->
+  <section class="anim-section" data-animate="section" data-scroll-trigger="top 80%" aria-labelledby="grid-h" style="border-bottom:2px solid var(--color-divider);padding:clamp(40px,5vw,80px) 0">
+    <div style="width:min(1320px, 100% - clamp(20px,5vw,64px));margin:0 auto;display:grid;gap:clamp(24px,3vw,48px)">
+      <h2 id="grid-h" style="font:600 12px/1 var(--font-body);letter-spacing:0.14em;text-transform:uppercase;color:var(--color-neutral-600)">All projects</h2>
+      <div class="stagger-group" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:clamp(20px,2.5vw,40px)">
+        <sc-for list="{{ projects }}" as="p" hint-placeholder-count="6">
+          <article class="stagger-item anim-target" data-animate="fade-up" data-anim-stagger="0.08" style="display:grid;gap:var(--space-3);align-content:start">
+            <a href="Studio Case Study.dc.html" target="_blank" rel="noopener" style="display:block;overflow:hidden">
+              <div class="grayscale media-zoom" data-animate="hover-scale" role="img" aria-label="Placeholder for project thumbnail" style="aspect-ratio:4/3;border:2px dashed var(--color-neutral-400);background:repeating-linear-gradient(135deg, transparent 0 10px, color-mix(in srgb, var(--color-neutral-400) 26%, transparent) 10px 11px);display:grid;place-items:center"><span style="font:400 11px/1.5 ui-monospace,Menlo,monospace;color:var(--color-neutral-700)">[IMAGE] 4:3</span></div>
+            </a>
+            <h3 style="font-family:var(--font-heading);font-weight:700;font-size:18px;line-height:1.25"><a href="Studio Case Study.dc.html" target="_blank" rel="noopener" style="color:var(--color-text);text-decoration:none">{{ p.title }}</a></h3>
+            <p style="font:400 11px/1.5 ui-monospace,Menlo,monospace;color:var(--color-neutral-600)">{{ p.meta }}</p>
+          </article>
+        </sc-for>
+      </div>
+      <nav aria-label="Pagination" style="display:flex;gap:var(--space-2);border-top:2px solid var(--color-divider);padding-top:var(--space-4)">
+        <a href="#" style="border:2px solid var(--color-text);color:var(--color-text);padding:10px var(--space-4);font-size:13px;font-weight:600;text-decoration:none">Previous</a>
+        <a href="#" style="border:2px solid var(--color-text);color:var(--color-text);padding:10px var(--space-4);font-size:13px;font-weight:600;text-decoration:none">Next</a>
+      </nav>
+    </div>
+  </section>
+
+  <!-- ===== 04 · CTA BAND — the one accent field on the page.
+       Animates: background wipe on enter, heading mask-up. ===== -->
+  <section class="anim-section" data-animate="section" data-scroll-trigger="top 85%" aria-labelledby="cta-h" style="background:var(--color-accent);color:#fff;padding:clamp(40px,6vw,88px) 0">
+    <div style="width:min(1320px, 100% - clamp(20px,5vw,64px));margin:0 auto;display:grid;gap:var(--space-6)">
+      <h2 id="cta-h" class="anim-target" data-animate="mask-up" style="font-family:var(--font-heading);font-weight:800;font-size:clamp(30px,5vw,64px);line-height:1;letter-spacing:-0.03em;max-width:24ch">Consectetur adipiscing elit sed</h2>
+      <a href="Studio Home.dc.html#contact" target="_blank" rel="noopener" class="anim-target" data-animate="fade-up" style="background:#fff;color:var(--color-accent-700);padding:14px var(--space-6);font-size:14px;font-weight:600;text-decoration:none;justify-self:start">Generic CTA</a>
+    </div>
+  </section>
+</main>
+
+<footer role="contentinfo" style="padding:clamp(32px,4vw,56px) 0">
+  <div style="width:min(1320px, 100% - clamp(20px,5vw,64px));margin:0 auto;display:flex;flex-wrap:wrap;gap:var(--space-4);justify-content:space-between;border-top:2px solid var(--color-divider);padding-top:var(--space-4)">
+    <p style="font:400 11px/1.5 ui-monospace,Menlo,monospace;color:var(--color-neutral-600)">&copy; 0000 Placeholder Studio</p>
+    <nav aria-label="Footer">
+      <ul style="display:flex;flex-wrap:wrap;gap:var(--space-4)">
+        <li><a href="Studio Home.dc.html" target="_blank" rel="noopener" style="font:400 11px/1.5 ui-monospace,Menlo,monospace;color:var(--color-neutral-600);text-decoration:none">Home</a></li>
+        <li><a href="Studio About.dc.html" target="_blank" rel="noopener" style="font:400 11px/1.5 ui-monospace,Menlo,monospace;color:var(--color-neutral-600);text-decoration:none">Studio</a></li>
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;cardCount&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:6,&quot;min&quot;:4,&quot;max&quot;:9,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Placeholder content&quot;}}">
+class Component extends DCLogic {
+  renderVals() {
+    const n = Math.max(4, Math.min(9, this.props.cardCount ?? 6));
+    const pad = (i) => String(i + 1).padStart(2, "0");
+    return {
+      filters: ["All", "Discipline one", "Discipline two", "Discipline three", "Year"],
+      projects: Array.from({ length: n }, (_, i) => ({
+        title: "Project name " + pad(i),
+        meta: "Sector · Discipline · 0000",
+      })),
+    };
+  }
+}
+
+</script>
+</body>
+</html>
