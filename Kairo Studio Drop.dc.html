@@ -134,6 +134,11 @@
     .irow{grid-template-columns:auto 1fr !important}
     .inote{grid-column:1 / -1 !important;padding-top:12px}
   }
+  .navlinks a{position:relative;display:inline-block;padding-bottom:5px;transition:color .22s ease}
+  .navlinks a::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1.5px;background:var(--amber);box-shadow:0 0 9px rgba(255,179,71,.75),0 0 18px rgba(255,179,71,.35);transform:scaleX(0);transform-origin:left;transition:transform .34s cubic-bezier(.2,.7,.2,1)}
+  .navlinks a:hover{color:var(--paper)}
+  .navlinks a:hover::after,.navlinks a:focus-visible::after{transform:scaleX(1)}
+
   @media (max-width:680px){
     .navlinks{display:none !important}
     .nav-cta{display:none !important}
@@ -172,8 +177,7 @@
   <header style="position:sticky;top:0;z-index:50;background:rgba(5,5,5,.72);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)">
     <div class="wrap" style="display:flex;align-items:center;justify-content:space-between;gap:22px;min-height:70px">
       <a href="#top" style="display:flex;align-items:center;gap:10px;color:var(--paper)">
-        <span aria-hidden="true" style="width:13px;height:13px;background:var(--amber);box-shadow:0 0 14px var(--amber);display:block"></span>
-        <span class="disp" style="font-size:21px;white-space:nowrap">KAIRO STUDIO</span>
+        <img src="assets/logo-mark.png" alt="Kairo Studio" style="height:15px;width:auto;display:block;filter:drop-shadow(0 0 9px rgba(255,179,71,.32))" />
       </a>
       <nav class="navlinks" aria-label="Primary">
         <ul style="display:flex;align-items:center;gap:clamp(16px,2.4vw,34px);white-space:nowrap">
@@ -185,7 +189,7 @@
 
         </ul>
       </nav>
-      <a href="#book" class="cta nav-cta" style="padding:12px 20px;font-size:13px">Book a Call <span class="arrow" aria-hidden="true">→</span></a>
+      <a href="https://calendly.com/tahmidhossain-kairostudio/30min" target="_blank" rel="noopener" class="cta nav-cta" style="padding:12px 20px;font-size:13px">Book a Call <span class="arrow" aria-hidden="true">→</span></a>
     </div>
   </header>
 
@@ -203,7 +207,7 @@
         <div class="g2" style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(22px,4vw,60px);align-items:end">
           <p class="r" style="font-size:clamp(16px,1.7vw,20px);line-height:1.65;color:#d6d6d9;max-width:46ch">We build sites that sell, get found, and stay maintained — so you can run your business instead of managing a website.</p>
           <div class="r" style="display:grid;gap:12px;justify-items:start">
-            <a href="#book" class="cta" data-magnetic>Book Your Call <span class="arrow" aria-hidden="true">→</span></a>
+            <a href="https://calendly.com/tahmidhossain-kairostudio/30min" target="_blank" rel="noopener" class="cta" data-magnetic>Book Your Call <span class="arrow" aria-hidden="true">→</span></a>
             <p style="font-size:13px;color:var(--mute);max-width:36ch">15 minutes. No pitch, no obligation.</p>
           </div>
         </div>
@@ -252,7 +256,7 @@
         </div>
         <ul>
           <li class="row r">
-            <a href="#book" class="irow" style="display:grid;grid-template-columns:auto minmax(0,1fr) minmax(0,1.15fr) auto;gap:clamp(14px,2.4vw,34px);align-items:baseline;padding:clamp(18px,2.4vw,30px) 0;color:var(--paper)">
+            <a href="https://calendly.com/tahmidhossain-kairostudio/30min" target="_blank" rel="noopener" class="irow" style="display:grid;grid-template-columns:auto minmax(0,1fr) minmax(0,1.15fr) auto;gap:clamp(14px,2.4vw,34px);align-items:baseline;padding:clamp(18px,2.4vw,30px) 0;color:var(--paper)">
               <span class="rn disp" style="font-size:15px;color:var(--mute)">01</span>
               <h3 class="disp" style="font-size:clamp(23px,3.5vw,47px)">Design that closes</h3>
               <div class="inote" style="display:grid;gap:8px">
@@ -263,7 +267,7 @@
             </a>
           </li>
           <li class="row r">
-            <a href="#book" class="irow" style="display:grid;grid-template-columns:auto minmax(0,1fr) minmax(0,1.15fr) auto;gap:clamp(14px,2.4vw,34px);align-items:baseline;padding:clamp(18px,2.4vw,30px) 0;color:var(--paper)">
+            <a href="https://calendly.com/tahmidhossain-kairostudio/30min" target="_blank" rel="noopener" class="irow" style="display:grid;grid-template-columns:auto minmax(0,1fr) minmax(0,1.15fr) auto;gap:clamp(14px,2.4vw,34px);align-items:baseline;padding:clamp(18px,2.4vw,30px) 0;color:var(--paper)">
               <span class="rn disp" style="font-size:15px;color:var(--mute)">02</span>
               <h3 class="disp" style="font-size:clamp(23px,3.5vw,47px)">SEO that puts you first</h3>
               <div class="inote" style="display:grid;gap:8px">
@@ -274,7 +278,7 @@
             </a>
           </li>
           <li class="row r" style="border-bottom:1px solid var(--line)">
-            <a href="#book" class="irow" style="display:grid;grid-template-columns:auto minmax(0,1fr) minmax(0,1.15fr) auto;gap:clamp(14px,2.4vw,34px);align-items:baseline;padding:clamp(18px,2.4vw,30px) 0;color:var(--paper)">
+            <a href="https://calendly.com/tahmidhossain-kairostudio/30min" target="_blank" rel="noopener" class="irow" style="display:grid;grid-template-columns:auto minmax(0,1fr) minmax(0,1.15fr) auto;gap:clamp(14px,2.4vw,34px);align-items:baseline;padding:clamp(18px,2.4vw,30px) 0;color:var(--paper)">
               <span class="rn disp" style="font-size:15px;color:var(--mute)">03</span>
               <h3 class="disp" style="font-size:clamp(23px,3.5vw,47px)">Maintenance that never sleeps</h3>
               <div class="inote" style="display:grid;gap:8px">
@@ -287,7 +291,7 @@
         </ul>
         <div class="r" style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:20px">
           <p class="disp" style="font-size:clamp(20px,2.6vw,34px);max-width:26ch">Want all three running for your business?</p>
-          <a href="#book" class="cta" data-magnetic>Book a Call <span class="arrow" aria-hidden="true">→</span></a>
+          <a href="https://calendly.com/tahmidhossain-kairostudio/30min" target="_blank" rel="noopener" class="cta" data-magnetic>Book a Call <span class="arrow" aria-hidden="true">→</span></a>
         </div>
       </div>
     </section>
@@ -346,7 +350,7 @@
         <div class="bar"></div>
         <div class="r" style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:20px">
           <p class="disp" style="font-size:clamp(20px,2.6vw,34px);max-width:26ch">Want to see this for your business?</p>
-          <a href="#book" class="cta" data-magnetic>Book Your Call <span class="arrow" aria-hidden="true">→</span></a>
+          <a href="https://calendly.com/tahmidhossain-kairostudio/30min" target="_blank" rel="noopener" class="cta" data-magnetic>Book Your Call <span class="arrow" aria-hidden="true">→</span></a>
         </div>
       </div>
     </section>
@@ -370,7 +374,7 @@
             <p class="kick" style="color:var(--cyan)">Free audit</p>
             <h3 class="disp" style="font-size:clamp(24px,3vw,38px)">Find out what's costing you customers. Free.</h3>
             <p style="font-size:15.5px;line-height:1.65;color:#c2c2c8">We send a written PDF breakdown of what's holding your conversions back, then walk you through it live on Zoom or Meet. No obligation, no spam — just a clear read on your site.</p>
-            <a href="#book" class="cta cta-ghost" data-magnetic style="justify-self:start">Request the Free Audit <span class="arrow" aria-hidden="true">→</span></a>
+            <a href="https://calendly.com/tahmidhossain-kairostudio/30min" target="_blank" rel="noopener" class="cta cta-ghost" data-magnetic style="justify-self:start">Request the Free Audit <span class="arrow" aria-hidden="true">→</span></a>
             <p style="font-size:13px;color:var(--mute)">The PDF is yours to keep.</p>
           </div>
 
@@ -425,7 +429,7 @@
         </div>
         <div class="r" style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:20px">
           <p class="disp" style="font-size:clamp(19px,2.4vw,30px);max-width:26ch">Anything else? Ask on the call.</p>
-          <a href="#book" class="cta" data-magnetic>Book Your Free Call <span class="arrow" aria-hidden="true">→</span></a>
+          <a href="https://calendly.com/tahmidhossain-kairostudio/30min" target="_blank" rel="noopener" class="cta" data-magnetic>Book Your Free Call <span class="arrow" aria-hidden="true">→</span></a>
         </div>
       </div>
     </section>
@@ -437,10 +441,10 @@
         <h2 id="book-h" class="disp punch" style="font-size:clamp(30px,5.2vw,76px)">Stop losing customers to a website that isn't <span style="color:var(--amber);text-shadow:0 0 42px rgba(255,179,71,.35)">working</span> for you.</h2>
         <div class="bar"></div>
         <div class="r" style="display:flex;flex-wrap:wrap;align-items:center;gap:24px">
-          <a href="#book" class="cta" data-magnetic style="padding:24px 42px;font-size:clamp(17px,1.9vw,23px)">Book Your Free Call <span class="arrow" aria-hidden="true">→</span></a>
+          <a href="https://calendly.com/tahmidhossain-kairostudio/30min" target="_blank" rel="noopener" class="cta" data-magnetic style="padding:24px 42px;font-size:clamp(17px,1.9vw,23px)">Book Your Free Call <span class="arrow" aria-hidden="true">→</span></a>
           <p style="font-size:15px;line-height:1.65;color:#c2c2c8;max-width:38ch">Fifteen minutes tells you whether your site can compete. Free, with no pitch and no obligation.</p>
         </div>
-        <p class="r" style="font-size:14px;color:var(--mute)">Or email <a href="#book">contact@kairostudio.com</a> — we reply same day.</p>
+        <p class="r" style="font-size:14px;color:var(--mute)">Or email <a href="mailto:contact@kairostudio.io">contact@kairostudio.io</a> — we reply same day.</p>
       </div>
     </section>
   </main>
@@ -451,12 +455,11 @@
       <div class="g4" style="display:grid;grid-template-columns:minmax(0,1.6fr) repeat(3,minmax(0,1fr));gap:clamp(22px,3vw,40px)">
         <div style="display:grid;gap:14px;align-content:start;max-width:36ch">
           <a href="#top" style="display:flex;align-items:center;gap:10px;color:var(--paper)">
-            <span aria-hidden="true" style="width:11px;height:11px;background:var(--amber);box-shadow:0 0 12px var(--amber);display:block"></span>
-            <span class="disp" style="font-size:18px">KAIRO STUDIO</span>
+            <img src="assets/logo-mark.png" alt="Kairo Studio" style="height:14px;width:auto;display:block;filter:drop-shadow(0 0 8px rgba(255,179,71,.28))" />
           </a>
           <p style="font-size:14px;line-height:1.65;color:var(--mute)">Websites, SEO and maintenance for businesses that need the phone to ring. Remote, serving clients across the US.</p>
           <p style="font-size:14px;line-height:1.65;color:#c2c2c8">Fifteen free minutes on what your site could be earning.</p>
-          <a href="#book" class="cta cta-ghost" style="justify-self:start;padding:13px 22px;font-size:13px">Book a Call <span class="arrow" aria-hidden="true">→</span></a>
+          <a href="https://calendly.com/tahmidhossain-kairostudio/30min" target="_blank" rel="noopener" class="cta cta-ghost" style="justify-self:start;padding:13px 22px;font-size:13px">Book a Call <span class="arrow" aria-hidden="true">→</span></a>
         </div>
         <nav aria-label="Footer — page" style="display:grid;gap:12px;align-content:start">
           <h2 class="kick" style="color:var(--mute)">Page</h2>
@@ -470,7 +473,7 @@
         <nav aria-label="Footer — contact" style="display:grid;gap:12px;align-content:start">
           <h2 class="kick" style="color:var(--mute)">Contact</h2>
           <ul style="display:grid;gap:10px">
-            <li><a href="#book" style="font-size:14px;color:var(--paper)">contact@kairostudio.com</a></li>
+            <li><a href="mailto:contact@kairostudio.io" style="font-size:14px;color:var(--paper)">contact@kairostudio.io</a></li>
             <li style="font-size:14px;color:var(--mute)">Remote — serving US clients</li>
           </ul>
         </nav>
@@ -484,13 +487,13 @@
       </div>
       <div style="display:flex;flex-wrap:wrap;gap:14px;justify-content:space-between;border-top:1px solid var(--line);padding-top:20px">
         <p style="font-size:12.5px;color:var(--mute)">© 2026 Kairo Studio</p>
-        <p style="font-size:12.5px;color:var(--mute)">Placeholder wordmark — drop in the real logo</p>
+        
       </div>
     </div>
   </footer>
 
   <div class="sticky-cta" style="position:fixed;bottom:0;left:0;right:0;z-index:65;background:rgba(5,5,5,.94);backdrop-filter:blur(12px);border-top:1px solid var(--amber);padding:12px 16px calc(12px + env(safe-area-inset-bottom))">
-    <a href="#book" class="cta" style="width:100%;justify-content:center;padding:17px">Book Your Call <span class="arrow" aria-hidden="true">→</span></a>
+    <a href="https://calendly.com/tahmidhossain-kairostudio/30min" target="_blank" rel="noopener" class="cta" style="width:100%;justify-content:center;padding:17px">Book Your Call <span class="arrow" aria-hidden="true">→</span></a>
   </div>
 </div>
 
